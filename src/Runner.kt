@@ -1,3 +1,4 @@
+import kotlin.system.measureNanoTime
 import kotlin.system.measureTimeMillis
 
 val longRunning = setOf(
@@ -21,7 +22,8 @@ const val skipLongRunning = true
 const val runLatest = true
 
 fun main() {
-    (2015..2019).forEach { if (runLatest) runLatest(it) else run(it) }
+    runDay(2019, 18)
+    //(2015..2019).forEach { if (runLatest) runLatest(it) else run(it) }
 }
 
 fun run(year: Int) {
@@ -52,13 +54,13 @@ fun runDay(year: Int, day: Int) {
     if (skipLongRunning && year to day to 1 in longRunning) {
         println("SKIPPED")
     } else {
-        println(" [${"%.3f".format(measureTimeMillis { print(d.solve1()) } / 1000.0)} s] ")
+        println(" [${"%.6f".format(measureNanoTime { print(d.solve1()) } / 1000000000.0)} s] ")
     }
 
     print("\tPart 2: ")
     if (skipLongRunning && year to day to 2 in longRunning) {
         println("SKIPPED")
     } else {
-        println(" [${"%.3f".format(measureTimeMillis { print(d.solve2()) } / 1000.0)} s] ")
+        println(" [${"%.6f".format(measureNanoTime { print(d.solve2()) } / 1000000000.0)} s] ")
     }
 }
