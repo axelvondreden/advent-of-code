@@ -1,0 +1,138 @@
+package y2019
+
+class IntCodeComputer(private var register: LongArray) {
+
+    private var pointer = 0
+    private var inputs = longArrayOf()
+    private var inputCounter = 0
+    private var relativeBase = 0
+    private var inputLambda: (() -> Long)? = null
+
+    fun withInputs(inputs: LongArray): IntCodeComputer {
+        this.inputs = inputs
+        return this
+    }
+
+    fun addInput(input: Long): IntCodeComputer {
+        inputs = inputs.plus(input)
+        return this
+    }
+
+    fun withInputFunction(f: () -> Long): IntCodeComputer {
+        inputLambda = f
+        return this
+    }
+
+    fun run(ignoreReturn0: Boolean = true): Long {
+        register = register.copyOf(99999)
+        while (true) {
+            var op = register[pointer]
+            val modes = intArrayOf(0, 0, 0)
+            if (op >= 100) {
+                op = op.toString().takeLast(2).toLong()
+                var index = 2
+                while (index < register[pointer].toString().length) {
+                    modes[index - 2] = register[pointer].toString().reversed()[index].toString().toInt()
+                    index++
+                }
+            }
+            when (op.toInt()) {
+                1 -> add(modes)
+                2 -> multiply(modes)
+                3 -> input(modes)
+                4 -> {
+                    pointer += 2
+                    if (modes[0] == 0) {
+                        if (register[register[pointer - 1].toInt()] > 0 || !ignoreReturn0) {
+                            return register[register[pointer - 1].toInt()]
+                        }
+                    } else if (modes[0] == 1) {
+                        if (register[pointer - 1] > 0 || !ignoreReturn0) {
+                            return register[pointer - 1]
+                        }
+                    } else {
+                        if (register[relativeBase + register[pointer - 1].toInt()] > 0 || !ignoreReturn0) {
+                            return register[relativeBase + register[pointer - 1].toInt()]
+                        }
+                    }
+                }
+                5 -> jumpIfNotZero(modes)
+                6 -> jumpIfZero(modes)
+                7 -> lessThan(modes)
+                8 -> equal(modes)
+                9 -> adjustRelativeBase(modes)
+                99 -> return -999
+            }
+        }
+    }
+
+    private fun getValue(mode: Int, index: Int): Long {
+        return when (mode) {
+            0 -> register[register[index].toInt()]
+            1 -> register[index]
+            2 -> register[relativeBase + register[index].toInt()]
+            else -> throw Error("unknown mode $mode")
+        }
+    }
+
+    private fun setValue(mode: Int, index: Int, value: Long) {
+        when (mode) {
+            0 -> register[register[index].toInt()] = value
+            1 -> register[index] = value
+            2 -> register[relativeBase + register[index].toInt()] = value
+        }
+    }
+
+    private fun adjustRelativeBase(modes: IntArray) {
+        relativeBase += getValue(modes[0], pointer + 1).toInt()
+        pointer += 2
+    }
+
+    private fun equal(modes: IntArray) {
+        val p1 = getValue(modes[0], pointer + 1)
+        val p2 = getValue(modes[1], pointer + 2)
+        setValue(modes[2], pointer + 3, if (p1 == p2) 1 else 0)
+        pointer += 4
+    }
+
+    private fun lessThan(modes: IntArray) {
+        val p1 = getValue(modes[0], pointer + 1)
+        val p2 = getValue(modes[1], pointer + 2)
+        setValue(modes[2], pointer + 3, if (p1 < p2) 1 else 0)
+        pointer += 4
+    }
+
+    private fun jumpIfZero(modes: IntArray) {
+        if (getValue(modes[0], pointer + 1) == 0L) {
+            pointer = getValue(modes[1], pointer + 2).toInt()
+        } else {
+            pointer += 3
+        }
+    }
+
+    private fun jumpIfNotZero(modes: IntArray) {
+        if (getValue(modes[0], pointer + 1) != 0L) {
+            pointer = getValue(modes[1], pointer + 2).toInt()
+        } else {
+            pointer += 3
+        }
+    }
+
+    private fun input(modes: IntArray) {
+        setValue(modes[0], pointer + 1, if (inputLambda != null) inputLambda!!.invoke() else inputs[inputCounter])
+        inputCounter++
+        pointer += 2
+    }
+
+    private fun multiply(modes: IntArray) {
+        val result = getValue(modes[0], pointer + 1) * getValue(modes[1], pointer + 2)
+        setValue(modes[2], pointer + 3, result)
+        pointer += 4
+    }
+
+    private fun add(modes: IntArray) {
+        val result = getValue(modes[0], pointer + 1) + getValue(modes[1], pointer + 2)
+        setValue(modes[2], pointer + 3, result)
+        pointer += 4
+    }
+}
