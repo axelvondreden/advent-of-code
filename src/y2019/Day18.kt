@@ -29,14 +29,14 @@ class Day18: Day() {
         cache = map
     }
 
-    override fun solve1() {
+    override fun solve1(): Int {
         val min = intArrayOf(Int.MAX_VALUE)
         val searchKeys = keys.map { it.c }.sortedBy {
             val e = cache["@$it"]!!
             e.length + (e.doors.size * 1000)
         }
         getShortestPath('@', searchKeys, doors.map { it.c }, 0, min, "")
-        println(min[0])
+        return min[0]
     }
 
     override fun solve2() {
@@ -47,7 +47,7 @@ class Day18: Day() {
         if (keys.isEmpty()) {
             if (length < minLength[0]) {
                 minLength[0] = length
-                println("$length $id")
+                //println("$length $id")
             }
             return
         }
@@ -59,9 +59,7 @@ class Day18: Day() {
             val newLength = length + edge.length
             val newId = id + key
             if (newLength >= minLength[0]) {
-                if (keys.size == 1) {
-                    print("$newLength ${newId}\r")
-                }
+                //if (keys.size == 1) print("$newLength ${newId}\r")
                 return
             }
             if (edge.doors.all { it.toLowerCase() in id }) {
