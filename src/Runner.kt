@@ -15,6 +15,7 @@ val longRunning = setOf(
     2019 to 12 to 2,
     2019 to 14 to 2,
     2019 to 18 to 1,
+    2019 to 18 to 2,
     2019 to 19 to 2
 )
 

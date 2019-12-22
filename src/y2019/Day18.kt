@@ -57,7 +57,7 @@ class Day18: Day() {
             val e = cache1["@$it"]!!
             e.length + (e.doors.size * 1000)
         }
-        getShortestPath('@', searchKeys, doors.map { it.c }, 0, min, "")
+        getShortestPath('@', keys.map { it.c }, doors.map { it.c }, 0, min, "")
         return min[0]
     }
 
@@ -75,7 +75,7 @@ class Day18: Day() {
             }
             return
         }
-        for (key in keys.subList(0, min(3, keys.size))) {
+        for (key in keys) {
             val edge = cache1["$start$key"]!!
             val newLength = length + edge.length
             val newId = id + key
@@ -85,11 +85,7 @@ class Day18: Day() {
             }
             if (edge.doors.all { it.toLowerCase() in id } && edge.keys.none { it in keys }) {
                 val searchDoors = doors.filter { it != key.toUpperCase() }
-                val searchKeys = keys.filter { it != key }.sortedBy {
-                    val e = cache1["$key$it"]!!
-                    e.length + (e.doors.count { door -> door.toLowerCase() !in newId } * 1000)
-                }
-                getShortestPath(key, searchKeys, searchDoors, newLength, minLength, newId)
+                getShortestPath(key,  keys.filter { it != key }, searchDoors, newLength, minLength, newId)
             }
         }
     }
@@ -98,7 +94,7 @@ class Day18: Day() {
         if (keys.isEmpty()) {
             if (length < minLength[0]) {
                 minLength[0] = length
-                println("$length $id")
+                //println("$length $id")
             }
             return
         }
@@ -108,7 +104,7 @@ class Day18: Day() {
                 val newLength = length + edge.length
                 val newId = id + key
                 if (newLength >= minLength[0]) {
-                    if (keys.size == 1) print("$newLength ${newId}\r")
+                    //if (keys.size == 1) print("$newLength ${newId}\r")
                     continue
                 }
                 if (edge.doors.all { it.toLowerCase() in id } && edge.keys.none { it in keys }) {
