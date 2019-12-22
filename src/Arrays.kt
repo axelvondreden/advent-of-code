@@ -33,3 +33,13 @@ fun Array<CharArray>.find(c: Char): AStar.Node? {
     }
     return null
 }
+
+fun Array<CharArray>.print() {
+    println()
+    for (y in get(0).indices) {
+        for (x in indices) {
+            print(get(x)[y])
+        }
+        println()
+    }
+}
