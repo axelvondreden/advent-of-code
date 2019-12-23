@@ -6,9 +6,9 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sign
 
-typealias Neighbors = (Node) -> Set<Node>
+typealias Neighbors = (INode) -> Set<INode>
 
-private fun neighbors(current: Node) = setOf(
+private fun neighbors(current: INode) = setOf(
     Node(current.x - 1, current.y),
     Node(current.x + 1, current.y),
     Node(current.x, current.y - 1),
@@ -16,13 +16,13 @@ private fun neighbors(current: Node) = setOf(
 )
 
 class Pathfinder(val map: BooleanArray, private val width: Int, private val height: Int, private val neighborFunction: Neighbors = ::neighbors) {
-    private val fringe = PriorityQueue<Node> { o1, o2 -> sign(f(o1) - f(o2)).toInt() }
-    private val closed = hashSetOf<Node>()
+    private val fringe = PriorityQueue<INode> { o1, o2 -> sign(f(o1) - f(o2)).toInt() }
+    private val closed = hashSetOf<INode>()
 
     private val gCosts = Array(map.size) { 0.0 }
     private val fCosts = Array(map.size) { 0.0 }
 
-    fun searchAStar(start: Node, end: Node): List<Node> {
+    fun searchAStar(start: INode, end: INode): List<INode> {
         if (start == end) return listOf(start)
 
         g(start, 0.0)
@@ -46,11 +46,11 @@ class Pathfinder(val map: BooleanArray, private val width: Int, private val heig
         return emptyList()
     }
 
-    fun searchBFS(start: Node, end: Node): List<Node> {
-        val previous = hashMapOf<Node, Node>()
+    fun searchBFS(start: INode, end: INode): List<INode> {
+        val previous = hashMapOf<INode, INode>()
 
-        val queue = ArrayDeque<Node>()
-        val visited = hashSetOf<Node>()
+        val queue = ArrayDeque<INode>()
+        val visited = hashSetOf<INode>()
 
         queue.offer(start)
         visited.add(start)
@@ -76,23 +76,23 @@ class Pathfinder(val map: BooleanArray, private val width: Int, private val heig
 
     private fun index(x: Int, y: Int) = y * width + x
 
-    private fun f(node: Node) = fCosts[index(node.x, node.y)]
+    private fun f(node: INode) = fCosts[index(node.x, node.y)]
 
-    private fun f(node: Node, value: Double) {
+    private fun f(node: INode, value: Double) {
         fCosts[index(node.x, node.y)] = value
     }
 
-    private fun g(node: Node) = gCosts[index(node.x, node.y)]
+    private fun g(node: INode) = gCosts[index(node.x, node.y)]
 
-    private fun g(node: Node, value: Double) {
+    private fun g(node: INode, value: Double) {
         gCosts[index(node.x, node.y)] = value
     }
 
-    private fun bound(node: Node) = node.x >= 0 && node.y >= 0 && node.x < width && node.y < height
+    private fun bound(node: INode) = node.x >= 0 && node.y >= 0 && node.x < width && node.y < height
 
-    private fun blocked(node: Node) = map[index(node.x, node.y)]
+    private fun blocked(node: INode) = map[index(node.x, node.y)]
 
-    private fun reconstructFrom(current: Node): List<Node> {
+    private fun reconstructFrom(current: INode): List<INode> {
         val list = arrayListOf(current)
         var p = current.parent
         while (p != null) {
@@ -103,13 +103,9 @@ class Pathfinder(val map: BooleanArray, private val width: Int, private val heig
         return list
     }
 
-    private fun manhattan(node0: Node, node1: Node): Double {
-        val a = (max(node0.x, node1.x) - min(node0.x, node1.x)) + (max(node0.y, node1.y) - min(node0.y, node1.y)).toDouble()
-        println(a)
-        return a
-    }
+    private fun manhattan(node0: INode, node1: INode) = max(node0.x, node1.x) - min(node0.x, node1.x) + (max(node0.y, node1.y) - min(node0.y, node1.y)).toDouble()
 
-    fun printMap(path: List<Node>) {
+    fun printMap(path: List<INode>) {
         println()
         for (y in 0 until height) {
             for (x in 0 until width) {
@@ -120,7 +116,27 @@ class Pathfinder(val map: BooleanArray, private val width: Int, private val heig
         }
     }
 
-    data class Node(val x: Int, val y: Int) {
-        var parent: Node? = null
+    class Node(x: Int, y: Int) : INode(x, y)
+
+    abstract class INode(val x: Int, val y: Int) {
+        var parent: INode? = null
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as INode
+
+            if (x != other.x) return false
+            if (y != other.y) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = x
+            result = 31 * result + y
+            return result
+        }
     }
 }

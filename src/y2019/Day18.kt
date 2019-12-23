@@ -4,7 +4,7 @@ import pathfinding.Pathfinder
 import Day
 import Utils
 import find
-import toPathfiningMap
+import toPathfindingMap
 
 class Day18: Day() {
 
@@ -39,7 +39,7 @@ class Day18: Day() {
         for (start in keysWithRobot) {
             for (end in keys) {
                 if (start.node != end.node) {
-                    val path = Pathfinder(input.toPathfiningMap(), input.size, input[0].size)
+                    val path = Pathfinder(input.toPathfindingMap(), input.size, input[0].size)
                         .searchAStar(start.node, end.node)
                     if (path.isNotEmpty()) {
                         val k = keys.filter { it.c != start.c && it.c != end.c && it.node in path }.map { it.c }.toCharArray()
