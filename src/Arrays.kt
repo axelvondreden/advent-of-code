@@ -1,3 +1,5 @@
+import pathfinding.Pathfinder
+
 fun Array<BooleanArray>.on(p1: Point, p2: Point) =
     (p1.x..p2.x).forEach { x -> (p1.y..p2.y).forEach { y -> get(x)[y] = true } }
 
@@ -15,7 +17,7 @@ fun Array<IntArray>.dec(p1: Point, p2: Point, amount: Int) =
 
 fun Array<BooleanArray>.copy() = map { it.clone() }.toTypedArray()
 
-fun Array<CharArray>.toAstar(walls: Set<Char> = setOf('#')): BooleanArray {
+fun Array<CharArray>.toPathfiningMap(walls: Set<Char> = setOf('#')): BooleanArray {
     val arr = BooleanArray(size * get(0).size)
     for (y in get(0).indices) {
         for (x in indices) {
@@ -25,10 +27,10 @@ fun Array<CharArray>.toAstar(walls: Set<Char> = setOf('#')): BooleanArray {
     return arr
 }
 
-fun Array<CharArray>.find(c: Char): AStar.Node? {
+fun Array<CharArray>.find(c: Char): Pathfinder.Node? {
     for (y in get(0).indices) {
         for (x in indices) {
-            if (get(x)[y] == c) return AStar.Node(x, y)
+            if (get(x)[y] == c) return Pathfinder.Node(x, y)
         }
     }
     return null

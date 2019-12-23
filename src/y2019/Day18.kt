@@ -1,11 +1,10 @@
 package y2019
 
-import AStar
+import pathfinding.Pathfinder
 import Day
 import Utils
 import find
-import toAstar
-import java.lang.Integer.min
+import toPathfiningMap
 
 class Day18: Day() {
 
@@ -40,7 +39,8 @@ class Day18: Day() {
         for (start in keysWithRobot) {
             for (end in keys) {
                 if (start.node != end.node) {
-                    val path = AStar(input.toAstar(), input.size, input[0].size).search(start.node, end.node)
+                    val path = Pathfinder(input.toPathfiningMap(), input.size, input[0].size)
+                        .searchAStar(start.node, end.node)
                     if (path.isNotEmpty()) {
                         val k = keys.filter { it.c != start.c && it.c != end.c && it.node in path }.map { it.c }.toCharArray()
                         map["${start.c}${end.c}"] = Edge(path.size - 1, doors.filter { it.node in path }.map { it.c }.toCharArray(), k)
@@ -53,10 +53,6 @@ class Day18: Day() {
 
     override fun solve1(): Int {
         val min = intArrayOf(Int.MAX_VALUE)
-        val searchKeys = keys.map { it.c }.sortedBy {
-            val e = cache1["@$it"]!!
-            e.length + (e.doors.size * 1000)
-        }
         getShortestPath('@', keys.map { it.c }, doors.map { it.c }, 0, min, "")
         return min[0]
     }
@@ -117,7 +113,7 @@ class Day18: Day() {
 
     data class Edge(val length: Int, val doors: CharArray, val keys: CharArray)
 
-    data class Door(val c: Char, val node: AStar.Node)
+    data class Door(val c: Char, val node: Pathfinder.Node)
 
-    data class Key(val c: Char, val node: AStar.Node)
+    data class Key(val c: Char, val node: Pathfinder.Node)
 }
