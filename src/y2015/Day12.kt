@@ -2,16 +2,16 @@ package y2015
 
 import Day
 import Utils
-import jdk.nashorn.api.scripting.ScriptObjectMirror
-import jdk.nashorn.internal.runtime.JSONListAdapter
-import javax.script.ScriptEngineManager
+//import jdk.nashorn.api.scripting.ScriptObjectMirror
+//import jdk.nashorn.internal.runtime.JSONListAdapter
+//import javax.script.ScriptEngineManager
 
 class Day12 : Day() {
 
-    override val input =
-        ScriptEngineManager().getEngineByName("javascript").eval(
-            "Java.asJSONCompatible(${Utils.readString(2015, 12)})"
-        ) as Map<*, *>
+    override val input = 0
+        //ScriptEngineManager().getEngineByName("javascript").eval(
+        //    "Java.asJSONCompatible(${Utils.readString(2015, 12)})"
+        //) as Map<*, *>
 
     override fun solve1() = sum(input)
 
@@ -20,8 +20,8 @@ class Day12 : Day() {
     private fun sum(obj: Any): Int {
         return when (obj) {
             is Int -> obj
-            is JSONListAdapter -> obj.sumBy { sum(it) }
-            is ScriptObjectMirror -> obj.values.sumBy { sum(it) }
+            //is JSONListAdapter -> obj.sumBy { sum(it) }
+            //is ScriptObjectMirror -> obj.values.sumBy { sum(it) }
             else -> 0
         }
     }
@@ -29,8 +29,8 @@ class Day12 : Day() {
     private fun sumNotRed(obj: Any): Int {
         return when (obj) {
             is Int -> obj
-            is JSONListAdapter -> obj.sumBy { sumNotRed(it) }
-            is ScriptObjectMirror -> if (obj.values.any { it == "red" }) 0 else obj.values.sumBy { sumNotRed(it) }
+            //is JSONListAdapter -> obj.sumBy { sumNotRed(it) }
+            //is ScriptObjectMirror -> if (obj.values.any { it == "red" }) 0 else obj.values.sumBy { sumNotRed(it) }
             else -> 0
         }
     }
