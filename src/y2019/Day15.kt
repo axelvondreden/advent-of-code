@@ -33,13 +33,13 @@ class Day15 : Day() {
                     val d = reverseDir(target.second)
                     previousMove = d
                     triedLocation = location.move(d)
-                    output = input.addInput(d).run(false)
+                    output = input.addInput(d).run().value
                 }
             } else {
                 val selected = neighbors.first().first
                 triedLocation = location.move(selected)
                 previousMove = selected
-                output = input.addInput(selected).run(false)
+                output = input.addInput(selected).run().value
             }
 
             if (triedLocation in map) {

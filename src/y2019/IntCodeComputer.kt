@@ -1,6 +1,6 @@
 package y2019
 
-class IntCodeComputer(private var register: LongArray) {
+class IntCodeComputer(private var register: LongArray, private val outputZeroes: Boolean = true, private val haltAfterInput: Boolean = false) {
 
     private var pointer = 0
     private var inputs = longArrayOf()
@@ -23,7 +23,7 @@ class IntCodeComputer(private var register: LongArray) {
         return this
     }
 
-    fun run(ignoreReturn0: Boolean = true): Long {
+    fun run(): Reply {
         register = register.copyOf(99999)
         while (true) {
             var op = register[pointer]
@@ -43,16 +43,16 @@ class IntCodeComputer(private var register: LongArray) {
                 4 -> {
                     pointer += 2
                     if (modes[0] == 0) {
-                        if (register[register[pointer - 1].toInt()] > 0 || !ignoreReturn0) {
-                            return register[register[pointer - 1].toInt()]
+                        if (register[register[pointer - 1].toInt()] > 0 || outputZeroes) {
+                            return Reply(register[register[pointer - 1].toInt()])
                         }
                     } else if (modes[0] == 1) {
-                        if (register[pointer - 1] > 0 || !ignoreReturn0) {
-                            return register[pointer - 1]
+                        if (register[pointer - 1] > 0 || outputZeroes) {
+                            return Reply(register[pointer - 1])
                         }
                     } else {
-                        if (register[relativeBase + register[pointer - 1].toInt()] > 0 || !ignoreReturn0) {
-                            return register[relativeBase + register[pointer - 1].toInt()]
+                        if (register[relativeBase + register[pointer - 1].toInt()] > 0 || outputZeroes) {
+                            return Reply(register[relativeBase + register[pointer - 1].toInt()])
                         }
                     }
                 }
@@ -61,7 +61,10 @@ class IntCodeComputer(private var register: LongArray) {
                 7 -> lessThan(modes)
                 8 -> equal(modes)
                 9 -> adjustRelativeBase(modes)
-                99 -> return -999
+                99 -> return Reply(halted = true, hasOutput = false)
+            }
+            if (haltAfterInput && op.toInt() == 3) {
+                return Reply(hasOutput = false)
             }
         }
     }
@@ -135,4 +138,6 @@ class IntCodeComputer(private var register: LongArray) {
         setValue(modes[2], pointer + 3, result)
         pointer += 4
     }
+
+    data class Reply(val value: Long = 0L, val halted: Boolean = false, val hasOutput: Boolean = true)
 }

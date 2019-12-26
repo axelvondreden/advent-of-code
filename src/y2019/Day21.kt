@@ -17,12 +17,12 @@ class Day21 : Day() {
     fun run(instructions: LongArray): Int {
         val comp = IntCodeComputer(input.copyOf()).withInputs(instructions)
         val out = mutableListOf<Char>()
-        var o = comp.run(false)
+        var o = comp.run()
         var last = 0L
-        while (o != -999L) {
-            last = o
-            out.add(o.toChar())
-            o = comp.run(false)
+        while (!o.halted) {
+            last = o.value
+            out.add(o.value.toChar())
+            o = comp.run()
         }
         if (last >= 128) {
             return last.toInt()

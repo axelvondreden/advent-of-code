@@ -53,12 +53,12 @@ class Day11 : Day() {
         private val comp = IntCodeComputer(register)
 
         fun run(input: Long): Triple<Int, Int, Long> {
-            val color = comp.addInput(input).run(false)
+            val color = comp.addInput(input).run().value
             val output = Triple(x, y, color)
             if (color == -1L) {
                 throw Error("finished")
             }
-            when (comp.run(false)) {
+            when (comp.run().value) {
                 0L -> if (dir > 0) dir-- else dir = 3
                 1L -> if (dir < 3) dir++ else dir = 0
             }

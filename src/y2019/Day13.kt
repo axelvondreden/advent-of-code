@@ -11,13 +11,13 @@ class Day13 : Day() {
         val comp = IntCodeComputer(input.copyOf())
         val set = emptySet<Triple<Long, Long, Long>>().toMutableSet()
         while (true) {
-            val x = comp.run(false)
-            if (x == -999L) {
+            val x = comp.run()
+            if (x.halted) {
                 break
             }
-            val y = comp.run(false)
-            val type = comp.run(false)
-            set.add(Triple(x, y, type))
+            val y = comp.run()
+            val type = comp.run()
+            set.add(Triple(x.value, y.value, type.value))
         }
         return set.count { it.third == 2L }
     }
@@ -28,18 +28,18 @@ class Day13 : Day() {
         val comp2 = IntCodeComputer(input).withInputFunction { input(ballX, paddleX) }
         var score = 0L
         while (true) {
-            val x = comp2.run(false)
-            if (x == -1L) {
-                comp2.run(false)
-                score = comp2.run(false)
+            val x = comp2.run()
+            if (x.value == -1L) {
+                comp2.run()
+                score = comp2.run().value
                 continue
-            } else if (x == -999L) {
+            } else if (x.halted) {
                 break
             }
-            comp2.run(false)
-            when (comp2.run(false)) {
-                3L -> paddleX = x
-                4L -> ballX = x
+            comp2.run()
+            when (comp2.run().value) {
+                3L -> paddleX = x.value
+                4L -> ballX = x.value
             }
         }
         return score

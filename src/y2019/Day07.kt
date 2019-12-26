@@ -8,17 +8,17 @@ class Day07 : Day() {
     override val input = Utils.readLongArray(2019, 7)
 
     override fun solve1() = listOf(0L, 1, 2, 3, 4).toAmps().map {
-        it.map { Amplifier(input.copyOf(), it) }
+        it.map { Amplifier(input.copyOf(), it, false) }
     }.map { runAmplifiers(it) }.max()!!
 
     override fun solve2() = listOf(5L, 6, 7, 8, 9).toAmps().map {
-        it.map { Amplifier(input.copyOf(), it) }
+        it.map { Amplifier(input.copyOf(), it, true) }
     }.map { runAmplifiersFeedback(it) }.max()!!
 
     private fun runAmplifiers(amps: List<Amplifier>): Long {
         var input = 0L
         for (i in 0..4) {
-            input = amps[i].runRegister(input)
+            input = amps[i].runRegister(input).value
         }
         return input
     }
@@ -28,7 +28,7 @@ class Day07 : Day() {
         var i = 0
         var result = 0L
         do {
-            input = amps[i].runRegister(input, false)
+            input = amps[i].runRegister(input).value
             if (i < 4) {
                 i++
             } else {
@@ -51,10 +51,10 @@ class Day07 : Day() {
         else -> dropLast(size - index) + element + drop(index)
     }
 
-    class Amplifier(register: LongArray, phase: Long) {
+    class Amplifier(register: LongArray, phase: Long, outputZeroes: Boolean) {
 
-        private val comp = IntCodeComputer(register).addInput(phase)
+        private val comp = IntCodeComputer(register, outputZeroes = outputZeroes).addInput(phase)
 
-        fun runRegister(input: Long, ignoreReturn0: Boolean = true) = comp.addInput(input).run(ignoreReturn0)
+        fun runRegister(input: Long) = comp.addInput(input).run()
     }
 }

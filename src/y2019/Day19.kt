@@ -11,7 +11,7 @@ class Day19 : Day() {
         var count = 0
         for (y in 0L..49) {
             for (x in 0L..49) {
-                if (IntCodeComputer(input.copyOf()).addInput(x).addInput(y).run(false) == 1L) {
+                if (IntCodeComputer(input.copyOf()).addInput(x).addInput(y).run().value == 1L) {
                     count++
                 }
             }
@@ -23,7 +23,7 @@ class Day19 : Day() {
         val list = mutableListOf<Pair<Long, Long>>()
         var i = 0L
         while (true) {
-            (0..i).filter { IntCodeComputer(input.copyOf()).addInput(it).addInput(i).run(false) == 1L }
+            (0..i).filter { IntCodeComputer(input.copyOf()).addInput(it).addInput(i).run().value == 1L }
                 .forEach { list.add(Pair(it, i)) }
             val search = find(list)
             if (search > 0) {

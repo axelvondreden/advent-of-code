@@ -13,19 +13,19 @@ class Day17 : Day() {
         val map = mutableMapOf<Point, Char>()
         var x = 0
         var y = 0
-        var out = computer.run(false)
-        while (out != -999L) {
-            when (out) {
+        var out = computer.run()
+        while (!out.halted) {
+            when (out.value) {
                 10L -> {
                     x = 0
                     y++
                 }
                 else -> {
-                    map[Point(x, y)] = out.toChar()
+                    map[Point(x, y)] = out.value.toChar()
                     x++
                 }
             }
-            out = computer.run(false)
+            out = computer.run()
         }
 
         val intersections = map.filter {
@@ -49,11 +49,11 @@ class Day17 : Day() {
             mutableListOf<Long>().apply { addAll(main); addAll(a); addAll(b); addAll(c); add('n'.toLong()); add(10L) }
 
         val computer2 = IntCodeComputer(register).withInputs(list.toLongArray())
-        var out = computer2.run(false)
-        var lastOut = out
-        while (out != -999L) {
-            lastOut = out
-            out = computer2.run(false)
+        var out = computer2.run()
+        var lastOut = out.value
+        while (!out.halted) {
+            lastOut = out.value
+            out = computer2.run()
         }
         return lastOut
     }
