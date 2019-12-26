@@ -17,6 +17,8 @@ fun Array<IntArray>.dec(p1: Point, p2: Point, amount: Int) =
 
 fun Array<BooleanArray>.copy() = map { it.clone() }.toTypedArray()
 
+fun Array<CharArray>.copy() = map { it.clone() }.toTypedArray()
+
 fun Array<CharArray>.toPathfindingMap(walls: Set<Char> = setOf('#')): BooleanArray {
     val arr = BooleanArray(size * get(0).size)
     for (y in get(0).indices) {
