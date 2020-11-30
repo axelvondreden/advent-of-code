@@ -24,7 +24,6 @@ const val skipLongRunning = true
 const val runLatest = true
 
 fun main() {
-    println(System.getProperty("user.dir"))
     (2015..2019).forEach { if (runLatest) runLatest(it) else run(it) }
 }
 
