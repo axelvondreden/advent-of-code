@@ -24,7 +24,7 @@ const val skipLongRunning = true
 const val runLatest = true
 
 fun main() {
-    (2015..2019).forEach { if (runLatest) runLatest(it) else run(it) }
+    (2015..2020).forEach { if (runLatest) runLatest(it) else run(it) }
 }
 
 fun run(year: Int) {
