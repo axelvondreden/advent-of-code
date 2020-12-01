@@ -14,5 +14,12 @@ class Day01 : Day() {
         return 0
     }
 
-    override fun solve2() = 0
+    override fun solve2(): Int {
+        input.forEach { i1 ->
+            input.forEach { i2 ->
+                input.forEach { i3 -> if (i1 + i2 + i3 == 2020) return@solve2 i1 * i2 * i3}
+            }
+        }
+        return 0
+    }
 }
