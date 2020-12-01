@@ -1,48 +1,36 @@
 package y2016
 
 import Day
+import Utils
+
 
 class Day15 : Day() {
 
     override val input = Utils.readStrings(2016, 15)
 
-    override fun solve1(): Int {
-        var time = -1
-        var found = false
-        while (!found) {
-            time++
-            found = simulate(parseDisks(input), time)
-        }
-        return time
-    }
+    override fun solve1() = simulate(parseDisks(input))
 
-    override fun solve2(): Int {
-        return 0
-    }
-
-    private fun simulate(disks: List<Disk>, time: Int): Boolean {
-        disks.forEach { disk -> repeat(time) { disk.tick() } }
-        var position = 0
-        while (position < disks.size) {
-            position++
-            disks.forEach { it.tick() }
-            if (disks[position - 1].current != 0) return false
-        }
-        return true
-    }
+    override fun solve2() = simulate(parseDisks(input).plus(Disc(11, 0)))
 
     private fun parseDisks(input: List<String>) = input.map {
         val split = it.split(" ")
-        Disk(split[3].toInt(), split[11].dropLast(1).toInt())
+        Disc(split[3].toInt(), split[11].dropLast(1).toInt())
     }
 
-    class Disk(private val positions: Int, var current: Int) {
-
-        fun tick() {
-            current++
-            if (current == positions) {
-                current = 0
+    private fun simulate(discs: List<Disc>): Int {
+        var i = 0
+        main@
+        while (true) {
+            for (j in discs.indices) {
+                val d = discs[j]
+                if ((d.current + (i + j + 1)) % d.positions != 0) {
+                    i++
+                    continue@main
+                }
             }
+            return i
         }
     }
+
+    data class Disc(val positions: Int, val current: Int)
 }

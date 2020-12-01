@@ -28,7 +28,7 @@ fun main() {
 }
 
 fun run(year: Int) {
-    println("\n*** Year $year ***")
+    println("\n*** $year ***")
     (1..25).forEach {
         try {
             runDay(year, it)
@@ -38,6 +38,7 @@ fun run(year: Int) {
 }
 
 fun runLatest(year: Int) {
+    println("\n*** $year ***")
     (25 downTo 1).forEach {
         try {
             runDay(year, it)
