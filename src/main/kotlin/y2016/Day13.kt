@@ -3,8 +3,8 @@ package y2016
 import Day
 import Utils
 import pathfinding.Pathfinder
-import print
 import toPathfindingMap
+import kotlin.math.abs
 
 class Day13 : Day() {
 
@@ -29,7 +29,25 @@ class Day13 : Day() {
         return path.size + 1
     }
 
-    override fun solve2() = 0
+    override fun solve2(): Int {
+        val coords = mutableSetOf(startNode)
+        val pf = Pathfinder(map.toPathfindingMap(), mapSize, mapSize)
+        for (x in startNode.x - 50 until startNode.x + 51) {
+            for (y in startNode.y - 50 until startNode.y + 51) {
+                if (x >= 0 && y >= 0 && map[x][y] == '.') {
+                    val endNode = Pathfinder.Node(x, y)
+                    val path = pf.searchBFS(startNode, endNode)
+                    if (path.isEmpty() && abs(x - startNode.x) + abs(y - startNode.y) <= 1) {
+                        coords.add(endNode)
+                    }
+                    if (path.size in 1..49) {
+                        coords.add(endNode)
+                    }
+                }
+            }
+        }
+        return coords.size
+    }
 
     companion object {
         const val mapSize = 100
