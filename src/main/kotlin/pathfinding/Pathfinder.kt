@@ -9,10 +9,10 @@ import kotlin.math.sign
 typealias Neighbors = (INode) -> Set<INode>
 
 private fun neighbors(current: INode) = setOf(
-    Node(current.x - 1, current.y),
-    Node(current.x + 1, current.y),
-    Node(current.x, current.y - 1),
-    Node(current.x, current.y + 1)
+        Node(current.x - 1, current.y),
+        Node(current.x + 1, current.y),
+        Node(current.x, current.y - 1),
+        Node(current.x, current.y + 1)
 )
 
 class Pathfinder(val map: BooleanArray, private val width: Int, private val height: Int, private val neighborFunction: Neighbors = ::neighbors) {
@@ -67,10 +67,10 @@ class Pathfinder(val map: BooleanArray, private val width: Int, private val heig
         }
 
         val pathToStart =
-            generateSequence(previous[end]) { cell -> previous[cell] }
-                .takeWhile { cell -> cell != start }
-                .toList()
-                .ifEmpty { return emptyList() }
+                generateSequence(previous[end]) { cell -> previous[cell] }
+                        .takeWhile { cell -> cell != start }
+                        .toList()
+                        .ifEmpty { return emptyList() }
         return pathToStart.reversed()
     }
 
@@ -109,7 +109,7 @@ class Pathfinder(val map: BooleanArray, private val width: Int, private val heig
         println()
         for (y in 0 until height) {
             for (x in 0 until width) {
-                if (path.contains(Node(x, y))) print('*')
+                if (path.contains(Node(x, y))) print("\u001B[32m*\u001B[0m")
                 else print(if (map[y * width + x]) '#' else ' ')
             }
             println()
