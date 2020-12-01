@@ -10,11 +10,21 @@ class Day12 : Day() {
     private var index = 0
 
     override fun solve1(): Int {
+        initRegister()
         run()
         return registers["a"]!!
     }
 
-    override fun solve2() = "MISSING"
+    override fun solve2(): Int {
+        initRegister()
+        registers["c"] = 1
+        run()
+        return registers["a"]!!
+    }
+
+    private fun initRegister() {
+        registers.keys.forEach { registers[it] = 0 }
+    }
 
     private fun run() {
         index = 0
