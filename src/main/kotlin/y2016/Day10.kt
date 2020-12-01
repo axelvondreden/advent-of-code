@@ -17,7 +17,8 @@ class Day10 : Day() {
 
     override fun solve1() = part1BotNr!!
 
-    override fun solve2() = 0
+    override fun solve2() = outputs.first { it.nr == 0 }.values.first() *
+            outputs.first { it.nr == 1 }.values.first() * outputs.first { it.nr == 2 }.values.first()
 
     private fun parseOutputs(): Set<Output> {
         val outputs = mutableSetOf<Output>()
@@ -75,7 +76,7 @@ class Day10 : Day() {
     }
 
     abstract class Target(val nr: Int) {
-        protected val values = mutableSetOf<Int>()
+        val values = mutableSetOf<Int>()
 
         abstract fun addValue(value: Int)
 
