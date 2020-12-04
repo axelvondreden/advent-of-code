@@ -47,3 +47,13 @@ fun Array<CharArray>.print() {
         println()
     }
 }
+
+fun Array<IntArray>.print() {
+    println()
+    for (y in get(0).indices) {
+        for (x in indices) {
+            print(get(x)[y])
+        }
+        println()
+    }
+}

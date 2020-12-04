@@ -4,50 +4,19 @@ import Day
 
 class Day12 : Day() {
 
-    override val input = Utils.readStrings(2016, 12)
+    override val input = Utils.readStrings(2016, 12).toMutableList()
 
-    private val registers = mutableMapOf("a" to 0, "b" to 0, "c" to 0, "d" to 0)
-    private var index = 0
+    private val register = mutableMapOf("a" to 0, "b" to 0, "c" to 0, "d" to 0)
 
     override fun solve1(): Int {
-        initRegister()
-        run()
-        return registers["a"]!!
+        val register = mutableMapOf("a" to 0, "b" to 0, "c" to 0, "d" to 0)
+        Assembunny(register).run(input)
+        return register["a"]!!
     }
 
     override fun solve2(): Int {
-        initRegister()
-        registers["c"] = 1
-        run()
-        return registers["a"]!!
-    }
-
-    private fun initRegister() {
-        registers.keys.forEach { registers[it] = 0 }
-    }
-
-    private fun run() {
-        index = 0
-        while (index < input.size) {
-            val split = input[index].split(" ")
-            val cmd = split[0]
-            val arg1 = split[1]
-            val arg2 = split.getOrNull(2)
-            when (cmd) {
-                "cpy" -> {
-                    registers[arg2!!] = arg1.toIntOrNull() ?: registers[arg1]!!
-                    index++
-                }
-                "inc" -> {
-                    registers[arg1] = registers[arg1]!! + 1
-                    index++
-                }
-                "dec" -> {
-                    registers[arg1] = registers[arg1]!! - 1
-                    index++
-                }
-                "jnz" -> if (arg1.toIntOrNull() ?: registers[arg1]!! != 0) index += arg2!!.toInt() else index++
-            }
-        }
+        val register = mutableMapOf("a" to 0, "b" to 0, "c" to 1, "d" to 0)
+        Assembunny(register).run(input)
+        return register["a"]!!
     }
 }

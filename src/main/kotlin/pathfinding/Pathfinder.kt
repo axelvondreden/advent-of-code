@@ -23,6 +23,10 @@ class Pathfinder(val map: BooleanArray, private val width: Int, private val heig
     private val fCosts = Array(map.size) { 0.0 }
 
     fun searchAStar(start: INode, end: INode): List<INode> {
+        fringe.clear()
+        closed.clear()
+        gCosts.fill(0.0)
+        fCosts.fill(0.0)
         if (start == end) return listOf(start)
 
         g(start, 0.0)
