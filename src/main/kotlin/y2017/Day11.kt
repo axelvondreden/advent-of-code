@@ -1,0 +1,44 @@
+package y2017
+
+import Day
+import java.lang.RuntimeException
+import kotlin.math.absoluteValue
+
+class Day11 : Day() {
+
+    override val input = Utils.readString(2017, 11).split(",")
+
+    override fun solve1() = input.fold(Hex(0, 0, 0)) { spot, dir -> spot.move(dir.toHexDir()) }.distance(Hex(0, 0, 0))
+
+    override fun solve2() = input.fold(listOf(Hex(0, 0, 0))) { path, dir -> path + (path.last().move(dir.toHexDir())) }
+        .map { it.distance(Hex(0, 0, 0)) }
+        .maxOrNull()!!
+
+    private fun String.toHexDir() = when (this) {
+        "n" -> HexDir.N
+        "ne" -> HexDir.NE
+        "se" -> HexDir.SE
+        "s" -> HexDir.S
+        "sw" -> HexDir.SW
+        "nw" -> HexDir.NW
+        else -> throw RuntimeException("oh no!")
+    }
+
+    data class Hex(val x: Int, val y: Int, val z: Int) {
+        fun move(direction: HexDir) = when (direction) {
+            HexDir.N -> Hex(x, y + 1, z - 1)
+            HexDir.NE -> Hex(x + 1, y, z - 1)
+            HexDir.SE -> Hex(x + 1, y - 1, z)
+            HexDir.S -> Hex(x, y - 1, z + 1)
+            HexDir.SW -> Hex(x - 1, y, z + 1)
+            HexDir.NW -> Hex(x - 1, y + 1, z)
+        }
+
+        fun distance(target: Hex) =
+            maxOf((x - target.x).absoluteValue, (y - target.y).absoluteValue, (z - target.z).absoluteValue)
+    }
+
+    enum class HexDir {
+        N, S, NE, NW, SE, SW
+    }
+}
