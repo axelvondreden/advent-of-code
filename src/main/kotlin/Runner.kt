@@ -57,7 +57,7 @@ fun runDay(year: Int, day: Int) {
     var sumTime = 0.0
     var d: Day?
     val constTime = measureNanoTime {
-        d = Class.forName("y$year.Day${day.toString().padStart(2, '0')}")?.newInstance() as Day
+        d = Class.forName("y$year.Day${day.toString().padStart(2, '0')}")?.getDeclaredConstructor()?.newInstance() as Day
     } / 1000000000.0
     sumTime += constTime
     println("Year $year Day $day:")
