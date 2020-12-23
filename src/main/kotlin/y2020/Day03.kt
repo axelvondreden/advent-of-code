@@ -20,7 +20,7 @@ class Day03 : Day() {
             if (input[position.x % input.size][position.y] == '#') {
                 trees++
             }
-            position = position.plus(right, down)
+            position += Point(right, down)
         }
         return trees
     }

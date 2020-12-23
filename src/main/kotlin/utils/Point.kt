@@ -9,5 +9,5 @@ data class Point(val x: Int, val y: Int) {
 
     fun distance(step: Point): Int = (max(x, step.x) - min(x, step.x)) + (max(y, step.y) - min(y, step.y))
 
-    fun plus(x: Int, y: Int) = Point(this.x + x, this.y + y)
+    operator fun plus(p: Point) = Point(this.x + p.x, this.y + p.y)
 }

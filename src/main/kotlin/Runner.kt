@@ -54,14 +54,20 @@ fun runLatest(year: Int) {
 }
 
 fun runDay(year: Int, day: Int) {
-    val d = Class.forName("y$year.Day${day.toString().padStart(2, '0')}")?.newInstance() as Day
-    println("\nYear $year Day $day:")
+    var sumTime = 0.0
+    var d: Day?
+    val constTime = measureNanoTime {
+        d = Class.forName("y$year.Day${day.toString().padStart(2, '0')}")?.newInstance() as Day
+    } / 1000000000.0
+    sumTime += constTime
+    println("Year $year Day $day:")
 
     print("\tPart 1: ")
     if (skipLongRunning && year to day to 1 in longRunning) {
         println("${ANSI_RED}SKIPPED$ANSI_RESET")
     } else {
-        val time = measureNanoTime { print(d.solve1()) } / 1000000000.0
+        val time = measureNanoTime { print(d?.solve1()) } / 1000000000.0
+        sumTime += time
         val color = if (time <= 1) ANSI_GREEN else ANSI_RED
         println(" [$color${"%.6f".format(time)} s$ANSI_RESET] ")
     }
@@ -70,8 +76,12 @@ fun runDay(year: Int, day: Int) {
     if (skipLongRunning && year to day to 2 in longRunning) {
         println("${ANSI_RED}SKIPPED$ANSI_RESET")
     } else {
-        val time = measureNanoTime { print(d.solve2()) } / 1000000000.0
+        val time = measureNanoTime { print(d?.solve2()) } / 1000000000.0
+        sumTime += time
         val color = if (time <= 1) ANSI_GREEN else ANSI_RED
         println(" [$color${"%.6f".format(time)} s$ANSI_RESET] ")
     }
+    val color = if (sumTime <= 1) ANSI_GREEN else ANSI_RED
+    println("Sum: [$color${"%.6f".format(sumTime)} s$ANSI_RESET]")
+    println("-".repeat(40))
 }

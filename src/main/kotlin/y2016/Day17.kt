@@ -26,10 +26,10 @@ class Day17 : Day() {
             return
         }
         val hash = (input + path).md5().substring(0, 4)
-        if (hash[0].isOpen() && current.y > 0) testWalk(current.plus(0, -1), path + "U", finishes)
-        if (hash[1].isOpen() && current.y < 3) testWalk(current.plus(0, 1), path + "D", finishes)
-        if (hash[2].isOpen() && current.x > 0) testWalk(current.plus(-1, 0), path + "L", finishes)
-        if (hash[3].isOpen() && current.x < 3) testWalk(current.plus(1, 0), path + "R", finishes)
+        if (hash[0].isOpen() && current.y > 0) testWalk(current + Point(0, -1), path + "U", finishes)
+        if (hash[1].isOpen() && current.y < 3) testWalk(current + Point(0, 1), path + "D", finishes)
+        if (hash[2].isOpen() && current.x > 0) testWalk(current + Point(-1, 0), path + "L", finishes)
+        if (hash[3].isOpen() && current.x < 3) testWalk(current + Point(1, 0), path + "R", finishes)
     }
 
     private fun Char.isOpen() = this in listOf('b', 'c', 'd', 'e', 'f')

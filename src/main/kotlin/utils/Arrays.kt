@@ -60,6 +60,16 @@ fun Array<IntArray>.print() {
     }
 }
 
+fun Array<BooleanArray>.print() {
+    println()
+    for (y in get(0).indices) {
+        for (x in indices) {
+            print(if (get(x)[y]) '#' else '.')
+        }
+        println()
+    }
+}
+
 fun Array<CharArray>.deepEquals(other: Array<CharArray>): Boolean {
     indices.forEach { y -> get(0).indices.forEach { x -> if (get(y)[x] != other[y][x]) return false } }
     return true
