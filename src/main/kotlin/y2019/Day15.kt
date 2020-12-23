@@ -1,14 +1,14 @@
 package y2019
 
 import Day
-import Utils
+import utils.IO
 import java.util.*
 import kotlin.Comparator
 import kotlin.math.abs
 
 class Day15 : Day() {
 
-    override val input = IntCodeComputer(Utils.readLongArray(2019, 15))
+    override val input = IntCodeComputer(IO.readLongArray(2019, 15))
 
     private var pathLength = 0
     private var oxyCounter = 0L

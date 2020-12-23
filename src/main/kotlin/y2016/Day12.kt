@@ -1,10 +1,11 @@
 package y2016
 
 import Day
+import utils.IO
 
 class Day12 : Day() {
 
-    override val input = Utils.readStrings(2016, 12).toMutableList()
+    override val input = IO.readStrings(2016, 12).toMutableList()
 
     private val register = mutableMapOf("a" to 0, "b" to 0, "c" to 0, "d" to 0)
 

@@ -1,11 +1,11 @@
 package y2017
 
 import Day
-import Utils
+import utils.IO
 
 class Day13 : Day() {
 
-    override val input = Utils.readStrings(2017, 13)
+    override val input = IO.readStrings(2017, 13)
 
     override fun solve1() = input.toLayers().filter { it.caughtAtTime(0) }.sumBy { it.severity }
 

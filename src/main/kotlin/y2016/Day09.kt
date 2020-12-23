@@ -1,10 +1,11 @@
 package y2016
 
 import Day
+import utils.IO
 
 class Day09 : Day() {
 
-    override val input = Utils.readString(2016, 9)
+    override val input = IO.readString(2016, 9)
 
     override fun solve1() = input.decodeCount()
 

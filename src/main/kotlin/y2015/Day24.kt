@@ -1,12 +1,12 @@
 package y2015
 
 import Day
-import Utils
-import product
+import utils.IO
+import utils.product
 
 class Day24 : Day() {
 
-    override val input = Utils.readInts(2015, 24).map { it.toLong() }
+    override val input = IO.readInts(2015, 24).map { it.toLong() }
 
     override fun solve1(): Long {
         for (i in 1..input.size) {

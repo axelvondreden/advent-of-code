@@ -1,11 +1,11 @@
 package y2015
 
 import Day
-import Utils
+import utils.IO
 
 class Day01 : Day() {
 
-    override val input = Utils.readString(2015, 1)
+    override val input = IO.readString(2015, 1)
 
     override fun solve1() = input.count { it == '(' } - input.count { it == ')' }
 

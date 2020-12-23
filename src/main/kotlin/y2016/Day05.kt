@@ -1,7 +1,7 @@
 package y2016
 
 import Day
-import md5
+import utils.md5
 
 class Day05 : Day() {
 

@@ -1,13 +1,13 @@
 package y2017
 
 import Day
-import Utils
+import utils.IO
 import java.lang.RuntimeException
 import kotlin.math.max
 
 class Day08 : Day() {
 
-    override val input = Utils.readStrings(2017, 8).map {
+    override val input = IO.readStrings(2017, 8).map {
         val split = it.split(" ")
         Instruction(split[0], split[1], split[2].toInt(), Condition(split[4], split[5].toOp(), split[6].toInt()))
     }
@@ -47,8 +47,8 @@ class Day08 : Day() {
     data class Instruction(val target: String, val op: String, val arg: Int, val condition: Condition) {
         fun execute(register: MutableMap<String, Int>) {
             when (op) {
-                "inc" -> register[target] = register.getOrPut(target) { 0 } + arg
-                "dec" -> register[target] = register.getOrPut(target) { 0 } - arg
+                "utils.inc" -> register[target] = register.getOrPut(target) { 0 } + arg
+                "utils.dec" -> register[target] = register.getOrPut(target) { 0 } - arg
             }
         }
     }

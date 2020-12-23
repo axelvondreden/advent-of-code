@@ -1,14 +1,14 @@
 package y2016
 
 import Day
-import Utils
+import utils.IO
 import pathfinding.Pathfinder
-import toPathfindingMap
+import utils.toPathfindingMap
 import kotlin.math.abs
 
 class Day13 : Day() {
 
-    override val input = Utils.readString(2016, 13).toInt()
+    override val input = IO.readString(2016, 13).toInt()
 
     val map = generateMap(mapSize)
 

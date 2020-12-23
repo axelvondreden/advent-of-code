@@ -1,9 +1,11 @@
+package utils
+
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths
 import kotlin.streams.toList
 
-object Utils {
+object IO {
     fun readInts(year: Int, day: Int): List<Int> {
         try {
             Files.lines(Paths.get("src/main/resources/$year/day${day.toString().padStart(2, '0')}.txt")).use { return it.map(String::toInt).toList<Int>() }
@@ -64,18 +66,5 @@ object Utils {
             e.printStackTrace()
             return LongArray(0)
         }
-    }
-
-    fun <T> permute(list: List<T>): List<List<T>> {
-        if (list.size == 1) return listOf(list)
-        val perms = mutableListOf<List<T>>()
-        val sub = list[0]
-        for (perm in permute(list.drop(1)))
-            for (i in 0..perm.size) {
-                val newPerm = perm.toMutableList()
-                newPerm.add(i, sub)
-                perms.add(newPerm)
-            }
-        return perms
     }
 }

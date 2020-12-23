@@ -1,11 +1,12 @@
 package y2016
 
 import Day
-import md5
+import utils.IO
+import utils.md5
 
 class Day14 : Day() {
 
-    override val input = Utils.readString(2016, 14)
+    override val input = IO.readString(2016, 14)
 
     private val cache = mutableMapOf<Int, String>()
 

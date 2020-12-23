@@ -1,11 +1,11 @@
 package y2019
 
 import Day
-import Utils
+import utils.IO
 
 class Day06 : Day() {
 
-    override val input = Utils.readStrings(2019, 6).map { it.split(")") }
+    override val input = IO.readStrings(2019, 6).map { it.split(")") }
 
     val map = mutableMapOf<String, ArrayList<String>>()
 

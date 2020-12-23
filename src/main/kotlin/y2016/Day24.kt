@@ -1,22 +1,23 @@
 package y2016
 
 import Day
-import Utils
+import utils.IO
 import pathfinding.Pathfinder
-import toPathfindingMap
+import utils.permute
+import utils.toPathfindingMap
 import kotlin.math.min
 
 
 class Day24 : Day() {
 
-    override val input = Utils.readCharMatrix(2016, 24)
+    override val input = IO.readCharMatrix(2016, 24)
 
     override fun solve1(): Int {
         val pf = Pathfinder(input.toPathfindingMap(), input.size, input[0].size)
         val points = input.flatMapIndexed { x, chars ->
             chars.mapIndexed { y, c -> if (c.isDigit() && c != '0') Pathfinder.Node(x, y) else null }
         }.filterNotNull()
-        val pointPerms = Utils.permute(points)
+        val pointPerms = points.permute()
         var minLength = Int.MAX_VALUE
         val start = input.flatMapIndexed { x, chars ->
             chars.mapIndexed { y, c -> if (c == '0') Pathfinder.Node(x, y) else null }
@@ -37,7 +38,7 @@ class Day24 : Day() {
         val points = input.flatMapIndexed { x, chars ->
             chars.mapIndexed { y, c -> if (c.isDigit() && c != '0') Pathfinder.Node(x, y) else null }
         }.filterNotNull()
-        val pointPerms = Utils.permute(points)
+        val pointPerms = points.permute()
         var minLength = Int.MAX_VALUE
         val start = input.flatMapIndexed { x, chars ->
             chars.mapIndexed { y, c -> if (c == '0') Pathfinder.Node(x, y) else null }

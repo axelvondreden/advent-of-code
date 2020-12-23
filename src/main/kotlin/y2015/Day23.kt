@@ -1,11 +1,11 @@
 package y2015
 
 import Day
-import Utils
+import utils.IO
 
 class Day23 : Day() {
 
-    override val input = Utils.readStrings(2015, 23).map { it.replace(",", "") }
+    override val input = IO.readStrings(2015, 23).map { it.replace(",", "") }
 
     var index = 0
 
@@ -38,7 +38,7 @@ class Day23 : Day() {
                 register[inst[1]] = register[inst[1]]!! * 3
                 index++
             }
-            "inc" -> {
+            "utils.inc" -> {
                 register[inst[1]] = register[inst[1]]!! + 1
                 index++
             }

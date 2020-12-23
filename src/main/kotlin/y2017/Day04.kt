@@ -1,14 +1,11 @@
 package y2017
 
 import Day
-import Point
-import Utils
-import sqrt
-import kotlin.math.max
+import utils.IO
 
 class Day04 : Day() {
 
-    override val input = Utils.readStrings(2017, 4)
+    override val input = IO.readStrings(2017, 4)
 
     override fun solve1() = input.count {
         val split = it.split(" ")

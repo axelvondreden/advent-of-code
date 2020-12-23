@@ -1,11 +1,11 @@
 package y2019
 
 import Day
-import Utils
+import utils.IO
 
 class Day13 : Day() {
 
-    override val input = Utils.readLongArray(2019, 13)
+    override val input = IO.readLongArray(2019, 13)
 
     override fun solve1(): Int {
         val comp = IntCodeComputer(input.copyOf())

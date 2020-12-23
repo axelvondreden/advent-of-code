@@ -10,7 +10,7 @@ class Day12 : Day() {
 
     override val input = 0
         //ScriptEngineManager().getEngineByName("javascript").eval(
-        //    "Java.asJSONCompatible(${Utils.readString(2015, 12)})"
+        //    "Java.asJSONCompatible(${utils.Utils.readString(2015, 12)})"
         //) as Map<*, *>
 
     override fun solve1() = sum(input)

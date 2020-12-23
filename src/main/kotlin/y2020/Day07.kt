@@ -1,11 +1,11 @@
 package y2020
 
 import Day
-import Utils
+import utils.IO
 
 class Day07 : Day() {
 
-    override val input = parseBags(Utils.readStrings(2020, 7))
+    override val input = parseBags(IO.readStrings(2020, 7))
 
     override fun solve1() = input.keys.count { it.canHoldColor("shiny gold") }
 

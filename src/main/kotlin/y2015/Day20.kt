@@ -1,7 +1,7 @@
 package y2015
 
 import Day
-import getAllDivisors
+import utils.getAllDivisors
 
 class Day20 : Day() {
 

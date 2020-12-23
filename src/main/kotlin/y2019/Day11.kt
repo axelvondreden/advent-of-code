@@ -1,12 +1,12 @@
 package y2019
 
 import Day
-import Point
-import Utils
+import utils.Point
+import utils.IO
 
 class Day11 : Day() {
 
-    override val input = Utils.readLongArray(2019, 11)
+    override val input = IO.readLongArray(2019, 11)
 
     override fun solve1(): Int {
         val robot = HullRobot(input.copyOf())

@@ -1,13 +1,13 @@
 package y2015
 
 import Day
-import Utils
+import utils.IO
 
 @ExperimentalUnsignedTypes
 @Suppress("EXPERIMENTAL_UNSIGNED_LITERALS")
 class Day07 : Day() {
 
-    override val input = Utils.readStrings(2015, 7).map { it.split(" -> ") }
+    override val input = IO.readStrings(2015, 7).map { it.split(" -> ") }
 
     private val firstA = buildWires(input).getValue("a").get()
 

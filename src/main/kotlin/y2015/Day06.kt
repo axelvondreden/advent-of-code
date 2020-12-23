@@ -1,17 +1,11 @@
 package y2015
 
 import Day
-import Point
-import Utils
-import dec
-import inc
-import off
-import on
-import toggle
+import utils.*
 
 class Day06 : Day() {
 
-    override val input = Utils.readStrings(2015, 6)
+    override val input = IO.readStrings(2015, 6)
         .map { it.replace("turn ", "").replace("through ", "").split(" ") }
 
     override fun solve1(): Int {
@@ -20,7 +14,7 @@ class Day06 : Day() {
             when (line[0]) {
                 "on" -> bGrid.on(Point(line[1]), Point(line[2]))
                 "off" -> bGrid.off(Point(line[1]), Point(line[2]))
-                "toggle" -> bGrid.toggle(Point(line[1]), Point(line[2]))
+                "utils.toggle" -> bGrid.toggle(Point(line[1]), Point(line[2]))
             }
         }
         return bGrid.sumBy { booleans -> booleans.count { it } }
@@ -32,7 +26,7 @@ class Day06 : Day() {
             when (line[0]) {
                 "on" -> iGrid.inc(Point(line[1]), Point(line[2]), 1)
                 "off" -> iGrid.dec(Point(line[1]), Point(line[2]), 1)
-                "toggle" -> iGrid.inc(Point(line[1]), Point(line[2]), 2)
+                "utils.toggle" -> iGrid.inc(Point(line[1]), Point(line[2]), 2)
             }
         }
         return iGrid.sumBy { ints -> ints.sum() }

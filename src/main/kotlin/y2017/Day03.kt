@@ -1,14 +1,14 @@
 package y2017
 
 import Day
-import Point
-import Utils
-import sqrt
+import utils.Point
+import utils.IO
+import utils.sqrt
 import kotlin.math.max
 
 class Day03 : Day() {
 
-    override val input = Utils.readString(2017, 3).toInt()
+    override val input = IO.readString(2017, 3).toInt()
 
     override fun solve1(): Int {
         var maxWidth = input.sqrt() + 1

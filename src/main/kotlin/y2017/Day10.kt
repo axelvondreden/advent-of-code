@@ -1,10 +1,11 @@
 package y2017
 
 import Day
+import utils.IO
 
 class Day10 : Day() {
 
-    override val input = Utils.readString(2017, 10)
+    override val input = IO.readString(2017, 10)
 
     override fun solve1(): Int {
         var list = (0..255).toList()

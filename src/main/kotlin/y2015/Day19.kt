@@ -1,11 +1,11 @@
 package y2015
 
 import Day
-import Utils
+import utils.IO
 
 class Day19 : Day() {
 
-    override val input = Utils.readStrings(2015, 19).map {
+    override val input = IO.readStrings(2015, 19).map {
         Replacement(
             it.split(" => ")[0],
             it.split(" => ")[1]

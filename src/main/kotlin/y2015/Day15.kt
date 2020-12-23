@@ -1,12 +1,12 @@
 package y2015
 
 import Day
-import Utils
+import utils.IO
 import kotlin.math.max
 
 class Day15 : Day() {
 
-    override val input = Utils.readStrings(2015, 15).map {
+    override val input = IO.readStrings(2015, 15).map {
         val split = it.split(", ")
         Ingredient(
             split[0].split(":")[0], split[0].split(" ")[2].toInt(), split[1].split(" ")[1].toInt(),

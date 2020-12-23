@@ -1,0 +1,117 @@
+package y2020
+
+import Day
+import utils.IO
+
+class Day17 : Day() {
+
+    override val input = IO.readCharMatrix(2020, 17)
+
+    override fun solve1(): Int {
+        var cubes = parseCubes(input)
+        repeat(6) {
+            cubes = cubes.step()
+        }
+        return cubes.size
+    }
+
+    override fun solve2(): Int {
+        var cubes = parseHyperCubes(input)
+        repeat(6) {
+            cubes = cubes.step()
+        }
+        return cubes.size
+    }
+
+    private fun Set<Cube>.step(): Set<Cube> {
+        val xRange = (minByOrNull { it.x }!!.x - 1)..(maxByOrNull { it.x }!!.x + 1)
+        val yRange = (minByOrNull { it.y }!!.y - 1)..(maxByOrNull { it.y }!!.y + 1)
+        val zRange = (minByOrNull { it.z }!!.z - 1)..(maxByOrNull { it.z }!!.z + 1)
+        val new = mutableSetOf<Cube>()
+        xRange.forEach { x ->
+            yRange.forEach { y ->
+                zRange.forEach { z ->
+                    val cube = Cube(x, y, z)
+                    val neighbours = countNeighbours(cube)
+                    if (cube in this) {
+                        if (neighbours in 2..3) {
+                            new.add(cube)
+                        }
+                    } else if (neighbours == 3) {
+                        new.add(cube)
+                    }
+                }
+            }
+        }
+        return new
+    }
+
+    @JvmName("stepHyperCube")
+    private fun Set<HyperCube>.step(): Set<HyperCube> {
+        val xRange = (minByOrNull { it.x }!!.x - 1)..(maxByOrNull { it.x }!!.x + 1)
+        val yRange = (minByOrNull { it.y }!!.y - 1)..(maxByOrNull { it.y }!!.y + 1)
+        val zRange = (minByOrNull { it.z }!!.z - 1)..(maxByOrNull { it.z }!!.z + 1)
+        val wRange = (minByOrNull { it.w }!!.w - 1)..(maxByOrNull { it.w }!!.w + 1)
+        val new = mutableSetOf<HyperCube>()
+        xRange.forEach { x ->
+            yRange.forEach { y ->
+                zRange.forEach { z ->
+                    wRange.forEach { w ->
+                        val cube = HyperCube(x, y, z, w)
+                        val neighbours = countNeighbours(cube)
+                        if (cube in this) {
+                            if (neighbours in 2..3) {
+                                new.add(cube)
+                            }
+                        } else if (neighbours == 3) {
+                            new.add(cube)
+                        }
+                    }
+                }
+            }
+        }
+        return new
+    }
+
+    private fun Set<Cube>.countNeighbours(cube: Cube): Int {
+        var count = 0
+        for (x in (cube.x - 1)..(cube.x + 1)) {
+            for (y in (cube.y - 1)..(cube.y + 1)) {
+                for (z in (cube.z - 1)..(cube.z + 1)) {
+                    if ((x != cube.x || y != cube.y || z != cube.z) && Cube(x, y, z) in this) {
+                        count++
+                    }
+                }
+            }
+        }
+        return count
+    }
+
+    private fun Set<HyperCube>.countNeighbours(cube: HyperCube): Int {
+        var count = 0
+        for (x in (cube.x - 1)..(cube.x + 1)) {
+            for (y in (cube.y - 1)..(cube.y + 1)) {
+                for (z in (cube.z - 1)..(cube.z + 1)) {
+                    for (w in (cube.w - 1)..(cube.w + 1)) {
+                        if ((x != cube.x || y != cube.y || z != cube.z || w != cube.w) && HyperCube(x, y, z, w) in this) {
+                            count++
+                        }
+                    }
+                }
+            }
+        }
+        return count
+    }
+
+    private fun parseCubes(input: Array<CharArray>) = input.withIndex().flatMap { x ->
+        input[x.index].withIndex().filter { it.value == '#' }.map { y -> Cube(x.index, y.index, 0) }
+    }.toSet()
+
+    private fun parseHyperCubes(input: Array<CharArray>) = input.withIndex().flatMap { x ->
+        input[x.index].withIndex().filter { it.value == '#' }.map { y -> HyperCube(x.index, y.index, 0, 0) }
+    }.toSet()
+
+    data class Cube(val x: Int, val y: Int, val z: Int)
+
+    data class HyperCube(val x: Int, val y: Int, val z: Int, val w: Int)
+}

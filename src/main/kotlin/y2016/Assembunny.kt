@@ -16,11 +16,11 @@ class Assembunny(private val register: MutableMap<String, Int>) {
                     register[arg2!!] = arg1.toIntOrNull() ?: register[arg1]!!
                     index++
                 }
-                "inc" -> {
+                "utils.inc" -> {
                     register[arg1] = register[arg1]!! + 1
                     index++
                 }
-                "dec" -> {
+                "utils.dec" -> {
                     register[arg1] = register[arg1]!! - 1
                     index++
                 }
@@ -44,11 +44,11 @@ class Assembunny(private val register: MutableMap<String, Int>) {
     }
 
     private fun String.toggle() = when (this) {
-        "inc" -> "dec"
-        "dec" -> "inc"
+        "utils.inc" -> "utils.dec"
+        "utils.dec" -> "utils.inc"
         "jnz" -> "cpy"
         "cpy" -> "jnz"
-        "tgl" -> "inc"
+        "tgl" -> "utils.inc"
         else -> throw RuntimeException("oh no!")
     }
 }

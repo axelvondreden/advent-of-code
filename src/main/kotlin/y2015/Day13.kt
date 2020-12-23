@@ -1,11 +1,12 @@
 package y2015
 
 import Day
-import Utils
+import utils.IO
+import utils.permute
 
 class Day13 : Day() {
 
-    override val input = Utils.readStrings(2015, 13).map { it.dropLast(1).split(" ") }
+    override val input = IO.readStrings(2015, 13).map { it.dropLast(1).split(" ") }
 
     private val happinessMap = input.map { Pair(it[0], it[10]) to it[3].toInt() * if (it[2] == "gain") 1 else -1 }.toMap().toMutableMap()
 
@@ -21,7 +22,7 @@ class Day13 : Day() {
 
     private fun getMaxHappiness(map: Map<Pair<String, String>, Int>): Int {
         val dudes = map.keys.map { it.first }.distinct()
-        val allCombos = Utils.permute(dudes)
+        val allCombos = dudes.permute()
         return allCombos.map { combo ->
             (1 until combo.size).sumBy { map.getValue(Pair(combo[it], combo[it - 1])) + map.getValue(Pair(combo[it - 1], combo[it])) }
             + map.getValue(Pair(combo.first(), combo.last())) + map.getValue(Pair(combo.last(), combo.first()))

@@ -1,3 +1,5 @@
+package utils
+
 import pathfinding.Pathfinder
 
 fun Array<BooleanArray>.on(p1: Point, p2: Point) =
@@ -56,4 +58,9 @@ fun Array<IntArray>.print() {
         }
         println()
     }
+}
+
+fun Array<CharArray>.deepEquals(other: Array<CharArray>): Boolean {
+    indices.forEach { y -> get(0).indices.forEach { x -> if (get(y)[x] != other[y][x]) return false } }
+    return true
 }

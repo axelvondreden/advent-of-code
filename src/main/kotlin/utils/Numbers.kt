@@ -1,3 +1,5 @@
+package utils
+
 import kotlin.math.roundToInt
 
 fun Int.getAllDivisors(divisors: MutableSet<Int>) {
@@ -21,4 +23,12 @@ fun Int.gcd(other: Int): Int {
         if (n1 > n2) n1 -= n2 else n2 -= n1
     }
     return n1
+}
+
+inline fun <T> Iterable<T>.sumByLong(selector: (T) -> Long): Long {
+    var sum = 0L
+    for (element in this) {
+        sum += selector(element)
+    }
+    return sum
 }

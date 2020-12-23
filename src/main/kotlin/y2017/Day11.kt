@@ -1,12 +1,13 @@
 package y2017
 
 import Day
+import utils.IO
 import java.lang.RuntimeException
 import kotlin.math.absoluteValue
 
 class Day11 : Day() {
 
-    override val input = Utils.readString(2017, 11).split(",")
+    override val input = IO.readString(2017, 11).split(",")
 
     override fun solve1() = input.fold(Hex(0, 0, 0)) { spot, dir -> spot.move(dir.toHexDir()) }.distance(Hex(0, 0, 0))
 

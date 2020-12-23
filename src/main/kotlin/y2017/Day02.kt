@@ -1,11 +1,11 @@
 package y2017
 
 import Day
-import Utils
+import utils.IO
 
 class Day02 : Day() {
 
-    override val input = Utils.readStrings(2017, 2)
+    override val input = IO.readStrings(2017, 2)
 
     override fun solve1() = input.sumBy { rowChecksum(it) }
 

@@ -1,11 +1,11 @@
 package y2015
 
 import Day
-import Utils
+import utils.IO
 
 class Day08 : Day() {
 
-    override val input = Utils.readStrings(2015, 8)
+    override val input = IO.readStrings(2015, 8)
 
     override fun solve1() = input.sumBy {
         it.length - (it.replace(Regex("\\\\\""), "a")

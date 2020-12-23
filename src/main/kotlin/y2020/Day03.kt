@@ -1,12 +1,12 @@
 package y2020
 
 import Day
-import Point
-import Utils
+import utils.Point
+import utils.IO
 
 class Day03 : Day() {
 
-    override val input = Utils.readCharMatrix(2020, 3)
+    override val input = IO.readCharMatrix(2020, 3)
 
     override fun solve1() = countTrees(3, 1)
 

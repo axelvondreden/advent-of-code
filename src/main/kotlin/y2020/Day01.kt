@@ -1,11 +1,11 @@
 package y2020
 
 import Day
-import Utils
+import utils.IO
 
 class Day01 : Day() {
 
-    override val input = Utils.readInts(2020, 1)
+    override val input = IO.readInts(2020, 1)
 
     override fun solve1(): Int {
         input.forEach { i1 ->

@@ -1,11 +1,11 @@
 package y2020
 
 import Day
-import Utils
+import utils.IO
 
 class Day04 : Day() {
 
-    override val input = Utils.readStrings(2020, 4)
+    override val input = IO.readStrings(2020, 4)
 
     private val passportStrings = parsePassportStrings()
 

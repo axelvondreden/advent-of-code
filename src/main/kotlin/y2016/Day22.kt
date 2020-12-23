@@ -1,13 +1,13 @@
 package y2016
 
 import Day
-import Utils
+import utils.IO
 import kotlin.math.abs
 
 
 class Day22 : Day() {
 
-    override val input = Utils.readStrings(2016, 22).drop(2).map {
+    override val input = IO.readStrings(2016, 22).drop(2).map {
         val split = it.split(Regex("\\s+"))
         val positionSplit = split[0].split("-")
         val x = positionSplit[1].drop(1).toInt()

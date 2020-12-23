@@ -1,15 +1,15 @@
 package y2019
 
 import Day
-import Point
-import Utils
-import gcd
+import utils.Point
+import utils.IO
+import utils.gcd
 import kotlin.math.abs
 import kotlin.math.atan2
 
 class Day10 : Day() {
 
-    override val input = Utils.readCharMatrix(2019, 10)
+    override val input = IO.readCharMatrix(2019, 10)
 
     private var station = Point(0, 0)
 

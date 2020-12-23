@@ -1,14 +1,15 @@
 package y2015
 
 import Day
-import Utils
+import utils.IO
+import utils.permute
 
 class Day09 : Day() {
 
     private val locations = mutableListOf<Location>()
     private val distances = mutableListOf<Distance>()
 
-    override val input = Utils.readStrings(2015, 9).map { it.split(" ") }
+    override val input = IO.readStrings(2015, 9).map { it.split(" ") }
 
     init {
         for (entry in input) {
@@ -21,7 +22,7 @@ class Day09 : Day() {
     }
 
     private val nav = Navigation(distances)
-    private val allRoutes = Utils.permute(locations.distinct())
+    private val allRoutes = locations.distinct().permute()
 
     override fun solve1() = nav.getLength(allRoutes.filter { nav.isPathPossible(it.toTypedArray()) }.minByOrNull { nav.getLength(it.toTypedArray()) }!!.toTypedArray())
 

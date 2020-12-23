@@ -1,13 +1,13 @@
 package y2019
 
 import Day
-import Utils
+import utils.IO
 import kotlin.math.max
 import kotlin.math.min
 
 class Day03 : Day() {
 
-    override val input = Utils.readStrings(2019, 3)
+    override val input = IO.readStrings(2019, 3)
 
     private val steps1 = getSteps(input[0].split(","))
     private val steps2 = getSteps(input[1].split(","))

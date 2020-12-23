@@ -1,11 +1,11 @@
 package y2019
 
 import Day
-import Utils
+import utils.IO
 
 class Day23 : Day() {
 
-    override val input = Utils.readLongArray(2019, 23)
+    override val input = IO.readLongArray(2019, 23)
 
     private val comps = mutableMapOf<Int, IntCodeComputer>()
     private val inputBuffer = mutableMapOf<Int, MutableList<Long>>()
