@@ -2,7 +2,6 @@ package y2020
 
 import Day
 import utils.IO
-import java.lang.RuntimeException
 import kotlin.math.absoluteValue
 
 
@@ -10,24 +9,69 @@ class Day24 : Day() {
 
     override val input = parseInput(IO.readStrings(2020, 24))
 
+    private val tiles = mutableMapOf<Pair<Int, Int>, Boolean>()
+
     override fun solve1(): Int {
-        val tiles = mutableListOf(Hex(0, 0, 0))
         input.forEach { path ->
-            var tile = Hex(0, 0, 0)
-            path.forEach {
-                var new = tile.move(it)
-                if (new !in tiles) {
-                    tiles.add(new)
-                }
-                new = tiles[tiles.indexOf(new)]
-                new.white = !new.white
-                tile = new
-            }
+            val tile = path.fold(0 to 0) { current, dir -> current.move(dir) }
+            tiles[tile] = if (tile !in tiles) false else !(tiles[tile]!!)
         }
-        return tiles.count { !it.white }
+        return tiles.values.count { !it }
     }
 
-    override fun solve2() = 0
+    override fun solve2(): Int {
+        var tiles = this.tiles.toMap()
+        repeat(100) {
+            tiles = tiles.flip()
+        }
+        return tiles.values.count { !it }
+    }
+
+    private fun Pair<Int, Int>.move(direction: HexDir) = when (direction) {
+        HexDir.E -> if (second.absoluteValue % 2 == 1) first + 1 to second else first + 1 to second
+        HexDir.NE -> if (second.absoluteValue % 2 == 1) first + 1 to second - 1 else first to second - 1
+        HexDir.SE -> if (second.absoluteValue % 2 == 1) first + 1 to second + 1 else first to second + 1
+        HexDir.W -> if (second.absoluteValue % 2 == 1) first - 1 to second else first - 1 to second
+        HexDir.SW -> if (second.absoluteValue % 2 == 1) first to second + 1 else first - 1 to second + 1
+        HexDir.NW -> if (second.absoluteValue % 2 == 1) first to second - 1 else first - 1 to second - 1
+    }
+
+    private fun Map<Pair<Int, Int>, Boolean>.flip(): Map<Pair<Int, Int>, Boolean> {
+        val new = mutableMapOf<Pair<Int, Int>, Boolean>()
+        val blacks = filter { !it.value }
+        blacks.forEach { (tile, white) ->
+            if (tile !in new) {
+                new[tile] = this.getNextSide(tile, white)
+            }
+            val neighbours = getNeighbours(tile)
+            neighbours.forEach { (nTile, nWhite) ->
+                if (nTile !in new) {
+                    new[nTile] = this.getNextSide(nTile, nWhite)
+                }
+            }
+        }
+        return new
+    }
+
+    private fun Map<Pair<Int, Int>, Boolean>.getNextSide(tile: Pair<Int, Int>, white: Boolean): Boolean {
+        val count = countBlackNeighbours(tile)
+        return when {
+            white && count == 2 -> false
+            !white && (count == 0 || count > 2) -> true
+            else -> white
+        }
+    }
+
+    private fun Map<Pair<Int, Int>, Boolean>.getNeighbours(tile: Pair<Int, Int>) = listOf(
+        tile.move(HexDir.E),
+        tile.move(HexDir.W),
+        tile.move(HexDir.NE),
+        tile.move(HexDir.SE),
+        tile.move(HexDir.NW),
+        tile.move(HexDir.SW)
+    ).map { it to getOrDefault(it, true) }.toMap()
+
+    private fun Map<Pair<Int, Int>, Boolean>.countBlackNeighbours(tile: Pair<Int, Int>) = getNeighbours(tile).values.count { !it }
 
     private fun parseInput(input: List<String>): List<List<HexDir>> {
         val paths = mutableListOf<List<HexDir>>()
@@ -50,38 +94,6 @@ class Day24 : Day() {
             paths += path
         }
         return paths
-    }
-
-    data class Hex(val x: Int, val y: Int, val z: Int, var white: Boolean = true) {
-        fun move(direction: HexDir) = when (direction) {
-            HexDir.E -> Hex(x + 1, y + 1, z - 1)
-            HexDir.NE -> Hex(x + 1, y, z - 1)
-            HexDir.SE -> Hex(x + 1, y - 1, z)
-            HexDir.W -> Hex(x, y - 1, z + 1)
-            HexDir.SW -> Hex(x - 1, y, z + 1)
-            HexDir.NW -> Hex(x - 1, y + 1, z)
-        }
-
-        fun distance(target: Hex) =
-            maxOf((x - target.x).absoluteValue, (y - target.y).absoluteValue, (z - target.z).absoluteValue)
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (javaClass != other?.javaClass) return false
-
-            other as Hex
-            if (x != other.x) return false
-            if (y != other.y) return false
-            if (z != other.z) return false
-            return true
-        }
-
-        override fun hashCode(): Int {
-            var result = x
-            result = 31 * result + y
-            result = 31 * result + z
-            return result
-        }
     }
 
     enum class HexDir {
