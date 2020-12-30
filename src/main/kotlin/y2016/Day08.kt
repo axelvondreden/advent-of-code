@@ -1,12 +1,11 @@
 package y2016
 
 import Day
-import utils.IO
 import utils.copy
 
-class Day08 : Day() {
+class Day08 : Day(2016, 8) {
 
-    override val input = IO.readStrings(2016, 8).map { it.split(" ") }
+    override val input = readStrings().map { it.split(" ") }
 
     private val screen = Array(50) { BooleanArray(6) }
 

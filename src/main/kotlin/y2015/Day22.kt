@@ -1,11 +1,11 @@
 package y2015
 
 import Day
-import y2015.day22.*
+import kotlin.math.max
 
-class Day22 : Day() {
+class Day22 : Day(2015, 22) {
 
-    override val input = Pair(58, 9)
+    override val input = with(readStrings().map { it.split(": ")[1].toInt() }) { get(0) to get(1) }
 
     override fun solve1(): Int {
         val v = intArrayOf(999999)
@@ -78,5 +78,127 @@ class Day22 : Day() {
             list.add(Shield)
         }
         return list
+    }
+
+    private class Wizard {
+
+        var hp = 50
+        var mana = 500
+        var arm = 0
+        var activeEffects = mutableListOf<Effect>()
+
+        fun addEffect(effect: Effect) {
+            activeEffects.add(effect)
+        }
+
+        fun defend(dmg: Int) {
+            hp -= max(dmg - arm, 1)
+            if (hp <= 0) {
+                error("Wizard dead")
+            }
+        }
+
+        fun turn(boss: Boss) {
+            activeEffects.forEach { it.trigger(this, boss) }
+            activeEffects.removeIf { it.left == 0 }
+        }
+
+        fun copy(): Wizard {
+            val wizard = Wizard()
+            wizard.hp = hp
+            wizard.mana = mana
+            wizard.arm = arm
+            wizard.activeEffects = activeEffects.map { it.copy() }.toMutableList()
+            return wizard
+        }
+    }
+
+    private class Boss(private var hp: Int, val dmg: Int) {
+
+        fun defend(dmg: Int) {
+            hp -= max(dmg, 1)
+            if (hp <= 0) {
+                error("Boss dead")
+            }
+        }
+
+        fun copy() = Boss(hp, dmg)
+    }
+
+    private abstract class Spell {
+        abstract val cost: Int
+
+        abstract fun cast(wizard: Wizard, boss: Boss)
+    }
+
+    private object Drain: Spell() {
+        override var cost = 73
+        override fun cast(wizard: Wizard, boss: Boss) {
+            wizard.mana -= cost
+            wizard.hp += 2
+            boss.defend(2)
+        }
+    }
+
+    private object MagicMissile: Spell() {
+        override var cost = 53
+        override fun cast(wizard: Wizard, boss: Boss) {
+            wizard.mana -= cost
+            boss.defend(4)
+        }
+    }
+
+    private object Poison: Spell() {
+        override var cost = 173
+        override fun cast(wizard: Wizard, boss: Boss) {
+            wizard.mana -= cost
+            wizard.addEffect(Effect("Poison",  6) { _, b, c ->
+                run {
+                    if (c > 0) {
+                        b.defend(3)
+                    }
+                }
+            })
+        }
+    }
+
+    private object Recharge: Spell() {
+        override var cost = 229
+        override fun cast(wizard: Wizard, boss: Boss) {
+            wizard.mana -= cost
+            wizard.addEffect(Effect("Recharge", 5) { w, _, c ->
+                run {
+                    if (c > 0) {
+                        w.mana += 101
+                    }
+                }
+            })
+        }
+    }
+
+    private object Shield: Spell() {
+        override var cost = 113
+        override fun cast(wizard: Wizard, boss: Boss) {
+            wizard.mana -= cost
+            wizard.addEffect(Effect("Shield", 6) { w, _, c ->
+                run {
+                    if (c == 6) {
+                        w.arm += 7
+                    } else if (c == 1) {
+                        w.arm -= 7
+                    }
+                }
+            })
+        }
+    }
+
+    private class Effect(var name: String, var left: Int, private val effect: (Wizard, Boss, Int) -> Unit) {
+
+        fun trigger(w: Wizard, b: Boss) {
+            effect.invoke(w, b, left)
+            left--
+        }
+
+        fun copy() = Effect(name, left, this.effect)
     }
 }

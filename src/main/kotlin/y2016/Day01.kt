@@ -2,12 +2,11 @@ package y2016
 
 import Day
 import utils.Point
-import utils.IO
 import kotlin.math.abs
 
-class Day01 : Day() {
+class Day01 : Day(2016, 1) {
 
-    override val input = IO.readString(2016, 1).split(", ")
+    override val input = readString().split(", ")
 
     override fun solve1(): Int {
         var x = 0

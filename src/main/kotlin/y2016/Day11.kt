@@ -1,12 +1,11 @@
 package y2016
 
 import Day
-import utils.IO
 import kotlin.math.abs
 
-class Day11 : Day() {
+class Day11 : Day(2016, 11) {
 
-    override val input = IO.readStrings(2016, 11)
+    override val input = readStrings()
 
     override fun solve1(): String = input.collectState().calculateState().toString()
 

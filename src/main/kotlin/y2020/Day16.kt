@@ -1,12 +1,11 @@
 package y2020
 
 import Day
-import utils.IO
 
 
-class Day16 : Day() {
+class Day16 : Day(2020, 16) {
 
-    override val input = IO.readStrings(2020, 16)
+    override val input = readStrings()
 
     private val rules = input.takeWhile { it.isNotBlank() }.map { line ->
         val lineSplit = line.split(": ")

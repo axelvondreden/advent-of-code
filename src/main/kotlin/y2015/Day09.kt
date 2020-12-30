@@ -1,15 +1,14 @@
 package y2015
 
 import Day
-import utils.IO
 import utils.permute
 
-class Day09 : Day() {
+class Day09 : Day(2015, 9) {
 
     private val locations = mutableListOf<Location>()
     private val distances = mutableListOf<Distance>()
 
-    override val input = IO.readStrings(2015, 9).map { it.split(" ") }
+    override val input = readStrings().map { it.split(" ") }
 
     init {
         for (entry in input) {

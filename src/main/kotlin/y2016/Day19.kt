@@ -1,12 +1,11 @@
 package y2016
 
 import Day
-import utils.IO
 
 
-class Day19 : Day() {
+class Day19 : Day(2016, 19) {
 
-    override val input = IO.readString(2016, 19).toInt()
+    override val input = readString().toInt()
 
     override fun solve1(): Int {
         val map = Array(input) { Elf(it + 1, 1) }

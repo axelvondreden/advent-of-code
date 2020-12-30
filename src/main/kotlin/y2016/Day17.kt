@@ -2,13 +2,12 @@ package y2016
 
 import Day
 import utils.Point
-import utils.IO
 import utils.md5
 
 
-class Day17 : Day() {
+class Day17 : Day(2016, 17) {
 
-    override val input = IO.readString(2016, 17)
+    override val input = readString()
 
     private val pathList = mutableSetOf<String>()
 

@@ -1,11 +1,10 @@
 package y2016
 
 import Day
-import utils.IO
 
-class Day07 : Day() {
+class Day07 : Day(2016, 7) {
 
-    override val input = IO.readStrings(2016, 7)
+    override val input = readStrings()
 
     override fun solve1() = input.filter { it.supportsTLS() }.count()
 

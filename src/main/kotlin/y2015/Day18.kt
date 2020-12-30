@@ -1,12 +1,11 @@
 package y2015
 
 import Day
-import utils.IO
 import utils.copy
 
-class Day18 : Day() {
+class Day18 : Day(2015, 18) {
 
-    override val input = IO.readCharMatrix(2015, 18).map { chars -> chars.map { it == '#' }.toBooleanArray() }.toTypedArray()
+    override val input = readCharMatrix().map { chars -> chars.map { it == '#' }.toBooleanArray() }.toTypedArray()
 
     override fun solve1(): Int {
         var map = input.copy()

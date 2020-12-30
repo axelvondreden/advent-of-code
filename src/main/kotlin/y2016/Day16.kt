@@ -1,12 +1,11 @@
 package y2016
 
 import Day
-import utils.IO
 
 
-class Day16 : Day() {
+class Day16 : Day(2016, 16) {
 
-    override val input = IO.readString(2016, 16)
+    override val input = readString()
 
     override fun solve1(): String {
         var string = input

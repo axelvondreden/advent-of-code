@@ -2,11 +2,10 @@ package y2015
 
 import Day
 import utils.Point
-import utils.IO
 
-class Day17 : Day() {
+class Day17 : Day(2015, 17) {
 
-    override val input = IO.readStrings(2015, 17).mapIndexed { index, nr -> Point(index, nr.toInt()) }
+    override val input = readStrings().mapIndexed { index, nr -> Point(index, nr.toInt()) }
 
     private val combinations = mutableListOf<List<Point>>()
 

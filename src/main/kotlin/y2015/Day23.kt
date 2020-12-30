@@ -1,11 +1,10 @@
 package y2015
 
 import Day
-import utils.IO
 
-class Day23 : Day() {
+class Day23 : Day(2015, 23) {
 
-    override val input = IO.readStrings(2015, 23).map { it.replace(",", "") }
+    override val input = readStrings().map { it.replace(",", "") }
 
     var index = 0
 

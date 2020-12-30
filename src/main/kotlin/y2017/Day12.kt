@@ -1,11 +1,10 @@
 package y2017
 
 import Day
-import utils.IO
 
-class Day12 : Day() {
+class Day12 : Day(2017, 12) {
 
-    override val input = parsePrograms(IO.readStrings(2017, 12))
+    override val input = parsePrograms(readStrings())
 
     override fun solve1(): Int {
         val output = mutableSetOf<Program>()

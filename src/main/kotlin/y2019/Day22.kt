@@ -1,13 +1,12 @@
 package y2019
 
 import Day
-import utils.IO
 import java.math.BigInteger
 import kotlin.math.abs
 
-class Day22 : Day() {
+class Day22 : Day(2019, 22) {
 
-    override val input = IO.readStrings(2019, 22)
+    override val input = readStrings()
 
     override fun solve1() = solve(2019, 10007, 1)
 

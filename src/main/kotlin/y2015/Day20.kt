@@ -3,9 +3,9 @@ package y2015
 import Day
 import utils.getAllDivisors
 
-class Day20 : Day() {
+class Day20 : Day(2015, 20) {
 
-    override val input = 36000000
+    override val input = readString().toInt()
 
     override fun solve1(): Int {
         var houseNumber = 1

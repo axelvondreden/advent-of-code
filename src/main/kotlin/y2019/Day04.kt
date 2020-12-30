@@ -2,9 +2,9 @@ package y2019
 
 import Day
 
-class Day04 : Day() {
+class Day04 : Day(2019, 4) {
 
-    override val input = (108457..562041)
+    override val input = with(readString().split("-").map { it.toInt() }) { get(0)..get(1) }
 
     override fun solve1() = input.filter { it.toString().checkDouble() && it.toString().checkIncreasing() }.count()
 

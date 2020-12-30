@@ -1,12 +1,11 @@
 package y2016
 
 import Day
-import utils.IO
 
 
-class Day20 : Day() {
+class Day20 : Day(2016, 20) {
 
-    override val input = IO.readStrings(2016, 20).map {
+    override val input = readStrings().map {
         val split = it.split("-")
         LongRange(split[0].toLong(), split[1].toLong())
     }.sortedBy { it.first }

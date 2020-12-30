@@ -1,11 +1,10 @@
 package y2020
 
 import Day
-import utils.IO
 
-class Day02 : Day() {
+class Day02 : Day(2020, 2) {
 
-    override val input = IO.readStrings(2020, 2).map {
+    override val input = readStrings().map {
         val split = it.split(":")
         val range = split[0].split(" ")[0].split("-")
         Password(range[0].toInt()..range[1].toInt(), split[0].split(" ")[1][0], split[1].trim())

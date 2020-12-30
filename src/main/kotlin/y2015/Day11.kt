@@ -2,9 +2,9 @@ package y2015
 
 import Day
 
-class Day11 : Day() {
+class Day11 : Day(2015, 11) {
 
-    override val input = "vzbxkghb"
+    override val input = readString()
 
     private var nextPw: String? = null
 

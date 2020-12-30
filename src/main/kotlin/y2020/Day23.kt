@@ -1,12 +1,11 @@
 package y2020
 
 import Day
-import utils.IO
 
 
-class Day23 : Day() {
+class Day23 : Day(2020, 23) {
 
-    override val input = IO.readString(2020, 23)
+    override val input = readString()
 
     override fun solve1() = Cups(input).allMoves(100).toString()
 

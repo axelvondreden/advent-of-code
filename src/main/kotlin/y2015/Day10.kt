@@ -3,9 +3,9 @@ package y2015
 import Day
 
 
-class Day10 : Day() {
+class Day10 : Day(2015, 10) {
 
-    override val input = "1113222113"
+    override val input = readString()
 
     override fun solve1(): Int {
         var value = input

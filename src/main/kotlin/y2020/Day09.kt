@@ -1,11 +1,10 @@
 package y2020
 
 import Day
-import utils.IO
 
-class Day09 : Day() {
+class Day09 : Day(2020, 9) {
 
-    override val input = IO.readStrings(2020, 9).map { it.toLong() }
+    override val input = readStrings().map { it.toLong() }
 
     private var wrongNumber = 0L
 

@@ -1,12 +1,11 @@
 package y2016
 
 import Day
-import utils.IO
 
 
-class Day15 : Day() {
+class Day15 : Day(2016,  15) {
 
-    override val input = IO.readStrings(2016, 15)
+    override val input = readStrings()
 
     override fun solve1() = simulate(parseDisks(input))
 

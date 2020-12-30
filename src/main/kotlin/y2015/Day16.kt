@@ -1,11 +1,10 @@
 package y2015
 
 import Day
-import utils.IO
 
-class Day16 : Day() {
+class Day16 : Day(2015, 16) {
 
-    override val input = IO.readStrings(2015, 16).map { it.removePrefix("Sue ") }
+    override val input = readStrings().map { it.removePrefix("Sue ") }
 
     private val searchValues = mutableMapOf(
         "children" to 3,

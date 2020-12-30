@@ -1,11 +1,10 @@
 package y2019
 
 import Day
-import utils.IO
 
-class Day16 : Day() {
+class Day16 : Day(2019, 16) {
 
-    override val input = IO.readString(2019, 16).map { it.toString().toInt() }.toIntArray()
+    override val input = readString().map { it.toString().toInt() }.toIntArray()
 
     override fun solve1(): String {
         var txt = input.copyOf()

@@ -6,7 +6,7 @@ import Day
 //import jdk.nashorn.internal.runtime.JSONListAdapter
 //import javax.script.ScriptEngineManager
 
-class Day12 : Day() {
+class Day12 : Day(2015, 12) {
 
     override val input = 0
         //ScriptEngineManager().getEngineByName("javascript").eval(

@@ -1,12 +1,11 @@
 package y2020
 
 import Day
-import utils.IO
 
 
-class Day19 : Day() {
+class Day19 : Day(2020, 19) {
 
-    override val input = IO.readStrings(2020, 19)
+    override val input = readStrings()
 
     private val rules = input.takeWhile { it.isNotBlank() }.map(::parseRules).toMap().toSortedMap()
     private val messages = input.subList(input.indexOf("") + 1, input.size)

@@ -1,11 +1,10 @@
 package y2015
 
 import Day
-import utils.IO
 
-class Day01 : Day() {
+class Day01 : Day(2015, 1) {
 
-    override val input = IO.readString(2015, 1)
+    override val input = readString()
 
     override fun solve1() = input.count { it == '(' } - input.count { it == ')' }
 
@@ -16,9 +15,7 @@ class Day01 : Day() {
                 '(' -> floor++
                 ')' -> floor--
             }
-            if (floor < 0) {
-                return index + 1
-            }
+            if (floor < 0) return index + 1
         }
         return 0
     }

@@ -1,12 +1,11 @@
 package y2019
 
 import Day
-import utils.IO
 import kotlin.math.absoluteValue
 
-class Day12 : Day() {
+class Day12 : Day(2019, 12) {
 
-    override val input = IO.readStrings(2019, 12).map { it.drop(1).dropLast(1).split(", ") }
+    override val input = readStrings().map { it.drop(1).dropLast(1).split(", ") }
 
     override fun solve1(): Int {
         val planets = input.map {

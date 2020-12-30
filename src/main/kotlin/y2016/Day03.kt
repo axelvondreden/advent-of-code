@@ -1,11 +1,10 @@
 package y2016
 
 import Day
-import utils.IO
 
-class Day03 : Day() {
+class Day03 : Day(2016, 3) {
 
-    override val input = IO.readStrings(2016, 3).map { it.split(" ").map(String::toInt) }
+    override val input = readStrings().map { it.split(" ").map(String::toInt) }
 
     override fun solve1() = input.map { it.sorted() }.count { it[0] + it[1] > it[2] }
 

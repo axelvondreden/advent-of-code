@@ -1,11 +1,10 @@
 package y2019
 
 import Day
-import utils.IO
 
-class Day07 : Day() {
+class Day07 : Day(2019, 7) {
 
-    override val input = IO.readLongArray(2019, 7)
+    override val input = readLongArray()
 
     override fun solve1() = listOf(0L, 1, 2, 3, 4).toAmps().map { list ->
         list.map { Amplifier(input.copyOf(), it, false) }

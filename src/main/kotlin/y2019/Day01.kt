@@ -1,11 +1,10 @@
 package y2019
 
 import Day
-import utils.IO
 
-class Day01 : Day() {
+class Day01 : Day(2019, 1) {
 
-    override val input = IO.readStrings(2019, 1)
+    override val input = readStrings()
 
     override fun solve1() = input.map { (it.toInt() / 3) - 2 }.sum()
 

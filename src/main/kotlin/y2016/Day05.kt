@@ -3,9 +3,9 @@ package y2016
 import Day
 import utils.md5
 
-class Day05 : Day() {
+class Day05 : Day(2016, 5) {
 
-    override val input = "reyedfim"
+    override val input = readString()
 
     override fun solve1(): String {
         var password = ""

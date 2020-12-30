@@ -1,16 +1,15 @@
 package y2016
 
 import Day
-import utils.IO
 import pathfinding.Pathfinder
 import utils.permute
 import utils.toPathfindingMap
 import kotlin.math.min
 
 
-class Day24 : Day() {
+class Day24 : Day(2016, 24) {
 
-    override val input = IO.readCharMatrix(2016, 24)
+    override val input = readCharMatrix()
 
     override fun solve1(): Int {
         val pf = Pathfinder(input.toPathfindingMap(), input.size, input[0].size)

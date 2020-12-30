@@ -1,13 +1,12 @@
 package y2020
 
 import Day
-import utils.IO
 import kotlin.math.absoluteValue
 
 
-class Day24 : Day() {
+class Day24 : Day(2020, 24) {
 
-    override val input = parseInput(IO.readStrings(2020, 24))
+    override val input = parseInput(readStrings())
 
     private val tiles = mutableMapOf<Pair<Int, Int>, Boolean>()
 

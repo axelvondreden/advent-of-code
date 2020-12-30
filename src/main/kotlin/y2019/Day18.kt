@@ -1,14 +1,13 @@
 package y2019
 
-import pathfinding.Pathfinder
 import Day
-import utils.IO
+import pathfinding.Pathfinder
 import utils.find
 import utils.toPathfindingMap
 
-class Day18: Day() {
+class Day18: Day(2019, 18) {
 
-    override val input = IO.readCharMatrix(2019, 18)
+    override val input = readCharMatrix()
 
     private val keys = ('a'..'z').mapNotNull { input.find(it)?.let { node -> Key(it, node) } }
     private val doors = ('A'..'Z').mapNotNull { input.find(it)?.let { node -> Door(it, node) } }

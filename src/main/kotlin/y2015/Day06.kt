@@ -3,9 +3,9 @@ package y2015
 import Day
 import utils.*
 
-class Day06 : Day() {
+class Day06 : Day(2015, 6) {
 
-    override val input = IO.readStrings(2015, 6)
+    override val input = readStrings()
         .map { it.replace("turn ", "").replace("through ", "").split(" ") }
 
     override fun solve1(): Int {

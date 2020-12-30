@@ -1,13 +1,12 @@
 package y2019
 
 import Day
-import utils.IO
 import utils.copy
 import kotlin.math.pow
 
-class Day24 : Day() {
+class Day24 : Day(2019, 24) {
 
-    override val input = IO.readCharMatrix(2019, 24)
+    override val input = readCharMatrix()
 
     override fun solve1(): Int {
         val states = mutableSetOf(input.toFlatString())

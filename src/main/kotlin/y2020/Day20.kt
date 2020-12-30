@@ -1,14 +1,13 @@
 package y2020
 
 import Day
-import utils.IO
 import utils.Point
 import utils.sqrt
 
 
-class Day20 : Day() {
+class Day20 : Day(2020, 20) {
 
-    override val input = parseInput(IO.readStrings(2020, 20).joinToString("|"))
+    override val input = parseInput(readStrings().joinToString("|"))
     private val img = createImage()
 
     override fun solve1() = img.first().first().id * img.first().last().id * img.last().first().id * img.last().last().id

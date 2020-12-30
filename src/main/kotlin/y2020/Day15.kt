@@ -1,12 +1,11 @@
 package y2020
 
 import Day
-import utils.IO
 
 
-class Day15 : Day() {
+class Day15 : Day(2020, 15) {
 
-    override val input = IO.readString(2020, 15).split(",").mapIndexed { index, s -> s.toInt() to index }.toMap()
+    override val input = readString().split(",").mapIndexed { index, s -> s.toInt() to index }.toMap()
 
     override fun solve1() = getNthSpokenNumber(input.toMutableMap(), 2020)
 

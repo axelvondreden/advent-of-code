@@ -4,9 +4,9 @@ import Day
 import kotlin.math.max
 import kotlin.math.min
 
-class Day21 : Day() {
+class Day21 : Day(2015, 21) {
 
-    override val input = Triple(104, 8, 1)
+    override val input = with(readStrings().map { it.split(": ")[1].toInt() }) { Triple(get(0), get(1), get(2)) }
 
     override fun solve1(): Int {
         var minGold = Integer.MAX_VALUE

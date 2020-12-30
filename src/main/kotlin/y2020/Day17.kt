@@ -1,11 +1,10 @@
 package y2020
 
 import Day
-import utils.IO
 
-class Day17 : Day() {
+class Day17 : Day(2020, 17) {
 
-    override val input = IO.readCharMatrix(2020, 17)
+    override val input = readCharMatrix()
 
     override fun solve1(): Int {
         var cubes = parseCubes(input)

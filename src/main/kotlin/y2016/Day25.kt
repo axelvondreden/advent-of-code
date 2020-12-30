@@ -1,12 +1,11 @@
 package y2016
 
 import Day
-import utils.IO
 
 
-class Day25 : Day() {
+class Day25 : Day(2016, 25) {
 
-    override val input = IO.readStrings(2016, 25)
+    override val input = readStrings()
 
     override fun solve1(): Int {
         val regex = Regex("^(!?01)+")

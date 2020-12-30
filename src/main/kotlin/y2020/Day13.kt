@@ -1,12 +1,11 @@
 package y2020
 
 import Day
-import utils.IO
 
 
-class Day13 : Day() {
+class Day13 : Day(2020, 13) {
 
-    override val input = IO.readStrings(2020, 13)
+    override val input = readStrings()
 
     override fun solve1(): Int {
         val earliest = input[0].toInt()

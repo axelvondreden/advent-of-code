@@ -1,12 +1,11 @@
 package y2020
 
 import Day
-import utils.IO
 import utils.deepEquals
 
-class Day11 : Day() {
+class Day11 : Day(2020, 11) {
 
-    override val input = IO.readCharMatrix(2020, 11)
+    override val input = readCharMatrix()
 
     override fun solve1(): Int {
         var last = input

@@ -1,13 +1,12 @@
 package y2019
 
 import Day
-import utils.IO
 import pathfinding.Pathfinder
 import utils.toPathfindingMap
 
-class Day20 : Day() {
+class Day20 : Day(2019, 20) {
 
-    override val input = IO.readCharMatrix(2019, 20)
+    override val input = readCharMatrix()
 
     private val start: LvlNode
     private val end: LvlNode

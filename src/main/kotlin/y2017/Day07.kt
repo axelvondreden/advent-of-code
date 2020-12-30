@@ -1,12 +1,11 @@
 package y2017
 
 import Day
-import utils.IO
 import kotlin.math.absoluteValue
 
-class Day07 : Day() {
+class Day07 : Day(2017, 7) {
 
-    override val input = parseMainProgram(IO.readStrings(2017, 7))
+    override val input = parseMainProgram(readStrings())
 
     override fun solve1() = input.name
 

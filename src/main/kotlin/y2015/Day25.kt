@@ -2,9 +2,11 @@ package y2015
 
 import Day
 
-class Day25 : Day() {
+class Day25 : Day(2015, 25) {
 
-    override val input = Pair(2947, 3029)
+    override val input = with(readString().split("at row ")[1].split(" ")) {
+        get(0).dropLast(1).toInt() to get(2).dropLast(1).toInt()
+    }
 
     override fun solve1(): Long {
         var current = 20151125L
@@ -23,7 +25,5 @@ class Day25 : Day() {
         return 0
     }
 
-    override fun solve2() {
-
-    }
+    override fun solve2() {}
 }

@@ -1,13 +1,11 @@
 package y2016
 
 import Day
-import utils.IO
-import java.lang.RuntimeException
 
 
-class Day21 : Day() {
+class Day21 : Day(2016, 21) {
 
-    override val input = parseOperations(IO.readStrings(2016, 21))
+    override val input = parseOperations(readStrings())
 
     override fun solve1(): String {
         var str = "abcdefgh"

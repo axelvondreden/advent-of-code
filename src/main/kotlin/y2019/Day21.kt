@@ -1,11 +1,10 @@
 package y2019
 
 import Day
-import utils.IO
 
-class Day21 : Day() {
+class Day21 : Day(2019, 21) {
 
-    override val input = IO.readLongArray(2019, 21)
+    override val input = readLongArray()
 
     private val inst1 = "NOT A J\nNOT B T\nOR T J\nNOT C T\nOR T J\nAND D J\n"
     private val inst2 = "NOT F J\nOR E J\nOR H J\nAND D J\nNOT C T\nAND T J\nNOT D T\nOR B T\nOR E T\nNOT T T\nOR T J\nNOT A T\nOR T J\n"

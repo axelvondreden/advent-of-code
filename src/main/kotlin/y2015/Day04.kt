@@ -3,9 +3,9 @@ package y2015
 import Day
 import utils.md5
 
-class Day04 : Day() {
+class Day04 : Day(2015, 4) {
 
-    override val input = "ckczppom"
+    override val input = readString()
 
     override fun solve1() = findLowest("00000")
 

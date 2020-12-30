@@ -2,12 +2,11 @@ package y2020
 
 import Day
 import utils.Point
-import utils.IO
 import kotlin.math.abs
 
-class Day12 : Day() {
+class Day12 : Day(2020, 12) {
 
-    override val input = IO.readStrings(2020, 12)
+    override val input = readStrings()
 
     override fun solve1(): Int {
         val p = move(input)

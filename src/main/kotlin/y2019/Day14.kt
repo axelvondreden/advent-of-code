@@ -1,11 +1,10 @@
 package y2019
 
 import Day
-import utils.IO
 
-class Day14 : Day() {
+class Day14 : Day(2019, 14) {
 
-    override val input = IO.readStrings(2019, 14).map { it.split(" => ") }
+    override val input = readStrings().map { it.split(" => ") }
 
     private val reactions = input.map { list ->
         val output = Pair(list[1].split(" ")[1], list[1].split(" ")[0].toLong())

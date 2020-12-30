@@ -1,11 +1,10 @@
 package y2016
 
 import Day
-import utils.IO
 
-class Day04 : Day() {
+class Day04 : Day(2016, 4) {
 
-    override val input = IO.readStrings(2016, 4).map { it.dropLast(1).split("[") }
+    override val input = readStrings().map { it.dropLast(1).split("[") }
 
     private val rooms = input.map {
         val checksum = it[1]

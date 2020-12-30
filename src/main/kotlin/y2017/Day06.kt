@@ -1,11 +1,10 @@
 package y2017
 
 import Day
-import utils.IO
 
-class Day06 : Day() {
+class Day06 : Day(2017, 6) {
 
-    override val input = IO.readString(2017, 6).split(Regex("\\s+")).map { it.toInt() }
+    override val input = readString().split(Regex("\\s+")).map { it.toInt() }
 
     override fun solve1(): Int {
         val states = mutableSetOf<String>()

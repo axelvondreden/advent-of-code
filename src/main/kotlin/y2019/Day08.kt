@@ -1,11 +1,10 @@
 package y2019
 
 import Day
-import utils.IO
 
-class Day08 : Day() {
+class Day08 : Day(2019, 8) {
 
-    override val input = IO.readString(2019, 8).map { it.toString().toInt() }.chunked(25 * 6)
+    override val input = readString().map { it.toString().toInt() }.chunked(25 * 6)
 
     override fun solve1(): Int {
         val minLayer = input.minByOrNull { list -> list.count { it == 0 } }!!

@@ -1,11 +1,10 @@
 package y2020
 
 import Day
-import utils.IO
 
-class Day08 : Day() {
+class Day08 : Day(2020, 8) {
 
-    override val input = parseInstructions(IO.readStrings(2020, 8))
+    override val input = parseInstructions(readStrings())
 
     override fun solve1(): Int {
         val acc = Accumulator()

@@ -1,13 +1,12 @@
 package y2020
 
 import Day
-import utils.IO
 import kotlin.math.pow
 
 
-class Day14 : Day() {
+class Day14 : Day(2020, 14) {
 
-    override val input = IO.readStrings(2020, 14)
+    override val input = readStrings()
 
     override fun solve1(): Long {
         var currentMask = ""

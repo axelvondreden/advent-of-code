@@ -1,11 +1,10 @@
 package y2019
 
 import Day
-import utils.IO
 
-class Day02 : Day() {
+class Day02 : Day(2019, 2) {
 
-    override val input = IO.readLongArray(2019, 2).also { it[1] = 12 }.also { it[2] = 2 }
+    override val input = readLongArray().also { it[1] = 12 }.also { it[2] = 2 }
 
     override fun solve1(): Long {
         val register = input.copyOf()

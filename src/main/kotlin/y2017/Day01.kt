@@ -1,11 +1,10 @@
 package y2017
 
 import Day
-import utils.IO
 
-class Day01 : Day() {
+class Day01 : Day(2017, 1) {
 
-    override val input = IO.readString(2017, 1)
+    override val input = readString()
 
     override fun solve1() = captcha(1)
 

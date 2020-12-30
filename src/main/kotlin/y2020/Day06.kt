@@ -1,11 +1,10 @@
 package y2020
 
 import Day
-import utils.IO
 
-class Day06 : Day() {
+class Day06 : Day(2020, 6) {
 
-    override val input = parseGroups(IO.readStrings(2020, 6))
+    override val input = parseGroups(readStrings())
 
     override fun solve1() = input.sumBy { it.yesCount }
 

@@ -1,11 +1,10 @@
 package y2017
 
 import Day
-import utils.IO
 
-class Day09 : Day() {
+class Day09 : Day(2017, 9) {
 
-    override val input = IO.readString(2017, 9)
+    override val input = readString()
 
     override fun solve1() = input.filterGarbage().calcGroupScore()
 

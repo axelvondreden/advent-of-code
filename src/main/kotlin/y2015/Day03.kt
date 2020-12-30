@@ -2,11 +2,10 @@ package y2015
 
 import Day
 import utils.Point
-import utils.IO
 
-class Day03: Day() {
+class Day03: Day(2015, 3) {
 
-    override val input = IO.readString(2015, 3).toCharArray().asList()
+    override val input = readString().toCharArray().asList()
 
     override fun solve1(): Int {
         val map = mutableMapOf(Pair(Point(0, 0), 1))

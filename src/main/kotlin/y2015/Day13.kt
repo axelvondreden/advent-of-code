@@ -1,12 +1,11 @@
 package y2015
 
 import Day
-import utils.IO
 import utils.permute
 
-class Day13 : Day() {
+class Day13 : Day(2015, 13) {
 
-    override val input = IO.readStrings(2015, 13).map { it.dropLast(1).split(" ") }
+    override val input = readStrings().map { it.dropLast(1).split(" ") }
 
     private val happinessMap = input.map { Pair(it[0], it[10]) to it[3].toInt() * if (it[2] == "gain") 1 else -1 }.toMap().toMutableMap()
 

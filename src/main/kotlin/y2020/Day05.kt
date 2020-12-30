@@ -1,11 +1,10 @@
 package y2020
 
 import Day
-import utils.IO
 
-class Day05 : Day() {
+class Day05 : Day(2020, 5) {
 
-    override val input = IO.readStrings(2020, 5)
+    override val input = readStrings()
 
     override fun solve1() = input.map { getSeatId(it) }.maxOrNull()!!
 

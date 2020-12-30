@@ -1,11 +1,10 @@
 package y2017
 
 import Day
-import utils.IO
 
-class Day04 : Day() {
+class Day04 : Day(2017, 4) {
 
-    override val input = IO.readStrings(2017, 4)
+    override val input = readStrings()
 
     override fun solve1() = input.count {
         val split = it.split(" ")

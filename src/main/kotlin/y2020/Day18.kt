@@ -1,12 +1,11 @@
 package y2020
 
 import Day
-import utils.IO
 
 
-class Day18 : Day() {
+class Day18 : Day(2020, 18) {
 
-    override val input = IO.readStrings(2020, 18).map { it.replace(" ", "") }
+    override val input = readStrings().map { it.replace(" ", "") }
 
     override fun solve1(): Long {
         return input.sumOf { eval1(it.iterator()) }

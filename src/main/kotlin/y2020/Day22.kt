@@ -1,12 +1,11 @@
 package y2020
 
 import Day
-import utils.IO
 
 
-class Day22 : Day() {
+class Day22 : Day(2020, 22) {
 
-    override val input = IO.readStrings(2020, 22).filter { it.isNotBlank() }
+    override val input = readStrings().filter { it.isNotBlank() }
 
     private fun parseDeck(input: List<String>, player: Int) = ArrayDeque(
         input.dropWhile { it != "Player $player:" }.drop(1).takeWhile { !it.startsWith("Player") }.map { it.toInt() }
