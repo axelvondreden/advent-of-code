@@ -12,11 +12,7 @@ class Day08 : Day(2017, 8) {
 
     override fun solve1(): Int {
         val register = mutableMapOf<String, Int>()
-        input.forEach {
-            if (it.condition.verify(register)) {
-                it.execute(register)
-            }
-        }
+        input.forEach { if (it.condition.verify(register)) it.execute(register) }
         return register.values.maxOrNull()!!
     }
 
@@ -45,8 +41,8 @@ class Day08 : Day(2017, 8) {
     data class Instruction(val target: String, val op: String, val arg: Int, val condition: Condition) {
         fun execute(register: MutableMap<String, Int>) {
             when (op) {
-                "utils.inc" -> register[target] = register.getOrPut(target) { 0 } + arg
-                "utils.dec" -> register[target] = register.getOrPut(target) { 0 } - arg
+                "inc" -> register[target] = register.getOrPut(target) { 0 } + arg
+                "dec" -> register[target] = register.getOrPut(target) { 0 } - arg
             }
         }
     }

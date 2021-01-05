@@ -8,18 +8,18 @@ class Day02 : Day(2019, 2) {
 
     override fun solve1(): Long {
         val register = input.copyOf()
-        IntCodeComputer(register).run()
-        return register[0]
+        return IntCodeComputer(register).run().register[0]
     }
 
     override fun solve2(): Long {
-        for (i in 0..99L) {
-            for (j in 0..99L) {
-                val register = input.copyOf()
-                IntCodeComputer(register).run()
-                if (register[0] == 19690720L) {
-                    return 100 * i + j
+        (0..99L).forEach { i ->
+            (0..99L).forEach { j ->
+                val register = input.copyOf().apply {
+                    set(1, i)
+                    set(2, j)
                 }
+                val result = IntCodeComputer(register).run()
+                if (result.register[0] == 19690720L) return 100 * i + j
             }
         }
         return 0

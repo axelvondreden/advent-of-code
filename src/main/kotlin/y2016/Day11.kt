@@ -16,7 +16,7 @@ class Day11 : Day(2016, 11) {
         }
     }.collectState().calculateState().toString()
 
-    data class State(
+    private data class State(
         var result: Int = 0,
         var floor: Int = 0,
         val last: MutableMap<String, Int> = mutableMapOf(),
@@ -25,7 +25,7 @@ class Day11 : Day(2016, 11) {
 
     private val matcher = Regex("([a-z]+)(\\sgenerator|-compatible\\smicrochip)")
 
-    private fun List<String>.collectState() = this.collectIndexed(State()) { state, floor, line ->
+    private fun List<String>.collectState() = collectIndexed(State()) { state, floor, line ->
         matcher.findAll(line).map { it.groups[0].toString() }.forEach { key ->
             state.result += (3 - floor) * 2
 
@@ -50,7 +50,7 @@ class Day11 : Day(2016, 11) {
     }
 
     private inline fun <T, R> List<T>.collectIndexed(collector: R, crossinline action: ((R, Int, T) -> Unit)): R {
-        this.forEachIndexed { i, item -> action.invoke(collector, i, item) }
+        forEachIndexed { i, item -> action.invoke(collector, i, item) }
         return collector
     }
 }

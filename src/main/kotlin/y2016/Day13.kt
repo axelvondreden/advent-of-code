@@ -9,17 +9,10 @@ class Day13 : Day(2016, 13) {
 
     override val input = readString().toInt()
 
-    val map = generateMap(mapSize)
-
-    private fun generateMap(size: Int): Array<CharArray> {
-        val map = Array(size) { CharArray(size) }
-        for (x in 0 until size) {
-            for (y in 0 until size) {
-                val value = (x * x) + (3 * x) + (2 * x * y) + y + (y * y) + input
-                map[x][y] = if (value.countOneBits() % 2 == 0) '.' else '#'
-            }
+    private val map = Array(mapSize) { x ->
+        CharArray(mapSize) { y ->
+            if (((x * x) + (3 * x) + (2 * x * y) + y + (y * y) + input).countOneBits() % 2 == 0) '.' else '#'
         }
-        return map
     }
 
     override fun solve1(): Int {
@@ -31,8 +24,8 @@ class Day13 : Day(2016, 13) {
     override fun solve2(): Int {
         val coords = mutableSetOf(startNode)
         val pf = Pathfinder(map.toPathfindingMap(), mapSize, mapSize)
-        for (x in startNode.x - 50 until startNode.x + 51) {
-            for (y in startNode.y - 50 until startNode.y + 51) {
+        (startNode.x - 50 until startNode.x + 51).forEach { x ->
+            (startNode.y - 50 until startNode.y + 51).forEach { y ->
                 if (x >= 0 && y >= 0 && map[x][y] == '.') {
                     val endNode = Pathfinder.Node(x, y)
                     val path = pf.searchBFS(startNode, endNode)
@@ -48,9 +41,9 @@ class Day13 : Day(2016, 13) {
         return coords.size
     }
 
-    companion object {
-        const val mapSize = 100
-        val startNode = Pathfinder.Node(1, 1)
-        val endNode = Pathfinder.Node(31, 39)
+    private companion object {
+        private const val mapSize = 100
+        private val startNode = Pathfinder.Node(1, 1)
+        private val endNode = Pathfinder.Node(31, 39)
     }
 }

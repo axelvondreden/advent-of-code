@@ -9,17 +9,13 @@ class Day22 : Day(2015, 22) {
 
     override fun solve1(): Int {
         val v = intArrayOf(999999)
-        getMinSpellCost(
-            Wizard(),
-            Boss(input.first, input.second), v, 0, false)
+        getMinSpellCost(Wizard(), Boss(input.first, input.second), v, 0, false)
         return v[0] - 20
     }
 
     override fun solve2(): Int {
         val v = intArrayOf(999999)
-        getMinSpellCost(
-            Wizard(),
-            Boss(input.first, input.second), v, 0, true)
+        getMinSpellCost(Wizard(), Boss(input.first, input.second), v, 0, true)
         return v[0]
     }
 
@@ -29,31 +25,23 @@ class Day22 : Day(2015, 22) {
             wizard.turn(boss)
 
             val spells = getAvailableSpells(wizard)
-            if (spells.isEmpty()) {
-                return
-            }
-            for (s in spells) {
+            if (spells.isEmpty()) return
+            spells.forEach { s ->
                 val w = wizard.copy()
                 val b = boss.copy()
                 myCost = cost + s.cost
                 s.cast(w, b)
 
-                if (part2) {
-                    w.hp--
-                }
+                if (part2) w.hp--
 
                 w.turn(b)
-
                 w.defend(b.dmg)
                 getMinSpellCost(w, b, v, myCost, part2)
             }
         } catch (e: IllegalStateException) {
-            if (e.message == "Wizard dead") {
-                return
-            } else if (e.message == "Boss dead") {
-                if (myCost < v[0]) {
-                    v[0] = myCost
-                }
+            if (e.message == "Wizard dead") return
+            else if (e.message == "Boss dead") {
+                if (myCost < v[0]) v[0] = myCost
                 return
             }
             throw e
@@ -62,26 +50,15 @@ class Day22 : Day(2015, 22) {
 
     private fun getAvailableSpells(wizard: Wizard): List<Spell> {
         val list = mutableListOf<Spell>()
-        if (wizard.mana >= Drain.cost) {
-            list.add(Drain)
-        }
-        if (wizard.mana >= MagicMissile.cost) {
-            list.add(MagicMissile)
-        }
-        if (wizard.mana >= Poison.cost && wizard.activeEffects.none { it.name == "Poison" }) {
-            list.add(Poison)
-        }
-        if (wizard.mana >= Recharge.cost && wizard.activeEffects.none { it.name == "Recharge" }) {
-            list.add(Recharge)
-        }
-        if (wizard.mana >= Shield.cost && wizard.activeEffects.none { it.name == "Shield" }) {
-            list.add(Shield)
-        }
+        if (wizard.mana >= Drain.cost) list.add(Drain)
+        if (wizard.mana >= MagicMissile.cost) list.add(MagicMissile)
+        if (wizard.mana >= Poison.cost && wizard.activeEffects.none { it.name == "Poison" }) list.add(Poison)
+        if (wizard.mana >= Recharge.cost && wizard.activeEffects.none { it.name == "Recharge" }) list.add(Recharge)
+        if (wizard.mana >= Shield.cost && wizard.activeEffects.none { it.name == "Shield" }) list.add(Shield)
         return list
     }
 
     private class Wizard {
-
         var hp = 50
         var mana = 500
         var arm = 0
@@ -93,9 +70,7 @@ class Day22 : Day(2015, 22) {
 
         fun defend(dmg: Int) {
             hp -= max(dmg - arm, 1)
-            if (hp <= 0) {
-                error("Wizard dead")
-            }
+            if (hp <= 0) error("Wizard dead")
         }
 
         fun turn(boss: Boss) {
@@ -117,9 +92,7 @@ class Day22 : Day(2015, 22) {
 
         fun defend(dmg: Int) {
             hp -= max(dmg, 1)
-            if (hp <= 0) {
-                error("Boss dead")
-            }
+            if (hp <= 0) error("Boss dead")
         }
 
         fun copy() = Boss(hp, dmg)
@@ -131,7 +104,7 @@ class Day22 : Day(2015, 22) {
         abstract fun cast(wizard: Wizard, boss: Boss)
     }
 
-    private object Drain: Spell() {
+    private object Drain : Spell() {
         override var cost = 73
         override fun cast(wizard: Wizard, boss: Boss) {
             wizard.mana -= cost
@@ -140,7 +113,7 @@ class Day22 : Day(2015, 22) {
         }
     }
 
-    private object MagicMissile: Spell() {
+    private object MagicMissile : Spell() {
         override var cost = 53
         override fun cast(wizard: Wizard, boss: Boss) {
             wizard.mana -= cost
@@ -148,47 +121,27 @@ class Day22 : Day(2015, 22) {
         }
     }
 
-    private object Poison: Spell() {
+    private object Poison : Spell() {
         override var cost = 173
         override fun cast(wizard: Wizard, boss: Boss) {
             wizard.mana -= cost
-            wizard.addEffect(Effect("Poison",  6) { _, b, c ->
-                run {
-                    if (c > 0) {
-                        b.defend(3)
-                    }
-                }
-            })
+            wizard.addEffect(Effect("Poison", 6) { _, b, c -> if (c > 0) b.defend(3) })
         }
     }
 
-    private object Recharge: Spell() {
+    private object Recharge : Spell() {
         override var cost = 229
         override fun cast(wizard: Wizard, boss: Boss) {
             wizard.mana -= cost
-            wizard.addEffect(Effect("Recharge", 5) { w, _, c ->
-                run {
-                    if (c > 0) {
-                        w.mana += 101
-                    }
-                }
-            })
+            wizard.addEffect(Effect("Recharge", 5) { w, _, c -> if (c > 0) w.mana += 101 })
         }
     }
 
-    private object Shield: Spell() {
+    private object Shield : Spell() {
         override var cost = 113
         override fun cast(wizard: Wizard, boss: Boss) {
             wizard.mana -= cost
-            wizard.addEffect(Effect("Shield", 6) { w, _, c ->
-                run {
-                    if (c == 6) {
-                        w.arm += 7
-                    } else if (c == 1) {
-                        w.arm -= 7
-                    }
-                }
-            })
+            wizard.addEffect(Effect("Shield", 6) { w, _, c -> if (c == 6) w.arm += 7 else if (c == 1) w.arm -= 7 })
         }
     }
 

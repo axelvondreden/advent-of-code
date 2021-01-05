@@ -20,25 +20,21 @@ class Day24 : Day(2019, 24) {
 
     override fun solve2(): Int {
         var map = mutableMapOf<Int, Array<CharArray>>()
-        for (i in -200..200) {
-            map[i] = Array(5) { CharArray(5) { '.' } }
-        }
+        (-200..200).forEach { map[it] = Array(5) { CharArray(5) { '.' } } }
         map[0] = input.copy()
-        repeat(200) {
-            map = stepRecursive(map)
-        }
+        repeat(200) { map = stepRecursive(map) }
         return map.values.sumBy { arrayOfCharArrays -> arrayOfCharArrays.sumBy { chars -> chars.count { it == '#' } } }
     }
 
     private fun step(map: Array<CharArray>): Array<CharArray> {
         val new = map.copy()
-        for (y in new[0].indices) {
-            for (x in new.indices) {
+        new[0].indices.forEach { y ->
+            new.indices.forEach { x ->
                 val n = map.countNeighbors(x, y)
-                if (map[x][y] == '#') {
-                    new[x][y] = if (n == 1) '#' else '.'
+                new[x][y] = if (map[x][y] == '#') {
+                    if (n == 1) '#' else '.'
                 } else {
-                    new[x][y] = if (n == 1 || n == 2) '#' else '.'
+                    if (n == 1 || n == 2) '#' else '.'
                 }
             }
         }
@@ -49,17 +45,17 @@ class Day24 : Day(2019, 24) {
         val minLvl = map.keys.minOrNull()!!
         val maxLvl = map.keys.maxOrNull()!!
         val ref = mutableMapOf<Int, Array<CharArray>>()
-        for (i in minLvl..maxLvl) {
-            ref[i] = map[i]!!.copy()
+        (minLvl..maxLvl).forEach {
+            ref[it] = map[it]!!.copy()
         }
-        for (lvl in minLvl..maxLvl) {
-            for (y in ref.getValue(lvl)[0].indices) {
-                for (x in ref.getValue(lvl).indices) {
+        (minLvl..maxLvl).forEach { lvl ->
+            ref.getValue(lvl)[0].indices.forEach { y ->
+                ref.getValue(lvl).indices.forEach { x ->
                     val n = countNeighborsRecursive(ref, lvl, x, y)
-                    if (ref.getValue(lvl)[x][y] == '#') {
-                        map.getValue(lvl)[x][y] = if (n == 1) '#' else '.'
+                    map.getValue(lvl)[x][y] = if (ref.getValue(lvl)[x][y] == '#') {
+                        if (n == 1) '#' else '.'
                     } else {
-                        map.getValue(lvl)[x][y] = if (n == 1 || n == 2) '#' else '.'
+                        if (n == 1 || n == 2) '#' else '.'
                     }
                 }
             }
@@ -180,8 +176,8 @@ class Day24 : Day(2019, 24) {
 
     private fun Array<CharArray>.toFlatString(): String {
         var ret = ""
-        for (y in get(0).indices) {
-            for (x in indices) {
+        get(0).indices.forEach { y ->
+            indices.forEach { x ->
                 ret += get(x)[y]
             }
         }

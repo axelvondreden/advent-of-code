@@ -14,15 +14,12 @@ class Day17 : Day(2019, 17) {
         var y = 0
         var out = computer.run()
         while (!out.halted) {
-            when (out.value) {
-                10L -> {
-                    x = 0
-                    y++
-                }
-                else -> {
-                    map[Point(x, y)] = out.value.toChar()
-                    x++
-                }
+            if (out.value == 10L) {
+                x = 0
+                y++
+            } else {
+                map[Point(x, y)] = out.value.toChar()
+                x++
             }
             out = computer.run()
         }
@@ -44,8 +41,7 @@ class Day17 : Day(2019, 17) {
         val c = "L,6,L,10,L,10,R,6".map { it.toLong() }.toMutableList().apply { add(10L) }
         val main = "A,B,B,C,A,B,C,A,B,C".map { it.toLong() }.toMutableList().apply { add(10L) }
 
-        val list =
-            mutableListOf<Long>().apply { addAll(main); addAll(a); addAll(b); addAll(c); add('n'.toLong()); add(10L) }
+        val list = mutableListOf<Long>().apply { addAll(main); addAll(a); addAll(b); addAll(c); add('n'.toLong()); add(10L) }
 
         val computer2 = IntCodeComputer(register).withInputs(list.toLongArray())
         var out = computer2.run()
@@ -55,16 +51,5 @@ class Day17 : Day(2019, 17) {
             out = computer2.run()
         }
         return lastOut
-    }
-
-    private fun printMap(map: Map<Point, Char>) {
-        val maxX = map.keys.map { it.x }.maxOrNull()!!
-        val maxY = map.keys.map { it.y }.maxOrNull()!!
-        for (yy in 0..maxY) {
-            for (xx in 0..maxX) {
-                print(map[Point(xx, yy)])
-            }
-            println()
-        }
     }
 }

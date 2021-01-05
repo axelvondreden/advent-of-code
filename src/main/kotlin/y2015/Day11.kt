@@ -27,7 +27,7 @@ class Day11 : Day(2015, 11) {
     private fun String.inc(): String {
         var ret = ""
         var done = false
-        for (c in reversed()) {
+        reversed().forEach { c ->
             if (!done) {
                 if (c == 'z') {
                     ret += 'a'

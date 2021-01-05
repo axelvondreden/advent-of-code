@@ -1,10 +1,10 @@
 cpy a d
 cpy 4 c
 cpy 643 b
-utils.inc d
-utils.dec b
+inc d
+dec b
 jnz b -2
-utils.dec c
+dec c
 jnz c -5
 cpy d a
 jnz 0 0
@@ -13,16 +13,16 @@ cpy 0 a
 cpy 2 c
 jnz b 2
 jnz 1 6
-utils.dec b
-utils.dec c
+dec b
+dec c
 jnz c -4
-utils.inc a
+inc a
 jnz 1 -7
 cpy 2 b
 jnz c 2
 jnz 1 4
-utils.dec b
-utils.dec c
+dec b
+dec c
 jnz 1 -4
 jnz 0 0
 out b

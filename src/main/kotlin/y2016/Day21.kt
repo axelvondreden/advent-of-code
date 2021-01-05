@@ -5,7 +5,7 @@ import Day
 
 class Day21 : Day(2016, 21) {
 
-    override val input = parseOperations(readStrings())
+    override val input = readStrings().toOperations()
 
     override fun solve1(): String {
         var str = "abcdefgh"
@@ -23,9 +23,9 @@ class Day21 : Day(2016, 21) {
         return str
     }
 
-    private fun parseOperations(input: List<String>): List<Operation> {
+    private fun List<String>.toOperations(): List<Operation> {
         val list = mutableListOf<Operation>()
-        input.forEach {
+        forEach {
             val split = it.split(" ")
             list.add(
                 when {
@@ -48,7 +48,7 @@ class Day21 : Day(2016, 21) {
         abstract fun unscramble(str: String): String
     }
 
-    data class SwapPos(val pos1: Int, val pos2: Int) : Operation() {
+    private data class SwapPos(val pos1: Int, val pos2: Int) : Operation() {
         override fun scramble(str: String) = str.toCharArray().apply {
             val c = get(pos1)
             set(pos1, get(pos2))
@@ -57,7 +57,7 @@ class Day21 : Day(2016, 21) {
         override fun unscramble(str: String) = SwapPos(pos2, pos1).scramble(str)
     }
 
-    data class SwapLetter(val letter1: Char, val letter2: Char) : Operation() {
+    private data class SwapLetter(val letter1: Char, val letter2: Char) : Operation() {
         override fun scramble(str: String): String {
             val new = StringBuilder(str.length)
             for (c in str) {
@@ -72,18 +72,18 @@ class Day21 : Day(2016, 21) {
         override fun unscramble(str: String) = SwapLetter(letter2, letter1).scramble(str)
     }
 
-    data class RotateLeft(val steps: Int) : Operation() {
+    private data class RotateLeft(val steps: Int) : Operation() {
         override fun scramble(str: String) = str.substring(steps % str.length) + str.substring(0, steps % str.length)
         override fun unscramble(str: String) = RotateRight(steps).scramble(str)
     }
 
-    data class RotateRight(val steps: Int) : Operation() {
+    private data class RotateRight(val steps: Int) : Operation() {
         override fun scramble(str: String) =
             str.substring(str.length - (steps % str.length)) + str.substring(0, str.length - (steps % str.length))
         override fun unscramble(str: String) = RotateLeft(steps).scramble(str)
     }
 
-    data class RotateBasedOnLetter(val letter: Char) : Operation() {
+    private data class RotateBasedOnLetter(val letter: Char) : Operation() {
         override fun scramble(str: String): String {
             val index = str.indexOf(letter)
             val rotation = index + 1 + (if (index >= 4) 1 else 0)
@@ -101,13 +101,13 @@ class Day21 : Day(2016, 21) {
         }
     }
 
-    data class ReversePositionRange(val start: Int, val end: Int) : Operation() {
+    private data class ReversePositionRange(val start: Int, val end: Int) : Operation() {
         override fun scramble(str: String) =
             str.substring(0, start) + str.substring(start, end + 1).reversed() + str.substring(end + 1)
         override fun unscramble(str: String) = scramble(str)
     }
 
-    data class MovePosition(val source: Int, val target: Int) : Operation() {
+    private data class MovePosition(val source: Int, val target: Int) : Operation() {
         override fun scramble(str: String): String {
             val letter = str[source]
             val temp = str.removeRange(source, source + 1)

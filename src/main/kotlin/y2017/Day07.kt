@@ -5,14 +5,14 @@ import kotlin.math.absoluteValue
 
 class Day07 : Day(2017, 7) {
 
-    override val input = parseMainProgram(readStrings())
+    override val input = readStrings().toMainProgram()
 
     override fun solve1() = input.name
 
     override fun solve2() = input.findWrongWeight()
 
-    private fun parseMainProgram(input: List<String>): Program {
-        val left = input.toMutableList()
+    private fun List<String>.toMainProgram(): Program {
+        val left = toMutableList()
         val parsed = mutableListOf<Program>()
         var index = 0
         while (left.size > 0) {
@@ -28,7 +28,8 @@ class Day07 : Day(2017, 7) {
                         Program(
                             line.split(" ")[0],
                             line.split(" ")[1].drop(1).dropLast(1).toInt(),
-                            children.map { child -> parsed.first { it.name == child } })
+                            children.map { child -> parsed.first { it.name == child } }
+                        )
                     )
                     left.removeAt(index)
                     index = 0

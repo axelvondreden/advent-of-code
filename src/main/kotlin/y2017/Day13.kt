@@ -18,7 +18,7 @@ class Day13 : Day(2017, 13) {
         Layer(split[0].toInt(), split[1].toInt())
     }
 
-    data class Layer(private val depth: Int, private val range: Int) {
+    private data class Layer(private val depth: Int, private val range: Int) {
         val severity = depth * range
         fun caughtAtTime(time: Int) = (time + depth) % ((range - 1) * 2) == 0
     }

@@ -13,7 +13,6 @@ class Day16 : Day(2016, 16) {
             string = string.dragonCurve()
         }
         return string.substring(0, maxLength1).checksum()
-
     }
 
     override fun solve2(): String {
@@ -28,17 +27,15 @@ class Day16 : Day(2016, 16) {
 
     private fun String.checksum(): String {
         val checksum = StringBuilder()
-        for (i in 0 until length step 2) {
-            checksum.append(if (get(i) == get(i + 1)) '1' else '0')
+        (0 until length step 2).forEach {
+            checksum.append(if (get(it) == get(it + 1)) '1' else '0')
         }
-        if (checksum.length % 2 == 0) {
-            return checksum.toString().checksum()
-        }
+        if (checksum.length % 2 == 0) return checksum.toString().checksum()
         return checksum.toString()
     }
 
-    companion object {
-        const val maxLength1 = 272
-        const val maxLength2 = 35651584
+    private companion object {
+        private const val maxLength1 = 272
+        private const val maxLength2 = 35651584
     }
 }

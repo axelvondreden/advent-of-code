@@ -4,7 +4,7 @@ import Day
 
 class Day12 : Day(2017, 12) {
 
-    override val input = parsePrograms(readStrings())
+    override val input = readStrings().toPrograms()
 
     override fun solve1(): Int {
         val output = mutableSetOf<Program>()
@@ -29,9 +29,9 @@ class Day12 : Day(2017, 12) {
         }
     }
 
-    private fun parsePrograms(input: List<String>): Set<Program> {
-        val programs = input.map { Program(it.split(" ")[0].toInt(), emptySet()) }.toSet()
-        input.forEach { line ->
+    private fun List<String>.toPrograms(): Set<Program> {
+        val programs = map { Program(it.split(" ")[0].toInt(), emptySet()) }.toSet()
+        forEach { line ->
             val split = line.split(" <-> ")
             val prog = programs.first { it.id == split[0].toInt() }
             prog.connections = split[1].split(", ").map { id -> programs.first { it.id == id.toInt() } }.toSet()

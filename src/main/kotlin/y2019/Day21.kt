@@ -23,10 +23,6 @@ class Day21 : Day(2019, 21) {
             out.add(o.value.toChar())
             o = comp.run()
         }
-        if (last >= 128) {
-            return last.toInt()
-        }
-        println(out.joinToString(""))
-        return 0
+        return last.toInt()
     }
 }

@@ -1,6 +1,6 @@
 import utils.IO
 
-abstract class Day(private val year: Int, private val day: Int) {
+abstract class Day(val year: Int, val day: Int) {
     abstract fun solve1(): Any
     abstract fun solve2(): Any
     abstract val input: Any

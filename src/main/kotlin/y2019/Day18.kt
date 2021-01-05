@@ -35,11 +35,10 @@ class Day18: Day(2019, 18) {
 
     private fun getCache(keysWithRobot: List<Key>): MutableMap<String, Edge> {
         val map = mutableMapOf<String, Edge>()
-        for (start in keysWithRobot) {
-            for (end in keys) {
+        keysWithRobot.forEach { start ->
+            keys.forEach { end ->
                 if (start.node != end.node) {
-                    val path = Pathfinder(input.toPathfindingMap(), input.size, input[0].size)
-                        .searchAStar(start.node, end.node)
+                    val path = Pathfinder(input.toPathfindingMap(), input.size, input[0].size).searchAStar(start.node, end.node)
                     if (path.isNotEmpty()) {
                         val k = keys.filter { it.c != start.c && it.c != end.c && it.node in path }.map { it.c }.toCharArray()
                         map["${start.c}${end.c}"] = Edge(path.size - 1, doors.filter { it.node in path }.map { it.c }.toCharArray(), k)
@@ -64,18 +63,14 @@ class Day18: Day(2019, 18) {
 
     private fun getShortestPath(start: Char, keys: List<Char>, doors: List<Char>, length: Int, minLength: IntArray, id: String) {
         if (keys.isEmpty()) {
-            if (length < minLength[0]) {
-                minLength[0] = length
-            }
+            if (length < minLength[0]) minLength[0] = length
             return
         }
-        for (key in keys) {
+        keys.forEach { key ->
             val edge = cache1.getValue("$start$key")
             val newLength = length + edge.length
             val newId = id + key
-            if (newLength >= minLength[0]) {
-                return
-            }
+            if (newLength >= minLength[0]) return
             if (edge.doors.all { it.toLowerCase() in id } && edge.keys.none { it in keys }) {
                 val searchDoors = doors.filter { it != key.toUpperCase() }
                 getShortestPath(key,  keys.filter { it != key }, searchDoors, newLength, minLength, newId)
@@ -85,19 +80,15 @@ class Day18: Day(2019, 18) {
 
     private fun getShortestPath(start: List<Char>, keys: List<Char>, doors: List<Char>, length: Int, minLength: IntArray, id: String) {
         if (keys.isEmpty()) {
-            if (length < minLength[0]) {
-                minLength[0] = length
-            }
+            if (length < minLength[0]) minLength[0] = length
             return
         }
-        for (key in keys) {
+        keys.forEach { key ->
             for (st in start) {
                 val edge = cache2["$st$key"] ?: continue
                 val newLength = length + edge.length
                 val newId = id + key
-                if (newLength >= minLength[0]) {
-                    continue
-                }
+                if (newLength >= minLength[0]) continue
                 if (edge.doors.all { it.toLowerCase() in id } && edge.keys.none { it in keys }) {
                     val searchDoors = doors.filter { it != key.toUpperCase() }
                     getShortestPath(start.toMutableList().apply { remove(st); add(key) }, keys.filter { it != key }, searchDoors, newLength, minLength, newId)
@@ -106,17 +97,15 @@ class Day18: Day(2019, 18) {
         }
     }
 
-    data class Edge(val length: Int, val doors: CharArray, val keys: CharArray) {
+    private data class Edge(val length: Int, val doors: CharArray, val keys: CharArray) {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (javaClass != other?.javaClass) return false
 
             other as Edge
-
             if (length != other.length) return false
             if (!doors.contentEquals(other.doors)) return false
             if (!keys.contentEquals(other.keys)) return false
-
             return true
         }
 
@@ -128,7 +117,7 @@ class Day18: Day(2019, 18) {
         }
     }
 
-    data class Door(val c: Char, val node: Pathfinder.Node)
+    private data class Door(val c: Char, val node: Pathfinder.Node)
 
-    data class Key(val c: Char, val node: Pathfinder.Node)
+    private data class Key(val c: Char, val node: Pathfinder.Node)
 }

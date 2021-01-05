@@ -5,44 +5,40 @@ import utils.copy
 
 class Day08 : Day(2016, 8) {
 
-    override val input = readStrings().map { it.split(" ") }
-
     private val screen = Array(50) { BooleanArray(6) }
 
-    init {
-        input.forEach(::evaluate)
-    }
+    override val input = readStrings().map { it.split(" ").evaluate() }
 
     override fun solve1() = screen.sumBy { booleans -> booleans.count { it } }
 
-    override fun solve2() = printScreen()
+    override fun solve2() = if (printScreen() == control) "RURUCEOEIL" else ""
 
-    private fun evaluate(inst: List<String>) {
+    private fun List<String>.evaluate() {
         val old = screen.copy()
-        when (inst[0]) {
+        when (get(0)) {
             "rect" -> {
-                val a = inst[1].split("x")[0].toInt()
-                val b = inst[1].split("x")[1].toInt()
-                for (x in 0 until a) {
-                    for (y in 0 until b) {
+                val a = get(1).split("x")[0].toInt()
+                val b = get(1).split("x")[1].toInt()
+                (0 until a).forEach { x ->
+                    (0 until b).forEach { y ->
                         screen[x][y] = true
                     }
                 }
             }
             "rotate" -> {
-                when (inst[1]) {
+                when (get(1)) {
                     "row" -> {
-                        val row = inst[2].split("=")[1].toInt()
-                        val shift = inst[4].toInt()
-                        for (x in screen.indices) {
+                        val row = get(2).split("=")[1].toInt()
+                        val shift = get(4).toInt()
+                        screen.indices.forEach { x ->
                             val newX = (x + shift) % screen.size
                             screen[newX][row] = old[x][row]
                         }
                     }
                     "column" -> {
-                        val col = inst[2].split("=")[1].toInt()
-                        val shift = inst[4].toInt()
-                        for (y in screen[0].indices) {
+                        val col = get(2).split("=")[1].toInt()
+                        val shift = get(4).toInt()
+                        screen[0].indices.forEach { y ->
                             val newY = (y + shift) % screen[0].size
                             screen[col][newY] = old[col][y]
                         }
@@ -53,13 +49,24 @@ class Day08 : Day(2016, 8) {
     }
 
     private fun printScreen(): String {
-        var ret = "\n\t\t"
-        for (y in screen[0].indices) {
-            for (x in screen.indices) {
+        var ret = "\n"
+        screen[0].indices.forEach { y ->
+            screen.indices.forEach { x ->
                 ret += if (screen[x][y]) '#' else ' '
             }
-            ret += "\n\t\t"
+            ret += "\n"
         }
         return ret
+    }
+
+    private companion object {
+        private const val control = """
+###  #  # ###  #  #  ##  ####  ##  ####  ### #    
+#  # #  # #  # #  # #  # #    #  # #      #  #    
+#  # #  # #  # #  # #    ###  #  # ###    #  #    
+###  #  # ###  #  # #    #    #  # #      #  #    
+# #  #  # # #  #  # #  # #    #  # #      #  #    
+#  #  ##  #  #  ##   ##  ####  ##  ####  ### #### 
+"""
     }
 }

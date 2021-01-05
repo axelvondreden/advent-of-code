@@ -124,7 +124,7 @@ class Day03 : Day(2017, 3) {
         }
     }
 
-    enum class Dir {
+    private enum class Dir {
         UP, DOWN, LEFT, RIGHT
     }
 }

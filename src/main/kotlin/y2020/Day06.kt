@@ -4,16 +4,16 @@ import Day
 
 class Day06 : Day(2020, 6) {
 
-    override val input = parseGroups(readStrings())
+    override val input = readStrings().toGroups()
 
     override fun solve1() = input.sumBy { it.yesCount }
 
     override fun solve2() = input.sumBy { it.allYesCount }
 
-    private fun parseGroups(input: List<String>): List<Group> {
+    private fun List<String>.toGroups(): List<Group> {
         val groups = mutableListOf<Group>()
         val answers = mutableListOf<String>()
-        for (it in input) {
+        forEach {
             if (it.isBlank()) {
                 groups.add(Group(answers.toList()))
                 answers.clear()

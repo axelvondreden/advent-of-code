@@ -4,13 +4,9 @@ import Day
 
 class Day08 : Day(2020, 8) {
 
-    override val input = parseInstructions(readStrings())
+    override val input = readStrings().toInstructions()
 
-    override fun solve1(): Int {
-        val acc = Accumulator()
-        acc.runWithoutLoop(input)
-        return acc.acc
-    }
+    override fun solve1() = Accumulator().apply { runWithoutLoop(input) }.acc
 
     override fun solve2(): Int {
         val switchMax = input.count { it.cmd == "nop" || it.cmd == "jmp" }
@@ -21,19 +17,15 @@ class Day08 : Day(2020, 8) {
             var cmdCount = 0
             input.forEach { instruction ->
                 if (instruction.cmd == "jmp" || instruction.cmd == "nop") {
-                    if (cmdCount != switchIndex) {
-                        switchedInput.add(instruction)
-                    } else {
-                        switchedInput.add(Instruction(if (instruction.cmd == "nop") "jmp" else "nop", instruction.arg))
-                    }
+                    if (cmdCount != switchIndex) switchedInput.add(instruction)
+                    else switchedInput.add(Instruction(if (instruction.cmd == "nop") "jmp" else "nop", instruction.arg))
                     cmdCount++
                 } else {
                     switchedInput.add(instruction)
                 }
             }
             try {
-                acc.run(switchedInput, 10000)
-                return acc.acc
+                return acc.apply { run(switchedInput, 10000) }.acc
             } catch (e: IllegalAccessException) {
                 switchIndex++
             }
@@ -41,14 +33,14 @@ class Day08 : Day(2020, 8) {
         return 0
     }
 
-    private fun parseInstructions(input: List<String>) = input.map {
+    private fun List<String>.toInstructions() = map {
         val split = it.split(" ")
         Instruction(split[0], split[1].toInt())
     }
 
     data class Instruction(val cmd: String, val arg: Int)
 
-    class Accumulator {
+    private class Accumulator {
         var acc = 0
 
         fun run(instr: List<Instruction>, max: Int = Int.MAX_VALUE) {
@@ -72,9 +64,7 @@ class Day08 : Day(2020, 8) {
 
         private fun runSingle(inst: Instruction): Int {
             when (inst.cmd) {
-                "acc" -> {
-                    acc += inst.arg
-                }
+                "acc" -> acc += inst.arg
                 "jmp" -> return inst.arg
                 "nop" -> {}
             }

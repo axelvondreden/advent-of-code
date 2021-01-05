@@ -1,26 +1,26 @@
 cpy a b
-utils.dec b
+dec b
 cpy a d
 cpy 0 a
 cpy b c
-utils.inc a
-utils.dec c
+inc a
+dec c
 jnz c -2
-utils.dec d
+dec d
 jnz d -5
-utils.dec b
+dec b
 cpy b c
 cpy c d
-utils.dec d
-utils.inc c
+dec d
+inc c
 jnz d -2
 tgl c
 cpy -16 c
 jnz 1 c
 cpy 90 c
 jnz 81 d
-utils.inc a
-utils.inc d
+inc a
+inc d
 jnz d -2
-utils.inc c
+inc c
 jnz c -5

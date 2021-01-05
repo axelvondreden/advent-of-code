@@ -6,7 +6,7 @@ import kotlin.math.absoluteValue
 
 class Day24 : Day(2020, 24) {
 
-    override val input = parseInput(readStrings())
+    override val input = readStrings().toPaths()
 
     private val tiles = mutableMapOf<Pair<Int, Int>, Boolean>()
 
@@ -39,14 +39,10 @@ class Day24 : Day(2020, 24) {
         val new = mutableMapOf<Pair<Int, Int>, Boolean>()
         val blacks = filter { !it.value }
         blacks.forEach { (tile, white) ->
-            if (tile !in new) {
-                new[tile] = this.getNextSide(tile, white)
-            }
+            if (tile !in new) new[tile] = this.getNextSide(tile, white)
             val neighbours = getNeighbours(tile)
             neighbours.forEach { (nTile, nWhite) ->
-                if (nTile !in new) {
-                    new[nTile] = this.getNextSide(nTile, nWhite)
-                }
+                if (nTile !in new) new[nTile] = this.getNextSide(nTile, nWhite)
             }
         }
         return new
@@ -72,9 +68,9 @@ class Day24 : Day(2020, 24) {
 
     private fun Map<Pair<Int, Int>, Boolean>.countBlackNeighbours(tile: Pair<Int, Int>) = getNeighbours(tile).values.count { !it }
 
-    private fun parseInput(input: List<String>): List<List<HexDir>> {
+    private fun List<String>.toPaths(): List<List<HexDir>> {
         val paths = mutableListOf<List<HexDir>>()
-        input.forEach {
+        forEach {
             var index = 0
             val path = mutableListOf<HexDir>()
             while (index < it.length) {

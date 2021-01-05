@@ -49,11 +49,9 @@ class Day10 : Day(2017, 10) {
         return dense
     }
 
-    private fun List<Int>.rotate(rotation: Int): List<Int> {
-        if (rotation > 0) {
-            return subList(size - rotation, size).plus(subList(0, size - rotation))
-        } else {
-            return subList(-rotation, size).plus(subList(0, -rotation))
-        }
+    private fun List<Int>.rotate(rotation: Int) = if (rotation > 0) {
+        subList(size - rotation, size).plus(subList(0, size - rotation))
+    } else {
+        subList(-rotation, size).plus(subList(0, -rotation))
     }
 }

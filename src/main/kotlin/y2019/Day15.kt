@@ -75,19 +75,18 @@ class Day15 : Day(2019, 15) {
         (1L..4L).map { current.move(it) }.filter { it in map && map[it] != 0L }
 
     private fun findPath(from: Pair<Long, Long>, target: Pair<Long, Long>, map: Map<Pair<Long, Long>, Long>): List<Pair<Long, Long>>? {
-        val openSet = PriorityQueue(Comparator<DistancedPoint> { a, b -> (a.distance - b.distance).toInt() })
-            .apply { add(DistancedPoint(from, 0)) }
+        val openSet = PriorityQueue(Comparator<DistancedPoint> { a, b -> (a.distance - b.distance).toInt() }).apply {
+            add(DistancedPoint(from, 0))
+        }
         val cameFrom = mutableMapOf<Pair<Long, Long>, Pair<Long, Long>>()
         val gScore = mutableMapOf(from to 0)
 
         while (!openSet.isEmpty()) {
             val current = openSet.poll().point
-            if (current == target) {
-                return reconstructPath(cameFrom, current)
-            }
+            if (current == target) return reconstructPath(cameFrom, current)
 
             val neighbors = neighbors(current, map)
-            for (n in neighbors) {
+            neighbors.forEach { n ->
                 val score = gScore.getOrDefault(current, Int.MAX_VALUE) + 1
                 if (score < gScore.getOrDefault(n, Int.MAX_VALUE)) {
                     cameFrom[n] = current
@@ -107,9 +106,7 @@ class Day15 : Day(2019, 15) {
         while (points.any { it !in hasOxy }) {
             counter += 1
             val newPoints = hasOxy.flatMap { point ->
-                (1L..4L).map { dir ->
-                    point.move(dir)
-                }.filter { it in map && map[it] ?: error("not in map") == 1L }
+                (1L..4L).map { dir -> point.move(dir)}.filter { it in map && map[it] ?: error("not in map") == 1L }
             }
             hasOxy.addAll(newPoints)
         }
@@ -134,5 +131,5 @@ class Day15 : Day(2019, 15) {
 
     private fun Pair<Long, Long>.manhattanDistance(target: Pair<Long, Long>) = abs(first - target.first) + abs(second - target.second)
 
-    data class DistancedPoint(val point: Pair<Long, Long>, val distance: Long)
+    private data class DistancedPoint(val point: Pair<Long, Long>, val distance: Long)
 }

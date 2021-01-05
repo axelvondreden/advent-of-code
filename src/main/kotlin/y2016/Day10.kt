@@ -26,9 +26,7 @@ class Day10 : Day(2016, 10) {
             val split = line.split("output")
             split.forEach {
                 val nr = it.trim().split(" ")[0].toIntOrNull()
-                if (nr != null) {
-                    outputs.add(Output(nr))
-                }
+                if (nr != null) outputs.add(Output(nr))
             }
         }
         return outputs
@@ -40,9 +38,7 @@ class Day10 : Day(2016, 10) {
             val split = line.split("bot")
             split.forEach {
                 val nr = it.trim().split(" ")[0].toIntOrNull()
-                if (nr != null) {
-                    bots.add(Bot(nr, null, null))
-                }
+                if (nr != null) bots.add(Bot(nr, null, null))
             }
         }
         return bots
@@ -69,13 +65,13 @@ class Day10 : Day(2016, 10) {
         }
     }
 
-    companion object {
+    private companion object {
         const val part1LowerNr = 17
         const val part1HigherNr = 61
         private var part1BotNr: Int? = null
     }
 
-    abstract class Target(val nr: Int) {
+    private abstract class Target(val nr: Int) {
         val values = mutableSetOf<Int>()
 
         abstract fun addValue(value: Int)
@@ -92,7 +88,7 @@ class Day10 : Day(2016, 10) {
         override fun hashCode() = nr
     }
 
-    class Bot(nr: Int, var lowTarget: Target?, var highTarget: Target?): Target(nr) {
+    private class Bot(nr: Int, var lowTarget: Target?, var highTarget: Target?): Target(nr) {
         override fun addValue(value: Int) {
             values.add(value)
             if (values.size == 2) proceed()
@@ -101,16 +97,14 @@ class Day10 : Day(2016, 10) {
         private fun proceed() {
             val low = values.minOrNull()!!
             val high = values.maxOrNull()!!
-            if (low == part1LowerNr && high == part1HigherNr) {
-                part1BotNr = nr
-            }
+            if (low == part1LowerNr && high == part1HigherNr) part1BotNr = nr
             values.clear()
             lowTarget!!.addValue(low)
             highTarget!!.addValue(high)
         }
     }
 
-    class Output(nr: Int): Target(nr) {
+    private class Output(nr: Int): Target(nr) {
         override fun addValue(value: Int) {
             values.clear()
             values.add(value)

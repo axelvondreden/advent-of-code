@@ -8,9 +8,9 @@ class Day02 : Day(2016, 2) {
 
     override fun solve1(): String {
         var code = ""
-        for (input in input) {
+        input.forEach { input ->
             var nr = 5
-            for (c in input) {
+            input.forEach { c ->
                 nr = when (c) {
                     'U' -> if (nr > 3) nr - 3 else nr
                     'D' -> if (nr < 7) nr + 3 else nr
@@ -26,9 +26,9 @@ class Day02 : Day(2016, 2) {
 
     override fun solve2(): String {
         var code = ""
-        for (input in input) {
+        input.forEach { input ->
             var nr = 5
-            for (c in input) {
+            input.forEach { c ->
                 nr = when (c) {
                     'U' -> {
                         when (nr) {

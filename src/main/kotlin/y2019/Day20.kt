@@ -17,8 +17,8 @@ class Day20 : Day(2019, 20) {
         var key = 'a'
         val storage = mutableMapOf<String, LvlNode>()
         val tempPortals = mutableSetOf<Portal>()
-        for (y in input[0].indices) {
-            for (x in input.indices) {
+        input[0].indices.forEach { y ->
+            input.indices.forEach { x ->
                 if (input[x][y] in 'A'..'Z') {
                     var str = input[x][y].toString()
                     var node: LvlNode? = null
@@ -91,18 +91,16 @@ class Day20 : Day(2019, 20) {
         return Pathfinder(input.toPathfindingMap(walls), input.size, input[0].size, ::neighborsWithLvlPortal).searchBFS(start, end).size + 1
     }
 
-    data class Portal(val c: Char, val outsideNode: LvlNode, val insideNode: LvlNode)
+    private data class Portal(val c: Char, val outsideNode: LvlNode, val insideNode: LvlNode)
 
-    class LvlNode(x: Int, y: Int, val lvl: Int): Pathfinder.INode(x, y) {
+    private class LvlNode(x: Int, y: Int, val lvl: Int): Pathfinder.INode(x, y) {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (javaClass != other?.javaClass) return false
             if (!super.equals(other)) return false
 
             other as LvlNode
-
             if (lvl != other.lvl) return false
-
             return true
         }
 

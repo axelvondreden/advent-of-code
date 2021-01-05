@@ -22,7 +22,5 @@ class Day25 : Day(2016, 25) {
         return value
     }
 
-    override fun solve2() {
-
-    }
+    override fun solve2() = 0
 }

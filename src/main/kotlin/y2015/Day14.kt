@@ -6,12 +6,7 @@ class Day14 : Day(2015, 14) {
 
     override val input = readStrings().map { it.split(" ") }
 
-    private val reindeers = input.map { it[0] to Reindeer(
-        it[3].toInt(),
-        it[6].toInt(),
-        it[13].toInt()
-    )
-    }.toMap()
+    private val reindeers = input.map { it[0] to Reindeer(it[3].toInt(), it[6].toInt(), it[13].toInt()) }.toMap()
 
     override fun solve1() = reindeers.values.map { it.getDistance(2503) }.maxOrNull()!!
 
@@ -19,14 +14,14 @@ class Day14 : Day(2015, 14) {
         val scores = reindeers.keys.map { it to 0 }.toMap().toMutableMap()
         (1..2503).forEach { i ->
             val max = reindeers.map { it.value.getDistance(i) }.maxOrNull()
-            for (leader in reindeers.filter { it.value.getDistance(i) == max }.keys) {
+            reindeers.filter { it.value.getDistance(i) == max }.keys.forEach { leader ->
                 scores[leader] = scores[leader]!! + 1
             }
         }
         return scores.values.maxOrNull()!!
     }
 
-    class Reindeer(private val speed: Int, private val flyTime: Int, private val restTime: Int) {
+    private class Reindeer(private val speed: Int, private val flyTime: Int, private val restTime: Int) {
 
         fun getDistance(time: Int): Int {
             var distance = 0
@@ -37,14 +32,10 @@ class Day14 : Day(2015, 14) {
                 if (fly < flyTime) {
                     fly++
                     distance += speed
-                    if (fly == flyTime) {
-                        rest = 0
-                    }
+                    if (fly == flyTime) rest = 0
                 } else if (rest < restTime) {
                     rest++
-                    if (rest == restTime) {
-                        fly = 0
-                    }
+                    if (rest == restTime) fly = 0
                 }
                 elapsed++
             }

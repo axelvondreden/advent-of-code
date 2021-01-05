@@ -16,7 +16,7 @@ class Day16 : Day(2019, 16) {
 
     override fun solve2(): String {
         val input2 = mutableListOf<Int>()
-        for (i in 0 until 10000) {
+        repeat(10000) {
             input2.addAll(input.toList())
         }
         val first7 = input.joinToString("").substring(0..6).toInt()
@@ -30,8 +30,8 @@ class Day16 : Day(2019, 16) {
     private fun translate2(input: IntArray): IntArray {
         val output = IntArray(input.size)
         output[output.size - 1] = input[output.size - 1]
-        for (i in output.size - 2 downTo 0) {
-            output[i] = (output[i + 1] + input[i]) % 10
+        (output.size - 2 downTo 0).forEach {
+            output[it] = (output[it + 1] + input[it]) % 10
         }
         return output
     }
@@ -42,7 +42,7 @@ class Day16 : Day(2019, 16) {
 
     private fun getPattern(index: Int): IntArray {
         var newPattern = emptyList<Int>().toMutableList()
-        for (i in intArrayOf(0, 1, 0, -1)) {
+        intArrayOf(0, 1, 0, -1).forEach { i ->
             repeat(index + 1) {
                 newPattern.add(i)
             }

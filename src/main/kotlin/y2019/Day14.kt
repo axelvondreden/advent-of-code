@@ -24,24 +24,16 @@ class Day14 : Day(2019, 14) {
         return fuel - 1
     }
 
-    private fun getOreCount(reactions: List<Reaction>, elem: Pair<String, Long>, reserves: MutableMap<String, Long>): Int {
+    private fun getOreCount(reactions: List<Reaction>, elem: Pair<String, Long>, reserves: MutableMap<String, Long>): Int =
         if (elem.first == "ORE") {
-            return elem.second.toInt()
+            elem.second.toInt()
+        } else {
+            getNeededElements(reactions, elem, reserves).entries.sumBy {
+                getOreCount(reactions, Pair(it.key, it.value), reserves)
+            }
         }
-        return getNeededElements(reactions, elem, reserves).entries.sumBy {
-            getOreCount(
-                reactions,
-                Pair(it.key, it.value),
-                reserves
-            )
-        }
-    }
 
-    private fun getNeededElements(
-        reactions: List<Reaction>,
-        elem: Pair<String, Long>,
-        reserves: MutableMap<String, Long>
-    ): Map<String, Long> {
+    private fun getNeededElements(reactions: List<Reaction>, elem: Pair<String, Long>, reserves: MutableMap<String, Long>): Map<String, Long> {
         val reaction = reactions.first { it.output.first == elem.first }
         val elems = emptyMap<String, Long>().toMutableMap()
         var multiplier = 0
@@ -50,11 +42,11 @@ class Day14 : Day(2019, 14) {
             multiplier++
         }
         reserves[elem.first] = reaction.output.second * multiplier - quant
-        for (input in reaction.inputs) {
+        reaction.inputs.forEach { input ->
             elems[input.key] = input.value * multiplier
         }
         return elems
     }
 
-    data class Reaction(val inputs: Map<String, Long>, val output: Pair<String, Long>)
+    private data class Reaction(val inputs: Map<String, Long>, val output: Pair<String, Long>)
 }

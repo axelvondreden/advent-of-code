@@ -11,9 +11,7 @@ class Day13 : Day(2019, 13) {
         val set = emptySet<Triple<Long, Long, Long>>().toMutableSet()
         while (true) {
             val x = comp.run()
-            if (x.halted) {
-                break
-            }
+            if (x.halted) break
             val y = comp.run()
             val type = comp.run()
             set.add(Triple(x.value, y.value, type.value))

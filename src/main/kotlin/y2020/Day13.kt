@@ -22,9 +22,7 @@ class Day13 : Day(2020, 13) {
         while (true) {
             val id = busses[index].toLong()
             if ((time + index) % id == 0L) {
-                if (++index >= busses.size) {
-                    return time
-                }
+                if (++index >= busses.size) return time
                 multiplier *= id
                 continue
             }

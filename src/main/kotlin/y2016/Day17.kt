@@ -9,11 +9,7 @@ class Day17 : Day(2016, 17) {
 
     override val input = readString()
 
-    private val pathList = mutableSetOf<String>()
-
-    init {
-        testWalk(Point(0, 0), "", pathList)
-    }
+    private val pathList = mutableSetOf<String>().also { testWalk(Point(0, 0), "", it) }
 
     override fun solve1() = pathList.minByOrNull { it.length }!!
 

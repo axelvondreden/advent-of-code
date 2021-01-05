@@ -23,7 +23,7 @@ class Day11 : Day(2017, 11) {
         else -> throw RuntimeException("oh no!")
     }
 
-    data class Hex(val x: Int, val y: Int, val z: Int) {
+    private data class Hex(val x: Int, val y: Int, val z: Int) {
         fun move(direction: HexDir) = when (direction) {
             HexDir.N -> Hex(x, y + 1, z - 1)
             HexDir.NE -> Hex(x + 1, y, z - 1)
@@ -37,7 +37,7 @@ class Day11 : Day(2017, 11) {
             maxOf((x - target.x).absoluteValue, (y - target.y).absoluteValue, (z - target.z).absoluteValue)
     }
 
-    enum class HexDir {
+    private enum class HexDir {
         N, S, NE, NW, SE, SW
     }
 }

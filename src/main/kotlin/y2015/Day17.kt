@@ -28,14 +28,10 @@ class Day17 : Day(2015, 17) {
                 val options = input.filter {
                     it.x > (chain.lastOrNull()?.x ?: -1) && it !in chain && sum + it.y <= expected
                 }
-                for (option in options) {
-                    val newChain = chain.toTypedArray().copyOf().toMutableList()
-                    newChain.add(option)
-                    fill(newChain, expected)
-                }
+                options.forEach { fill(chain.toTypedArray().copyOf().toMutableList().apply { add(it) }, expected) }
             }
         }
     }
 
-    private fun MutableList<List<Point>>.containsList(search: List<Point>) = this.any { it.containsAll(search) }
+    private fun MutableList<List<Point>>.containsList(search: List<Point>) = any { it.containsAll(search) }
 }

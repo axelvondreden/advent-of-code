@@ -16,9 +16,7 @@ class Day07 : Day(2019, 7) {
 
     private fun runAmplifiers(amps: List<Amplifier>): Long {
         var input = 0L
-        for (i in 0..4) {
-            input = amps[i].runRegister(input).value
-        }
+        (0..4).forEach { input = amps[it].runRegister(input).value }
         return input
     }
 
@@ -50,7 +48,7 @@ class Day07 : Day(2019, 7) {
         else -> dropLast(size - index) + element + drop(index)
     }
 
-    class Amplifier(register: LongArray, phase: Long, outputZeroes: Boolean) {
+    private class Amplifier(register: LongArray, phase: Long, outputZeroes: Boolean) {
 
         private val comp = IntCodeComputer(register, outputZeroes = outputZeroes).addInput(phase)
 

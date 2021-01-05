@@ -19,7 +19,7 @@ class Day09 : Day(2016, 9) {
                 val marker = parseMarker(substring(index + 1, endIndex))
                 val s = substring(endIndex + 1, endIndex + marker.chars + 1)
                 count += s.length * marker.repeats
-                index += ((endIndex - index) + marker.chars + 1)
+                index += endIndex - index + marker.chars + 1
             } else {
                 count++
                 index++
@@ -37,7 +37,7 @@ class Day09 : Day(2016, 9) {
                 val marker = parseMarker(substring(index + 1, endIndex))
                 val s = substring(endIndex + 1, endIndex + marker.chars + 1)
                 count += s.decodeCountRec() * marker.repeats
-                index += ((endIndex - index) + marker.chars + 1)
+                index += endIndex - index + marker.chars + 1
             } else {
                 count++
                 index++
@@ -55,7 +55,7 @@ class Day09 : Day(2016, 9) {
                 val marker = parseMarker(substring(index + 1, endIndex))
                 repeat(marker.repeats) {
                     newString += substring(endIndex + 1, endIndex + marker.chars + 1)
-                    index += (endIndex - index) + marker.chars + 1
+                    index += endIndex - index + marker.chars + 1
                 }
             } else {
                 newString += get(index)
@@ -67,5 +67,5 @@ class Day09 : Day(2016, 9) {
 
     private fun parseMarker(substring: String) = Marker(substring.split("x")[0].toInt(), substring.split("x")[1].toInt())
 
-    data class Marker(val chars: Int, val repeats: Int)
+    private data class Marker(val chars: Int, val repeats: Int)
 }

@@ -21,8 +21,9 @@ class Day23 : Day(2020, 23) {
 
         init {
             val orderedCups = list.map { it.toString().toInt() }.plus((list.length + 1..amount))
-            orderedCups.map { cups[it] }
-                .fold(cups[list.last().toString().toInt()]) { prev, cup -> cup.also { prev.next = cup } }
+            orderedCups.map { cups[it] }.fold(cups[list.last().toString().toInt()]) { prev, cup ->
+                cup.also { prev.next = cup }
+            }
             cups[orderedCups.last()].next = cups[orderedCups.first()]
         }
 
@@ -68,5 +69,4 @@ class Day23 : Day(2020, 23) {
             }
         }
     }
-
 }

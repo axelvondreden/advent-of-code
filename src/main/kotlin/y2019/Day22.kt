@@ -13,8 +13,8 @@ class Day22 : Day(2019, 22) {
     override fun solve2() = solve(2020, 119315717514047, -101741582076661)
 
     private fun solve(x: Long, n: Long, k: Long): Long {
-        var a: BigInteger = BigInteger.ONE
-        var b: BigInteger = BigInteger.ZERO
+        var a = BigInteger.ONE
+        var b = BigInteger.ZERO
         val m = n.toBigInteger()
 
         for (ln in input) {
@@ -40,8 +40,8 @@ class Day22 : Day(2019, 22) {
             b = (-b * a).mod(m)
         }
 
-        var c: BigInteger = BigInteger.ONE
-        var d: BigInteger = BigInteger.ZERO
+        var c = BigInteger.ONE
+        var d = BigInteger.ZERO
         var e = abs(k)
 
         while (e > 0) {
@@ -60,14 +60,12 @@ class Day22 : Day(2019, 22) {
     fun doShuffle(n: Int, k: Int): IntArray {
         val deck = IntArray(n) { it }
         repeat(k) {
-            for (ln in input) {
+            input.forEach { ln ->
                 when {
                     ln == "deal into new stack" -> deck.reverse()
                     "cut" in ln -> {
                         val arg = ln.split(' ').last().toInt()
-                        val new = IntArray(n) { i ->
-                            deck[i + arg umod n]
-                        }
+                        val new = IntArray(n) { deck[it + arg umod n] }
                         new.copyInto(deck)
                     }
                     "deal with increment" in ln -> {
@@ -81,7 +79,6 @@ class Day22 : Day(2019, 22) {
                         }
                         new.copyInto(deck)
                     }
-
                     else -> error("Unrecognized instruction: $ln")
                 }
             }

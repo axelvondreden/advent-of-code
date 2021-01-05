@@ -15,13 +15,17 @@ class Day09 : Day(2017, 9) {
         var canceled = false
         var inGarbage = false
         forEach {
-            if (canceled) canceled = false
-            else if (inGarbage) {
-                if (it == '!') canceled = true
-                else if (it == '>') inGarbage = false
+            when {
+                canceled -> canceled = false
+                inGarbage -> {
+                    when (it) {
+                        '!' -> canceled = true
+                        '>' -> inGarbage = false
+                    }
+                }
+                it == '<' -> inGarbage = true
+                else -> new += it
             }
-            else if (it == '<') inGarbage = true
-            else new += it
         }
         return new
     }
@@ -30,11 +34,12 @@ class Day09 : Day(2017, 9) {
         var lvl = 0
         var score = 0
         forEach {
-            if (it == '{') {
-                lvl++
-            } else if (it == '}') {
-                score += lvl
-                lvl--
+            when (it) {
+                '{' -> lvl++
+                '}' -> {
+                    score += lvl
+                    lvl--
+                }
             }
         }
         return score

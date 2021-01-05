@@ -1,37 +1,33 @@
 package y2015
 
 import Day
-
-//import jdk.nashorn.api.scripting.ScriptObjectMirror
-//import jdk.nashorn.internal.runtime.JSONListAdapter
-//import javax.script.ScriptEngineManager
+import com.google.gson.JsonElement
+import com.google.gson.JsonParser
 
 class Day12 : Day(2015, 12) {
 
-    override val input = 0
-        //ScriptEngineManager().getEngineByName("javascript").eval(
-        //    "Java.asJSONCompatible(${utils.Utils.readString(2015, 12)})"
-        //) as Map<*, *>
+    override val input = readString()
 
-    override fun solve1() = sum(input)
+    private val integerPattern = Regex("-?\\d+")
 
-    override fun solve2() = sumNotRed(input)
+    override fun solve1() = integerPattern.findAll(input).mapNotNull { it.value.toInt() }.sum()
 
-    private fun sum(obj: Any): Int {
-        return when (obj) {
-            is Int -> obj
-            //is JSONListAdapter -> obj.sumBy { sum(it) }
-            //is ScriptObjectMirror -> obj.values.sumBy { sum(it) }
-            else -> 0
+    override fun solve2() = jsonSum(JsonParser.parseString(input))
+
+    private fun jsonSum(node: JsonElement): Int {
+        return when {
+            node.isJsonPrimitive -> try { node.asInt } catch (e: Exception) { 0 }
+            node.isJsonArray -> node.asJsonArray.map { jsonSum(it) }.sum()
+            node.isJsonObject -> {
+                node.asJsonObject.takeIf { subNode ->
+                    subNode.entrySet().none { it.value.isRed() }
+                }?.entrySet()?.map {
+                    jsonSum(it.value)
+                }?.sum() ?: 0
+            }
+            else -> throw Exception("bad node type")
         }
     }
 
-    private fun sumNotRed(obj: Any): Int {
-        return when (obj) {
-            is Int -> obj
-            //is JSONListAdapter -> obj.sumBy { sumNotRed(it) }
-            //is ScriptObjectMirror -> if (obj.values.any { it == "red" }) 0 else obj.values.sumBy { sumNotRed(it) }
-            else -> 0
-        }
-    }
+    private fun JsonElement.isRed() = this.isJsonPrimitive && this.asString == "red"
 }

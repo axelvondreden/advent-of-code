@@ -14,11 +14,8 @@ class Day10 : Day(2020, 10) {
         var index = 0
         val list = input.plus(deviceJoltage).sorted()
         while (index < list.size) {
-            if (list[index] - current == 1) {
-                diff1++
-            } else if (list[index] - current == 3) {
-                diff3++
-            }
+            if (list[index] - current == 1) diff1++
+            else if (list[index] - current == 3) diff3++
             current = list[index]
             index++
         }
@@ -29,8 +26,8 @@ class Day10 : Day(2020, 10) {
         val list = input.plus(0).sorted()
         val paths = Array(list.size) { 0L }
         paths[0] = 1L
-        for (i in 1 until paths.size) {
-            for (j in 1 .. 3) {
+        (1 until paths.size).forEach { i ->
+            (1 .. 3).forEach { j ->
                 val prev = i - j
                 if (prev >= 0 && (list[i] - list[prev]) <= 3) {
                     paths[i] += paths[i - j]

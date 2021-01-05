@@ -10,7 +10,7 @@ class Day06 : Day(2015, 6) {
 
     override fun solve1(): Int {
         val bGrid = Array(1000) { BooleanArray(1000) }
-        for (line in input) {
+        input.forEach { line ->
             when (line[0]) {
                 "on" -> bGrid.on(Point(line[1]), Point(line[2]))
                 "off" -> bGrid.off(Point(line[1]), Point(line[2]))
@@ -22,7 +22,7 @@ class Day06 : Day(2015, 6) {
 
     override fun solve2(): Int {
         val iGrid = Array(1000) { IntArray(1000) }
-        for (line in input) {
+        input.forEach { line ->
             when (line[0]) {
                 "on" -> iGrid.inc(Point(line[1]), Point(line[2]), 1)
                 "off" -> iGrid.dec(Point(line[1]), Point(line[2]), 1)

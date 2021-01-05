@@ -6,7 +6,7 @@ class Day06 : Day(2019, 6) {
 
     override val input = readStrings().map { it.split(")") }
 
-    val map = mutableMapOf<String, ArrayList<String>>()
+    private val map = mutableMapOf<String, ArrayList<String>>()
 
     override fun solve1(): Int {
         input.forEach { line -> map[line[0]] = map.getOrDefault(line[0], ArrayList()).apply { add(line[1]) } }
@@ -18,7 +18,7 @@ class Day06 : Day(2019, 6) {
     private fun countOrbits(): Int {
         val distinct = map.values.flatten()
         var count = 0
-        for (planet in distinct) {
+        distinct.forEach { planet ->
             var origin = map.entries.firstOrNull { it.value.contains(planet) }
             while (origin != null) {
                 count++
@@ -38,9 +38,7 @@ class Day06 : Day(2019, 6) {
         var count = 0
         planet = map.entries.firstOrNull { it.value.contains("SAN") }
         while (planet != null) {
-            if (list1.contains(planet.key)) {
-                return count + list1.indexOf(planet.key)
-            }
+            if (list1.contains(planet.key)) return count + list1.indexOf(planet.key)
             count++
             planet = map.entries.firstOrNull { it.value.contains(planet!!.key) }
         }

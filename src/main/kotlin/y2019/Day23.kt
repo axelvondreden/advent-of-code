@@ -13,14 +13,12 @@ class Day23 : Day(2019, 23) {
     override fun solve1(): Int {
         initNetwork()
         while (true) {
-            for (i in 0 until 50) {
+            (0 until 50).forEach { i ->
                 val reply = comps[i]!!.run()
                 if (reply.hasOutput) {
                     outputBuffer[i]!!.add(reply.value)
                     if (outputBuffer[i]!!.size == 3) {
-                        if (outputBuffer[i]!![0] == 255L) {
-                            return outputBuffer[i]!![2].toInt()
-                        }
+                        if (outputBuffer[i]!![0] == 255L) return outputBuffer[i]!![2].toInt()
                         inputBuffer[outputBuffer[i]!![0].toInt()]!!.add(outputBuffer[i]!![1])
                         inputBuffer[outputBuffer[i]!![0].toInt()]!!.add(outputBuffer[i]!![2])
                         outputBuffer[i]!!.clear()
@@ -36,7 +34,7 @@ class Day23 : Day(2019, 23) {
         var natMemory = Pair(0L, 0L)
         val lastActions = Array(50) { BooleanArray(5) { true } } //false -> received; true -> sent
         while (true) {
-            for (i in 0 until 50) {
+            (0 until 50).forEach { i ->
                 val reply = comps[i]!!.run()
                 lastActions[i] = booleanArrayOf(lastActions[i][1], lastActions[i][2], lastActions[i][3], lastActions[i][4], reply.hasOutput)
                 if (reply.hasOutput) {
@@ -52,9 +50,7 @@ class Day23 : Day(2019, 23) {
                     }
                 }
                 if (lastActions.all { booleans -> booleans.all { !it } } && inputBuffer.values.all { it.isEmpty() }) {
-                    if (lastNatY == natMemory.second) {
-                        return natMemory.second.toInt()
-                    }
+                    if (lastNatY == natMemory.second) return natMemory.second.toInt()
                     inputBuffer[0]!!.add(natMemory.first)
                     inputBuffer[0]!!.add(natMemory.second)
                     lastActions[0][4] = true
@@ -65,7 +61,7 @@ class Day23 : Day(2019, 23) {
     }
 
     private fun initNetwork() {
-        for (i in 0 until 50) {
+        (0 until 50).forEach { i ->
             comps[i] = IntCodeComputer(input.copyOf(), true, true).withInputFunction {
                 if (inputBuffer[i]!!.isNotEmpty()) inputBuffer[i]!!.removeAt(0) else -1
             }

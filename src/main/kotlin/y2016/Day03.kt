@@ -10,11 +10,10 @@ class Day03 : Day(2016, 3) {
 
     override fun solve2(): Int {
         var count = 0
-        for (i in input.indices step 3) {
-            repeat((0..2)
-                .map { intArrayOf(input[i][it], input[i + 1][it], input[i + 2][it]).sorted() }
-                .filter { it[0] + it[1] > it[2] }.size
-            ) { count++ }
+        (input.indices step 3).forEach { i ->
+            repeat((0..2).map {
+                intArrayOf(input[i][it], input[i + 1][it], input[i + 2][it]).sorted()
+            }.filter { it[0] + it[1] > it[2] }.size) { count++ }
         }
         return count
     }

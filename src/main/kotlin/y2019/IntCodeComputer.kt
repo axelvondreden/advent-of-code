@@ -44,15 +44,15 @@ class IntCodeComputer(private var register: LongArray, private val outputZeroes:
                     pointer += 2
                     if (modes[0] == 0) {
                         if (register[register[pointer - 1].toInt()] > 0 || outputZeroes) {
-                            return Reply(register[register[pointer - 1].toInt()])
+                            return Reply(register, register[register[pointer - 1].toInt()])
                         }
                     } else if (modes[0] == 1) {
                         if (register[pointer - 1] > 0 || outputZeroes) {
-                            return Reply(register[pointer - 1])
+                            return Reply(register, register[pointer - 1])
                         }
                     } else {
                         if (register[relativeBase + register[pointer - 1].toInt()] > 0 || outputZeroes) {
-                            return Reply(register[relativeBase + register[pointer - 1].toInt()])
+                            return Reply(register, register[relativeBase + register[pointer - 1].toInt()])
                         }
                     }
                 }
@@ -61,10 +61,10 @@ class IntCodeComputer(private var register: LongArray, private val outputZeroes:
                 7 -> lessThan(modes)
                 8 -> equal(modes)
                 9 -> adjustRelativeBase(modes)
-                99 -> return Reply(halted = true, hasOutput = false)
+                99 -> return Reply(register, halted = true, hasOutput = false)
             }
             if (haltAfterInput && op.toInt() == 3) {
-                return Reply(hasOutput = false)
+                return Reply(register, hasOutput = false)
             }
         }
     }
@@ -139,5 +139,25 @@ class IntCodeComputer(private var register: LongArray, private val outputZeroes:
         pointer += 4
     }
 
-    data class Reply(val value: Long = 0L, val halted: Boolean = false, val hasOutput: Boolean = true)
+    data class Reply(val register: LongArray, val value: Long = 0L, val halted: Boolean = false, val hasOutput: Boolean = true) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as Reply
+            if (!register.contentEquals(other.register)) return false
+            if (value != other.value) return false
+            if (halted != other.halted) return false
+            if (hasOutput != other.hasOutput) return false
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = register.contentHashCode()
+            result = 31 * result + value.hashCode()
+            result = 31 * result + halted.hashCode()
+            result = 31 * result + hasOutput.hashCode()
+            return result
+        }
+    }
 }

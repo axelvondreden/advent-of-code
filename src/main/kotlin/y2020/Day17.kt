@@ -33,12 +33,8 @@ class Day17 : Day(2020, 17) {
                     val cube = Cube(x, y, z)
                     val neighbours = countNeighbours(cube)
                     if (cube in this) {
-                        if (neighbours in 2..3) {
-                            new.add(cube)
-                        }
-                    } else if (neighbours == 3) {
-                        new.add(cube)
-                    }
+                        if (neighbours in 2..3) new.add(cube)
+                    } else if (neighbours == 3) new.add(cube)
                 }
             }
         }
@@ -59,12 +55,8 @@ class Day17 : Day(2020, 17) {
                         val cube = HyperCube(x, y, z, w)
                         val neighbours = countNeighbours(cube)
                         if (cube in this) {
-                            if (neighbours in 2..3) {
-                                new.add(cube)
-                            }
-                        } else if (neighbours == 3) {
-                            new.add(cube)
-                        }
+                            if (neighbours in 2..3) new.add(cube)
+                        } else if (neighbours == 3) new.add(cube)
                     }
                 }
             }
@@ -72,35 +64,25 @@ class Day17 : Day(2020, 17) {
         return new
     }
 
-    private fun Set<Cube>.countNeighbours(cube: Cube): Int {
-        var count = 0
-        for (x in (cube.x - 1)..(cube.x + 1)) {
-            for (y in (cube.y - 1)..(cube.y + 1)) {
-                for (z in (cube.z - 1)..(cube.z + 1)) {
-                    if ((x != cube.x || y != cube.y || z != cube.z) && Cube(x, y, z) in this) {
-                        count++
-                    }
-                }
+    private fun Set<Cube>.countNeighbours(cube: Cube) =
+        ((cube.x - 1)..(cube.x + 1)).sumBy { x ->
+            ((cube.y - 1)..(cube.y + 1)).sumBy { y ->
+                ((cube.z - 1)..(cube.z + 1))
+                    .filter { (x != cube.x || y != cube.y || it != cube.z) && Cube(x, y, it) in this }
+                    .count()
             }
         }
-        return count
-    }
 
-    private fun Set<HyperCube>.countNeighbours(cube: HyperCube): Int {
-        var count = 0
-        for (x in (cube.x - 1)..(cube.x + 1)) {
-            for (y in (cube.y - 1)..(cube.y + 1)) {
-                for (z in (cube.z - 1)..(cube.z + 1)) {
-                    for (w in (cube.w - 1)..(cube.w + 1)) {
-                        if ((x != cube.x || y != cube.y || z != cube.z || w != cube.w) && HyperCube(x, y, z, w) in this) {
-                            count++
-                        }
-                    }
+    private fun Set<HyperCube>.countNeighbours(cube: HyperCube) =
+        ((cube.x - 1)..(cube.x + 1)).sumBy { x ->
+            ((cube.y - 1)..(cube.y + 1)).sumBy { y ->
+                ((cube.z - 1)..(cube.z + 1)).sumBy { z ->
+                    ((cube.w - 1)..(cube.w + 1)).filter {
+                        (x != cube.x || y != cube.y || z != cube.z || it != cube.w) && HyperCube(x, y, z, it) in this
+                    }.count()
                 }
             }
         }
-        return count
-    }
 
     private fun parseCubes(input: Array<CharArray>) = input.withIndex().flatMap { x ->
         input[x.index].withIndex().filter { it.value == '#' }.map { y -> Cube(x.index, y.index, 0) }
@@ -110,7 +92,7 @@ class Day17 : Day(2020, 17) {
         input[x.index].withIndex().filter { it.value == '#' }.map { y -> HyperCube(x.index, y.index, 0, 0) }
     }.toSet()
 
-    data class Cube(val x: Int, val y: Int, val z: Int)
+    private data class Cube(val x: Int, val y: Int, val z: Int)
 
-    data class HyperCube(val x: Int, val y: Int, val z: Int, val w: Int)
+    private data class HyperCube(val x: Int, val y: Int, val z: Int, val w: Int)
 }

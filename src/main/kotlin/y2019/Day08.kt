@@ -13,7 +13,7 @@ class Day08 : Day(2019, 8) {
 
     override fun solve2(): String {
         val finalImage = IntArray(25 * 6) { 2 }
-        for (i in finalImage.indices) {
+        finalImage.indices.forEach { i ->
             for (layer in input) {
                 if (layer[i] < 2) {
                     finalImage[i] = layer[i]
@@ -21,6 +21,18 @@ class Day08 : Day(2019, 8) {
                 }
             }
         }
-        return "\n\t\t${finalImage.asList().chunked(25).joinToString("") { list -> list.joinToString("") { if (it == 0) " " else "#" } + "\n\t\t" }}"
+        val result = "\n${finalImage.asList().chunked(25).joinToString("") { list -> list.joinToString("") { if (it == 0) " " else "#" } + "\n" }}"
+        return if (result == control) "CYKBY" else ""
+    }
+
+    private companion object {
+        private const val control = """
+ ##  #   ##  # ###  #   #
+#  # #   ## #  #  # #   #
+#     # # ##   ###   # # 
+#      #  # #  #  #   #  
+#  #   #  # #  #  #   #  
+ ##    #  #  # ###    #  
+"""
     }
 }

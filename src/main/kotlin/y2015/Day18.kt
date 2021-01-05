@@ -1,69 +1,87 @@
 package y2015
 
 import Day
-import utils.copy
 
 class Day18 : Day(2015, 18) {
 
-    override val input = readCharMatrix().map { chars -> chars.map { it == '#' }.toBooleanArray() }.toTypedArray()
+    override val input = readStrings().joinToString("").toCharArray()
 
     override fun solve1(): Int {
-        var map = input.copy()
-        repeat(100) {
-            val temp = Array(map.size) { BooleanArray(map[0].size) }
-            for (x in temp.indices) {
-                for (y in temp[0].indices) {
-                    temp[x][y] = getNextState(x, y)
-                }
-            }
-            map = temp
+        Grid(100, 100, input.clone()).let { grid ->
+            repeat(100) { grid.tick() }
+            return grid.onCells()
         }
-        return map.sumBy { booleans -> booleans.count { it } }
     }
 
     override fun solve2(): Int {
-        var map = input.copy()
-        map[0][0] = true
-        map[map.size - 1][0] = true
-        map[0][map.size - 1] = true
-        map[map.size - 1][map.size - 1] = true
-        repeat(100) {
-            val temp = Array(map.size) { BooleanArray(map[0].size) }
-            for (x in temp.indices) {
-                for (y in temp[0].indices) {
-                    temp[x][y] = getNextState(x, y)
-                }
-            }
-            temp[0][0] = true
-            temp[temp.size - 1][0] = true
-            temp[0][temp.size - 1] = true
-            temp[temp.size - 1][temp.size - 1] = true
-            map = temp
-        }
-        return map.sumBy { booleans -> booleans.count { it } }
-    }
-
-    private fun getNextState(x: Int, y: Int): Boolean {
-        val onCount = getNeighbors(x, y).count { it }
-        return if (input[x][y]) {
-            onCount == 2 || onCount == 3
-        } else {
-            onCount == 3
+        input[0] = '#'
+        input[100 - 1] = '#'
+        input[100 * 100 - 100] = '#'
+        input[100 * 100 - 1] = '#'
+        Grid(100, 100, input).let { grid ->
+            repeat(100) { grid.tick(true) }
+            return grid.onCells()
         }
     }
 
-    private fun getNeighbors(x: Int, y: Int): List<Boolean> {
-        val list = mutableListOf<Boolean>()
-        for (xx in x - 1..x + 1) {
-            for (yy in y - 1..y + 1) {
-                if (xx != x || yy != y) {
-                    try {
-                        list.add(input[xx][yy])
-                    } catch (e: ArrayIndexOutOfBoundsException) {
-                    }
+    private data class Grid(var width: Int, var height: Int, var cells: CharArray) {
+
+        fun onCells() = cells.fold(0) { total, cell -> if (cell == '#') total + 1 else total }
+
+        private fun getCell(x: Int, y: Int) = cells[width * x + y]
+
+        private fun isOn(x: Int, y: Int) = getCell(x, y) == '#'
+
+        private fun isInGrid(x: Int, y: Int) = x in 0 until width && y in 0 until height
+
+        private fun getNeighboursCount(x: Int, y: Int): Int {
+            var count = if (isOn(x, y)) -1 else 0
+            (0..2).forEach { yy ->
+                repeat((0..2).filter {
+                    isInGrid(x + it - 1, y + yy - 1) && isOn(
+                        x + it - 1,
+                        y + yy - 1
+                    )
+                }.size) { count++ }
+            }
+            return count
+        }
+
+        fun tick(part2: Boolean = false) {
+            val cells = CharArray(width * height) { '.' }
+            if (part2) {
+                cells[0] = '#'
+                cells[width - 1] = '#'
+                cells[width * height - 1] = '#'
+                cells[width * height - width] = '#'
+            }
+
+            (0 until height).forEach { y ->
+                (0 until width).forEach { x ->
+                    val onLightsCount = getNeighboursCount(x, y)
+                    if ((isOn(x, y) && onLightsCount in 2..3) || onLightsCount == 3) cells[width * x + y] = '#'
                 }
             }
+            this.cells = cells
         }
-        return list
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as Grid
+            if (width != other.width) return false
+            if (height != other.height) return false
+            if (!cells.contentEquals(other.cells)) return false
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = width
+            result = 31 * result + height
+            result = 31 * result + cells.contentHashCode()
+            return result
+        }
     }
+
 }

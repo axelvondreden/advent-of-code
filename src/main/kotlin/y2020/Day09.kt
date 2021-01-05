@@ -8,10 +8,7 @@ class Day09 : Day(2020, 9) {
 
     private var wrongNumber = 0L
 
-    override fun solve1(): Long {
-        wrongNumber = getFirstWrongNumber(input, 25)
-        return wrongNumber
-    }
+    override fun solve1() = getFirstWrongNumber(input, 25).also { wrongNumber = it }
 
     override fun solve2(): Long {
         val subList = input.indices.map { input.findSubListToSum(it, wrongNumber) }.first { it.isNotEmpty() }
@@ -25,19 +22,14 @@ class Day09 : Day(2020, 9) {
             sum += get(start + indexDelta)
             indexDelta++
         }
-        if (sum == target) {
-            return subList(start, start + indexDelta)
-        }
-        return emptyList()
+        return if (sum == target) subList(start, start + indexDelta) else emptyList()
     }
 
     private fun getFirstWrongNumber(list: List<Long>, preambleSize: Int): Long {
         val prevList = list.subList(0, preambleSize).toMutableList()
         var index = preambleSize
         while (index < list.size) {
-            if (!prevList.canSum(list[index])) {
-                return list[index]
-            }
+            if (!prevList.canSum(list[index])) return list[index]
             prevList.removeAt(0)
             prevList.add(list[index])
             index++
@@ -45,14 +37,5 @@ class Day09 : Day(2020, 9) {
         return 0
     }
 
-    private fun List<Long>.canSum(nr: Long): Boolean {
-        forEach { i ->
-            forEach { j ->
-                if (i != j && i + j == nr) {
-                    return true
-                }
-            }
-        }
-        return false
-    }
+    private fun List<Long>.canSum(nr: Long) = any { i -> any { j -> i != j && i + j == nr } }
 }

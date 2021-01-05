@@ -12,7 +12,7 @@ class Day23 : Day(2015, 23) {
         index = 0
         val register = mutableMapOf("a" to 0L, "b" to 0L)
         while (index in input.indices) {
-            run(register)
+            register.run()
         }
         return register["b"]!!
     }
@@ -21,41 +21,29 @@ class Day23 : Day(2015, 23) {
         index = 0
         val register = mutableMapOf("a" to 1L, "b" to 0L)
         while (index in input.indices) {
-            run(register)
+            register.run()
         }
         return register["b"]!!
     }
 
-    fun run(register: MutableMap<String, Long>) {
+    private fun MutableMap<String, Long>.run() {
         val inst = input[index].split(" ")
         when (inst[0]) {
             "hlf" -> {
-                register[inst[1]] = register[inst[1]]!! / 2
+                put(inst[1], get(inst[1])!! / 2)
                 index++
             }
             "tpl" -> {
-                register[inst[1]] = register[inst[1]]!! * 3
+                put(inst[1], get(inst[1])!! * 3)
                 index++
             }
-            "utils.inc" -> {
-                register[inst[1]] = register[inst[1]]!! + 1
+            "inc" -> {
+                put(inst[1], get(inst[1])!! + 1)
                 index++
             }
             "jmp" -> index += inst[1].toInt()
-            "jie" -> {
-                if (register[inst[1]]!! % 2 == 0L) {
-                    index += inst[2].toInt()
-                } else {
-                    index++
-                }
-            }
-            "jio" -> {
-                if (register[inst[1]]!! == 1L) {
-                    index += inst[2].toInt()
-                } else {
-                    index++
-                }
-            }
+            "jie" -> if (get(inst[1])!! % 2 == 0L) index += inst[2].toInt() else index++
+            "jio" -> if (get(inst[1])!! == 1L) index += inst[2].toInt() else index++
         }
     }
 }

@@ -40,11 +40,11 @@ class Day04 : Day(2020, 4) {
 
     private fun String.hasPassportFields() = fields.all { contains(" $it:") }
 
-    companion object {
+    private companion object {
         val fields = listOf("byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid")
     }
 
-    data class Passport(val byr: String, val iyr: String, val eyr: String, val hgt: String, val hcl: String, val ecl: String, val pid: String) {
+    private data class Passport(val byr: String, val iyr: String, val eyr: String, val hgt: String, val hcl: String, val ecl: String, val pid: String) {
         fun hasValidValues(): Boolean {
             if (byr.toIntOrNull() ?: 0 !in 1920..2002) return false
             if (iyr.toIntOrNull() ?: 0 !in 2010..2020) return false

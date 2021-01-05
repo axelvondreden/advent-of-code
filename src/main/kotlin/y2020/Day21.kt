@@ -5,7 +5,7 @@ import Day
 
 class Day21 : Day(2020, 21) {
 
-    override val input = parseInput(readStrings())
+    override val input = readStrings().toIngredients()
 
     override fun solve1(): Int {
         val safe = input.safeIngredients()
@@ -25,13 +25,11 @@ class Day21 : Day(2020, 21) {
             singles.keys.forEach { ingredientsByAllergy.remove(it) }
             ingredientsByAllergy.values.forEach { it.removeAll(singles.values) }
         }
-
         return found.entries.sortedBy { it.key }.joinToString(",") { it.value }
     }
 
     private fun Map<Set<String>, Set<String>>.ingredientsByAllergy(): MutableMap<String, MutableSet<String>> {
         val safeIngredients = safeIngredients()
-
         return values.flatten().toSet().map { allergen ->
             allergen to entries
                 .filter { allergen in it.value }
@@ -49,7 +47,7 @@ class Day21 : Day(2020, 21) {
         }.toSet()
     )
 
-    private fun parseInput(input: List<String>) = input.map { line ->
+    private fun List<String>.toIngredients() = map { line ->
         val ingredients = line.substringBefore(" (").split(" ").toSet()
         val allergens = line.substringAfter("(contains ").substringBefore(")").split(", ").toSet()
         ingredients to allergens

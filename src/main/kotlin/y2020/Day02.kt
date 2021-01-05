@@ -14,8 +14,8 @@ class Day02 : Day(2020, 2) {
 
     override fun solve2() = input.count { it.isValid2() }
 
-    data class Password(val range: IntRange, val char: Char, val password: String)
-
-    private fun Password.isValid() = password.count { it == char } in range
-    private fun Password.isValid2() = listOf(password[range.first - 1], password[range.last - 1]).count { it == char } == 1
+    data class Password(val range: IntRange, val char: Char, val password: String) {
+        fun isValid() = password.count { it == char } in range
+        fun isValid2() = listOf(password[range.first - 1], password[range.last - 1]).count { it == char } == 1
+    }
 }

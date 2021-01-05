@@ -19,15 +19,16 @@ class Day20 : Day(2015, 20) {
     }
 
     override fun solve2(): Int {
-        val presentCounter: MutableMap<Int, Int> = HashMap()
+        val presentCounter = HashMap<Int, Int>()
         var houseNumber = 0
-        val divisors: MutableSet<Int> = HashSet()
+        val divisors = HashSet<Int>()
         do {
             houseNumber++
             divisors.clear()
             houseNumber.getAllDivisors(divisors)
             divisors.forEach { presentCounter[it] = presentCounter[it]?.plus(1) ?: 1 }
-            val value = divisors.fold(0, { sum, divisor -> if (presentCounter[divisor] ?: 0 <= 50) sum + divisor else sum })
+            val value =
+                divisors.fold(0, { sum, divisor -> if (presentCounter[divisor] ?: 0 <= 50) sum + divisor else sum })
         } while (value < input / 11 && houseNumber < 1000000)
         return houseNumber
     }

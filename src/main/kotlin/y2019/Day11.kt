@@ -34,8 +34,8 @@ class Day11 : Day(2019, 11) {
             val maxX = panels.keys.map { it.x }.maxOrNull()!!
             val minY = panels.keys.map { it.y }.minOrNull()!!
             val maxY = panels.keys.map { it.y }.maxOrNull()!!
-            for (y in minY..maxY) {
-                for (x in minX..maxX) {
+            (minY..maxY).forEach { y ->
+                (minX..maxX).forEach { x ->
                     ret += if (panels.getOrDefault(Point(x, y), 0L) == 1L) '#' else ' '
                 }
                 ret += '\n'
@@ -43,7 +43,7 @@ class Day11 : Day(2019, 11) {
         }
     }
 
-    class HullRobot(register: LongArray) {
+    private class HullRobot(register: LongArray) {
 
         private var x = 0
         private var y = 0
@@ -54,9 +54,7 @@ class Day11 : Day(2019, 11) {
         fun run(input: Long): Triple<Int, Int, Long> {
             val color = comp.addInput(input).run().value
             val output = Triple(x, y, color)
-            if (color == -1L) {
-                throw Error("finished")
-            }
+            if (color == -1L) throw Error("finished")
             when (comp.run().value) {
                 0L -> if (dir > 0) dir-- else dir = 3
                 1L -> if (dir < 3) dir++ else dir = 0

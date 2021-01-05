@@ -31,5 +31,5 @@ class Day15 : Day(2016,  15) {
         }
     }
 
-    data class Disc(val positions: Int, val current: Int)
+    private data class Disc(val positions: Int, val current: Int)
 }

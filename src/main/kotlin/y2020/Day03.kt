@@ -9,7 +9,7 @@ class Day03 : Day(2020, 3) {
 
     override fun solve1() = countTrees(3, 1)
 
-    override fun solve2() = countTrees(1, 1) * countTrees(3, 1) * countTrees(5, 1)*
+    override fun solve2() = countTrees(1, 1) * countTrees(3, 1) * countTrees(5, 1) *
             countTrees(7, 1) * countTrees(1, 2)
 
     private fun countTrees(right: Int, down: Int): Long {

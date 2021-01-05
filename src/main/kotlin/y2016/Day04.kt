@@ -18,33 +18,33 @@ class Day04 : Day(2016, 4) {
 
     override fun solve2() = rooms.first { it.decrypt().contains("northpole") }.sector
 
-    private fun Room.check(): Boolean {
-        val cleanName = name.replace("-", "")
-        val occurrences = cleanName.groupingBy { it }.eachCount()
-        var check = ""
-        for (i in occurrences.map { it.value }.maxOrNull()!! downTo 1) {
-            val temp = occurrences.filter { it.value == i }.keys.sorted().joinToString("")
-            check += temp
-        }
-        return check.substring(0..4) == checksum
-    }
 
-    private fun Room.decrypt(): String {
-        val shift = sector % 26
-        var ret = ""
-        for (c in name) {
-            if (c == '-') {
-                ret += " "
-            } else {
-                var newC = c + shift
-                while (newC > 122.toChar()) {
-                    newC -= 26
+    private data class Room(val name: String, val sector: Int, val checksum: String) {
+        fun check(): Boolean {
+            val cleanName = name.replace("-", "")
+            val occurrences = cleanName.groupingBy { it }.eachCount()
+            var check = ""
+            (occurrences.values.maxOrNull()!! downTo 1)
+                .map { i -> occurrences.filter { it.value == i }.keys.sorted().joinToString("") }
+                .forEach { check += it }
+            return check.substring(0..4) == checksum
+        }
+
+        fun decrypt(): String {
+            val shift = sector % 26
+            var ret = ""
+            name.forEach { c ->
+                if (c == '-') {
+                    ret += " "
+                } else {
+                    var newC = c + shift
+                    while (newC > 122.toChar()) {
+                        newC -= 26
+                    }
+                    ret += newC
                 }
-                ret += newC
             }
+            return ret
         }
-        return ret
     }
-
-    data class Room(val name: String, val sector: Int, val checksum: String)
 }

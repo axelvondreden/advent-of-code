@@ -14,10 +14,11 @@ class Day22 : Day(2016, 22) {
         Node(x, y, split[1].dropLast(1).toInt(), split[2].dropLast(1).toInt())
     }
 
-    override fun solve1() =
-        input.sumBy { nodeA -> input.count { nodeB -> nodeA != nodeB && nodeA.used > 0 && nodeA.used <= nodeB.size - nodeB.used } }
+    override fun solve1() = input.sumBy { nodeA ->
+        input.count { nodeB -> nodeA != nodeB && nodeA.used > 0 && nodeA.used <= nodeB.size - nodeB.used }
+    }
 
-    override fun solve2(): Any {
+    override fun solve2(): Int {
         val xMax = input.maxByOrNull { it.x }!!.x
         val wall = input.filter { it.size > 250 }.minByOrNull { it.x }!!
         val empty = input.first { it.used == 0 }

@@ -1,7 +1,5 @@
 package y2016
 
-import java.lang.RuntimeException
-
 class Assembunny(private val register: MutableMap<String, Int>) {
 
     fun run(instructions: MutableList<String>, onOutput: (Int) -> Boolean = { true }) {
@@ -16,11 +14,11 @@ class Assembunny(private val register: MutableMap<String, Int>) {
                     register[arg2!!] = arg1.toIntOrNull() ?: register[arg1]!!
                     index++
                 }
-                "utils.inc" -> {
+                "inc" -> {
                     register[arg1] = register[arg1]!! + 1
                     index++
                 }
-                "utils.dec" -> {
+                "dec" -> {
                     register[arg1] = register[arg1]!! - 1
                     index++
                 }
@@ -44,11 +42,11 @@ class Assembunny(private val register: MutableMap<String, Int>) {
     }
 
     private fun String.toggle() = when (this) {
-        "utils.inc" -> "utils.dec"
-        "utils.dec" -> "utils.inc"
+        "inc" -> "dec"
+        "dec" -> "inc"
         "jnz" -> "cpy"
         "cpy" -> "jnz"
-        "tgl" -> "utils.inc"
+        "tgl" -> "inc"
         else -> throw RuntimeException("oh no!")
     }
 }

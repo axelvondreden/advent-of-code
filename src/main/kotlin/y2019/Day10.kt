@@ -17,18 +17,16 @@ class Day10 : Day(2019, 10) {
     init {
         input.forEachIndexed { x, chars ->
             chars.forEachIndexed { y, c ->
-                if (c == '#') {
-                    asteroids += Point(x, y)
-                }
+                if (c == '#') asteroids += Point(x, y)
             }
         }
     }
 
     override fun solve1(): Int {
         var maxAsteroids = 0
-        for (asteroid in asteroids) {
+        asteroids.forEach { asteroid ->
             var count = 0
-            for (otherAsteroid in asteroids) {
+            asteroids.forEach { otherAsteroid ->
                 if (otherAsteroid != asteroid) {
                     val dx = otherAsteroid.x - asteroid.x
                     val dy = otherAsteroid.y - asteroid.y
@@ -54,10 +52,8 @@ class Day10 : Day(2019, 10) {
 
     override fun solve2(): Int {
         val distances = mutableListOf<Point>()
-        for (asteroid in asteroids) {
-            if (asteroid != station) {
-                distances += Point(station.x - asteroid.x, station.y - asteroid.y)
-            }
+        asteroids.filter { it != station }.forEach {
+            distances += Point(station.x - it.x, station.y - it.y)
         }
 
         distances.sortBy { atan2(it.y.toFloat(), it.x.toFloat()) }
@@ -72,9 +68,7 @@ class Day10 : Day(2019, 10) {
             val newList = map[angles[index]]!!.toMutableList()
             val next = newList.minByOrNull { abs(it.x) + abs(it.y) }!!
             counter++
-            if (counter == 200) {
-                return (station.x - next.x) * 100 + (station.y - next.y)
-            }
+            if (counter == 200) return (station.x - next.x) * 100 + (station.y - next.y)
             newList.remove(next)
             if (newList.isEmpty()) {
                 map.remove(angles[index])
@@ -84,9 +78,7 @@ class Day10 : Day(2019, 10) {
                 map[angles[index]] = newList
             }
             index++
-            if (index >= angles.size) {
-                index = 0
-            }
+            if (index >= angles.size) index = 0
         }
         return 0
     }
@@ -95,9 +87,7 @@ class Day10 : Day(2019, 10) {
         var x = start.x + dx
         var y = start.y + dy
         while (x in indices && y in get(x).indices) {
-            if (get(x)[y] == '#') {
-                return Point(x, y)
-            }
+            if (get(x)[y] == '#') return Point(x, y)
             x += dx
             y += dy
         }

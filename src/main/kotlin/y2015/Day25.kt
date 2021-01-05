@@ -10,13 +10,11 @@ class Day25 : Day(2015, 25) {
 
     override fun solve1(): Long {
         var current = 20151125L
-        for (i in 1..7000) {
+        (1..7000).forEach { i ->
             var y = i
             var x = 1
             while (y > 0) {
-                if (x == input.second && y == input.first) {
-                    return current
-                }
+                if (x == input.second && y == input.first) return current
                 current = (current * 252533L) % 33554393L
                 y--
                 x++
@@ -25,5 +23,5 @@ class Day25 : Day(2015, 25) {
         return 0
     }
 
-    override fun solve2() {}
+    override fun solve2() = 0
 }

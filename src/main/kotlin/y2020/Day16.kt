@@ -29,12 +29,7 @@ class Day16 : Day(2020, 16) {
         while (null in ruleOrder) {
             for (i in ruleOrder.indices) {
                 if (ruleOrder[i] == null) {
-                    val possibleRules = mutableSetOf<Rule>()
-                    for (rule in unassignedRules) {
-                        if (validTickets.all { rule.isValid(it[i]) }) {
-                            possibleRules.add(rule)
-                        }
-                    }
+                    val possibleRules = unassignedRules.filter { rule -> validTickets.all { rule.isValid(it[i]) } }.toSet()
                     if (possibleRules.size == 1) {
                         ruleOrder[i] = possibleRules.first()
                         unassignedRules.remove(possibleRules.first())
@@ -51,7 +46,7 @@ class Day16 : Day(2020, 16) {
         return product
     }
 
-    data class Rule(val name: String, private val ranges: List<IntRange>) {
+    private data class Rule(val name: String, private val ranges: List<IntRange>) {
         fun isValid(nr: Int) = ranges.any { nr in it }
     }
 }

@@ -15,18 +15,11 @@ class Day15 : Day(2015, 15) {
 
     override fun solve1(): Int {
         var maxScore = 0
-        for (i in 0..100) {
-            for (j in 0..100 - i) {
-                for (k in 0..100 - i - j) {
+        (0..100).forEach { i ->
+            (0..100 - i).forEach { j ->
+                (0..100 - i - j).forEach { k ->
                     val m = 100 - i - j - k
-                    val score = Cookie(
-                        mapOf(
-                            input[0] to i,
-                            input[1] to j,
-                            input[2] to k,
-                            input[3] to m
-                        )
-                    ).getScore()
+                    val score = Cookie(mapOf(input[0] to i, input[1] to j, input[2] to k, input[3] to m)).getScore()
                     maxScore = max(maxScore, score)
                 }
             }
@@ -36,28 +29,19 @@ class Day15 : Day(2015, 15) {
 
     override fun solve2(): Int {
         var maxScore = 0
-        for (i in 0..100) {
-            for (j in 0..100 - i) {
-                for (k in 0..100 - i - j) {
+        (0..100).forEach { i ->
+            (0..100 - i).forEach { j ->
+                (0..100 - i - j).forEach { k ->
                     val m = 100 - i - j - k
-                    val cookie = Cookie(
-                        mapOf(
-                            input[0] to i,
-                            input[1] to j,
-                            input[2] to k,
-                            input[3] to m
-                        )
-                    )
-                    if (cookie.getCalories() == 500) {
-                        maxScore = max(maxScore, cookie.getScore())
-                    }
+                    val cookie = Cookie(mapOf(input[0] to i, input[1] to j, input[2] to k, input[3] to m))
+                    if (cookie.getCalories() == 500) maxScore = max(maxScore, cookie.getScore())
                 }
             }
         }
         return maxScore
     }
 
-    class Cookie(private val ings: Map<Ingredient, Int>) {
+    private class Cookie(private val ings: Map<Ingredient, Int>) {
 
         fun getScore(): Int {
             val capacity = ings.entries.sumBy { it.value * it.key.capacity }

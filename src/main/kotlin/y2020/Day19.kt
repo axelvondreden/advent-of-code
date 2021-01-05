@@ -37,7 +37,7 @@ class Day19 : Day(2020, 19) {
         )
     }
 
-    sealed class Rule {
+    private sealed class Rule {
         class Letter(var char: Char) : Rule()
         class Choice(var choices: List<List<Int>>) : Rule()
     }

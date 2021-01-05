@@ -40,8 +40,8 @@ class Day12 : Day(2019, 12) {
     }
 
     private fun step(planets: List<Planet>) {
-        for (i in planets.indices) {
-            for (j in i + 1 until planets.size) {
+        planets.indices.forEach { i ->
+            (i + 1 until planets.size).forEach { j ->
                 applyGravity(planets[i], planets[j])
             }
         }
@@ -81,5 +81,5 @@ class Day12 : Day(2019, 12) {
         }
     }
 
-    data class Planet(var x: Int, var y: Int, var z: Int, var vx: Int = 0, var vy: Int = 0, var vz: Int = 0)
+    private data class Planet(var x: Int, var y: Int, var z: Int, var vx: Int = 0, var vy: Int = 0, var vz: Int = 0)
 }

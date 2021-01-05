@@ -11,7 +11,7 @@ class Day05 : Day(2020, 5) {
     override fun solve2(): Int {
         val ids = input.map { getSeatId(it) }.sorted()
         var last = ids.first()
-        for (i in 1 until ids.size) {
+        (1 until ids.size).forEach { i ->
             if (ids[i] == last + 1) last = ids[i]
             else return last + 1
         }

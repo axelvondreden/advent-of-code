@@ -7,18 +7,14 @@ class Day20 : Day(2016, 20) {
 
     override val input = readStrings().map {
         val split = it.split("-")
-        LongRange(split[0].toLong(), split[1].toLong())
+        split[0].toLong()..split[1].toLong()
     }.sortedBy { it.first }
 
     override fun solve1(): Long {
         var ip = 0L
         while (ip <= 4294967295L) {
             val range = input.firstOrNull { ip in it }
-            if (range != null) {
-                ip = range.last + 1
-            } else {
-                return ip
-            }
+            if (range != null) ip = range.last + 1 else return ip
         }
         return 0
     }

@@ -7,10 +7,11 @@ import utils.sqrt
 
 class Day20 : Day(2020, 20) {
 
-    override val input = parseInput(readStrings().joinToString("|"))
+    override val input = readStrings().joinToString("|").toTiles()
     private val img = createImage()
 
-    override fun solve1() = img.first().first().id * img.first().last().id * img.last().first().id * img.last().last().id
+    override fun solve1() =
+        img.first().first().id * img.first().last().id * img.last().first().id * img.last().last().id
 
     override fun solve2(): Int {
         val monsterPattern = listOf(
@@ -19,15 +20,14 @@ class Day20 : Day(2020, 20) {
             Point(2, 4), Point(2, 7), Point(2, 10), Point(2, 13), Point(2, 16)
         )
 
-        return imageToSingleTile().orientations().first { it.maskIfFound(monsterPattern) }.data.sumBy { row -> row.count { char -> char == '#' } }
+        return imageToSingleTile().orientations()
+            .first { it.maskIfFound(monsterPattern) }.data.sumBy { row -> row.count { char -> char == '#' } }
     }
 
     private fun imageToSingleTile(): Tile {
         val rows = input.first().data.size
         val data = img.flatMap { row ->
-            (1 until rows - 1).map { y ->
-                row.joinToString("") { it.insetRow(y) }.toCharArray()
-            }
+            (1 until rows - 1).map { y -> row.joinToString("") { it.insetRow(y) }.toCharArray() }
         }.toTypedArray()
         return Tile(0, data)
     }
@@ -60,6 +60,12 @@ class Day20 : Day(2020, 20) {
         .first {
             it.isSideShared(Orientation.SOUTH, input) && it.isSideShared(Orientation.EAST, input)
         }
+
+    private fun String.toTiles() = split("||").map { it.split("|") }.map { tileText ->
+        val id = tileText.first().substringAfter(" ").substringBefore(":").toLong()
+        val body = tileText.drop(1).map { it.toCharArray() }.toTypedArray()
+        Tile(id, body)
+    }
 
     enum class Orientation {
         NORTH, EAST, SOUTH, WEST
@@ -134,11 +140,5 @@ class Day20 : Day(2020, 20) {
 
         private fun orientToSide(side: String, direction: Orientation) =
             orientations().first { it.sideFacing(direction) == side }
-    }
-
-    private fun parseInput(input: String) = input.split("||").map { it.split("|") }.map { tileText ->
-        val id = tileText.first().substringAfter(" ").substringBefore(":").toLong()
-        val body = tileText.drop(1).map { it.toCharArray() }.toTypedArray()
-        Tile(id, body)
     }
 }

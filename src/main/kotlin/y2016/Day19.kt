@@ -40,5 +40,5 @@ class Day19 : Day(2016, 19) {
         return map.first().nr
     }
 
-    data class Elf(val nr: Int, var presents: Int)
+    private data class Elf(val nr: Int, var presents: Int)
 }

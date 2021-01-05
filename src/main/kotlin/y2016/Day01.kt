@@ -12,20 +12,16 @@ class Day01 : Day(2016, 1) {
         var x = 0
         var y = 0
         var dir = 0
-        for (inst in input) {
+        input.forEach { inst ->
             val d = inst[0]
             val steps = inst.substring(1).toInt()
             when (d) {
                 'L' -> dir--
                 'R' -> dir++
             }
-            if (dir < 0) {
-                dir = 3
-            }
-            if (dir > 3) {
-                dir = 0
-            }
-            when (dir) {
+            if (dir < 0) dir = 3
+            if (dir > 3) dir = 0
+            when (dir % 4) {
                 0 -> y -= steps
                 1 -> x += steps
                 2 -> y += steps
@@ -40,19 +36,15 @@ class Day01 : Day(2016, 1) {
         var y = 0
         var dir = 0
         val visited = mutableSetOf<Point>()
-        for (inst in input) {
+        input.forEach { inst ->
             val d = inst[0]
             val steps = inst.substring(1).toInt()
             when (d) {
                 'L' -> dir--
                 'R' -> dir++
             }
-            if (dir < 0) {
-                dir = 3
-            }
-            if (dir > 3) {
-                dir = 0
-            }
+            if (dir < 0) dir = 3
+            if (dir > 3) dir = 0
             repeat(steps) {
                 when (dir) {
                     0 -> y--
@@ -60,9 +52,7 @@ class Day01 : Day(2016, 1) {
                     2 -> y++
                     3 -> x--
                 }
-                if (!visited.add(Point(x, y))) {
-                    return abs(x) + abs(y)
-                }
+                if (!visited.add(Point(x, y))) return abs(x) + abs(y)
             }
         }
         return 0

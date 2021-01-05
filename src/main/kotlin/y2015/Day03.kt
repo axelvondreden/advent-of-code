@@ -8,30 +8,30 @@ class Day03: Day(2015, 3) {
     override val input = readString().toCharArray().asList()
 
     override fun solve1(): Int {
-        val map = mutableMapOf(Pair(Point(0, 0), 1))
-        runSteps(input, map)
-        return map.size
+        with(mutableMapOf(Point(0, 0) to 1)) {
+            runSteps(input)
+            return size
+        }
     }
 
     override fun solve2(): Int {
-        val steps1 = input.filterIndexed { index, _ -> index % 2 == 0 }
-        val steps2 = input.filterIndexed { index, _ -> index % 2 == 1 }
-        val map = mutableMapOf(Pair(Point(0, 0), 1))
-        runSteps(steps1, map)
-        runSteps(steps2, map)
-        return map.size
+        with(mutableMapOf(Point(0, 0) to 1)) {
+            runSteps(input.filterIndexed { index, _ -> index % 2 == 0 })
+            runSteps(input.filterIndexed { index, _ -> index % 2 == 1 })
+            return size
+        }
     }
 
-    private fun runSteps(steps: List<Char>, map: MutableMap<Point, Int>) {
+    private fun MutableMap<Point, Int>.runSteps(steps: List<Char>) {
         var point = Point(0, 0)
-        for (c in steps) {
-            when (c) {
-                '<' -> point = Point(point.x - 1, point.y)
-                '>' -> point = Point(point.x + 1, point.y)
-                '^' -> point = Point(point.x, point.y - 1)
-                'v' -> point = Point(point.x, point.y + 1)
+        steps.forEach {
+            when (it) {
+                '<' -> point += Point(-1, 0)
+                '>' -> point += Point(1, 0)
+                '^' -> point += Point(0, -1)
+                'v' -> point += Point(0, 1)
             }
-            map[point] = map.getOrDefault(point, 0) + 1
+            put(point, getOrDefault(point, 0) + 1)
         }
     }
 }

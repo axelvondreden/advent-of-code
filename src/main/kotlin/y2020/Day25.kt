@@ -15,5 +15,5 @@ class Day25 : Day(2020, 25) {
         return generateSequence(1L) { (it * doorPublic) % 20201227 }.drop(loopSize).first()
     }
 
-    override fun solve2() {}
+    override fun solve2() = 0
 }
