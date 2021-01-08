@@ -31,9 +31,9 @@ class Day01 : Day(2016, 1) {
         return abs(x) + abs(y)
     }
 
-    override fun solve2(): Int {
-        var x = 0
-        var y = 0
+    override fun solve2(): Long {
+        var x = 0L
+        var y = 0L
         var dir = 0
         val visited = mutableSetOf<Point>()
         input.forEach { inst ->

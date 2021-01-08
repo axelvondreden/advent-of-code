@@ -2,12 +2,13 @@ package y2019
 
 import Day
 import utils.Point
+import utils.sumByLong
 
 class Day17 : Day(2019, 17) {
 
     override val input = readLongArray()
 
-    override fun solve1(): Int {
+    override fun solve1(): Long {
         val computer = IntCodeComputer(input)
         val map = mutableMapOf<Point, Char>()
         var x = 0
@@ -31,7 +32,7 @@ class Day17 : Day(2019, 17) {
                     map.getOrDefault(Point(it.key.x, it.key.y - 1), ' ') == '#' &&
                     map.getOrDefault(Point(it.key.x, it.key.y + 1), ' ') == '#'
         }.map { it.key }.toSet()
-        return intersections.sumBy { it.x * it.y }
+        return intersections.sumByLong { it.x * it.y }
     }
 
     override fun solve2(): Long {

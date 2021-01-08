@@ -99,9 +99,9 @@ class Day20 : Day(2020, 20) {
                 (0..(data.size - maxWidth)).forEach { y ->
                     val lookingAt = Point(x, y)
                     val actualSpots = mask.map { it + lookingAt }
-                    if (actualSpots.all { data[it.x][it.y] == '#' }) {
+                    if (actualSpots.all { data[it.x.toInt()][it.y.toInt()] == '#' }) {
                         found = true
-                        actualSpots.forEach { data[it.x][it.y] = '0' }
+                        actualSpots.forEach { data[it.x.toInt()][it.y.toInt()] = '0' }
                     }
                 }
             }

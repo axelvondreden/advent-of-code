@@ -3,19 +3,19 @@ package utils
 import pathfinding.Pathfinder
 
 fun Array<BooleanArray>.on(p1: Point, p2: Point) =
-    (p1.x..p2.x).forEach { x -> (p1.y..p2.y).forEach { y -> get(x)[y] = true } }
+    (p1.x..p2.x).forEach { x -> (p1.y..p2.y).forEach { y -> get(x.toInt())[y.toInt()] = true } }
 
 fun Array<BooleanArray>.off(p1: Point, p2: Point) =
-    (p1.x..p2.x).forEach { x -> (p1.y..p2.y).forEach { y -> get(x)[y] = false } }
+    (p1.x..p2.x).forEach { x -> (p1.y..p2.y).forEach { y -> get(x.toInt())[y.toInt()] = false } }
 
 fun Array<BooleanArray>.toggle(p1: Point, p2: Point) =
-    (p1.x..p2.x).forEach { x -> (p1.y..p2.y).forEach { y -> get(x)[y] = !get(x)[y] } }
+    (p1.x..p2.x).forEach { x -> (p1.y..p2.y).forEach { y -> get(x.toInt())[y.toInt()] = !get(x.toInt())[y.toInt()] } }
 
 fun Array<IntArray>.inc(p1: Point, p2: Point, amount: Int) =
-    (p1.x..p2.x).forEach { x -> (p1.y..p2.y).forEach { y -> get(x)[y] += amount } }
+    (p1.x..p2.x).forEach { x -> (p1.y..p2.y).forEach { y -> get(x.toInt())[y.toInt()] += amount } }
 
 fun Array<IntArray>.dec(p1: Point, p2: Point, amount: Int) =
-    (p1.x..p2.x).forEach { x -> (p1.y..p2.y).forEach { y -> get(x)[y] = kotlin.math.max(get(x)[y] - amount, 0) } }
+    (p1.x..p2.x).forEach { x -> (p1.y..p2.y).forEach { y -> get(x.toInt())[y.toInt()] = kotlin.math.max(get(x.toInt())[y.toInt()] - amount, 0) } }
 
 fun Array<BooleanArray>.copy() = map { it.clone() }.toTypedArray()
 

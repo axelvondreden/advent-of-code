@@ -2,10 +2,11 @@ package y2015
 
 import Day
 import utils.Point
+import utils.sumByLong
 
 class Day17 : Day(2015, 17) {
 
-    override val input = readStrings().mapIndexed { index, nr -> Point(index, nr.toInt()) }
+    override val input = readStrings().mapIndexed { index, nr -> Point(index.toLong(), nr.toLong()) }
 
     private val combinations = mutableListOf<List<Point>>()
 
@@ -19,8 +20,8 @@ class Day17 : Day(2015, 17) {
         return combinations.count { it.size == min }
     }
 
-    private fun fill(chain: MutableList<Point>, expected: Int) {
-        val sum = chain.sumBy { it.y }
+    private fun fill(chain: MutableList<Point>, expected: Long) {
+        val sum = chain.sumByLong { it.y }
         when {
             sum == expected && !combinations.containsList(chain) -> combinations.add(chain)
             sum > expected -> return

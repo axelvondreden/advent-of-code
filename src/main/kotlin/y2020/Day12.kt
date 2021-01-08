@@ -8,12 +8,12 @@ class Day12 : Day(2020, 12) {
 
     override val input = readStrings()
 
-    override fun solve1(): Int {
+    override fun solve1(): Long {
         val p = move(input)
         return abs(p.x) + abs(p.y)
     }
 
-    override fun solve2(): Int {
+    override fun solve2(): Long {
         val p = moveByWaypoint(input)
         return abs(p.x) + abs(p.y)
     }

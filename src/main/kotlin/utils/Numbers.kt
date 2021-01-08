@@ -25,6 +25,15 @@ fun Int.gcd(other: Int): Int {
     return n1
 }
 
+fun Long.gcd(other: Long): Long {
+    var n1 = if (this > 0) this else -this
+    var n2 = if (other > 0) other else -other
+    while (n1 != n2) {
+        if (n1 > n2) n1 -= n2 else n2 -= n1
+    }
+    return n1
+}
+
 inline fun <T> Iterable<T>.sumByLong(selector: (T) -> Long): Long {
     var sum = 0L
     for (element in this) {

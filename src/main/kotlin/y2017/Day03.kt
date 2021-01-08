@@ -9,14 +9,14 @@ class Day03 : Day(2017, 3) {
 
     override val input = readString().toInt()
 
-    override fun solve1(): Int {
+    override fun solve1(): Long {
         var maxWidth = input.sqrt() + 1
         if (maxWidth % 2 == 0) maxWidth++
         val map = generateSpiral(maxWidth)
         val xStart = map.indexOfFirst { it.contains(1) }
-        val pStart = Point(xStart, map[xStart].indexOfFirst { it == 1 })
+        val pStart = Point(xStart.toLong(), map[xStart].indexOfFirst { it == 1 }.toLong())
         val xTarget = map.indexOfFirst { it.contains(input) }
-        val pTarget = Point(xTarget, map[xTarget].indexOfFirst { it == input })
+        val pTarget = Point(xTarget.toLong(), map[xTarget].indexOfFirst { it == input }.toLong())
         return pStart.distance(pTarget)
     }
 

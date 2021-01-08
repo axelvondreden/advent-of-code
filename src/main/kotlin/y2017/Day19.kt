@@ -9,7 +9,7 @@ class Day19 : Day(2017, 19) {
 
     override fun solve1(): String {
         val startX = input.mapIndexed { index, chars -> index to chars[0] }.first { it.second == '|' }.first
-        var point = Point(startX, 0)
+        var point = Point(startX.toLong(), 0)
         val letters = mutableListOf<Char>()
         val letterCount = input.sumBy { chars -> chars.count { it.isLetter() } }
         var lastDir = Dir.DOWN
@@ -22,7 +22,7 @@ class Day19 : Day(2017, 19) {
 
     override fun solve2(): Int {
         val startX = input.mapIndexed { index, chars -> index to chars[0] }.first { it.second == '|' }.first
-        var point = Point(startX, 0)
+        var point = Point(startX.toLong(), 0)
         val letters = mutableListOf<Char>()
         val letterCount = input.sumBy { chars -> chars.count { it.isLetter() } }
         var lastDir = Dir.DOWN
@@ -36,7 +36,7 @@ class Day19 : Day(2017, 19) {
     }
 
     private fun Array<CharArray>.nextDir(currentPos: Point, lastDir: Dir, letters: MutableList<Char>): Dir {
-        val currentSymbol = this[currentPos.x][currentPos.y]
+        val currentSymbol = this[currentPos.x.toInt()][currentPos.y.toInt()]
         if (currentSymbol.isLetter()) letters.add(currentSymbol)
         if (currentSymbol != '+') return lastDir
         val blockedDirection = when (lastDir) {
@@ -49,7 +49,7 @@ class Day19 : Day(2017, 19) {
         val newPoints = validDirections.map { it.nextPoint(currentPos) }
         val validPoint = newPoints.first {
             it.x in (0 until 200) && it.y in (0 until 200)
-                    && (this[it.x][it.y].isLetter() || this[it.x][it.y] in listOf('-', '|', '+'))
+                    && (this[it.x.toInt()][it.y.toInt()].isLetter() || this[it.x.toInt()][it.y.toInt()] in listOf('-', '|', '+'))
         }
         return when {
             validPoint.x < currentPos.x -> Dir.LEFT

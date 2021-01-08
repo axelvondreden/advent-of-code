@@ -16,7 +16,7 @@ class Day03 : Day(2020, 3) {
         var position = Point(0, 0)
         var trees = 0L
         while (position.y < input[0].size) {
-            if (input[position.x % input.size][position.y] == '#') {
+            if (input[position.x.toInt() % input.size][position.y.toInt()] == '#') {
                 trees++
             }
             position += Point(right, down)
