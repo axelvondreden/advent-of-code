@@ -24,34 +24,28 @@ class Day25 : Day(2017, 25) {
         return tape.values.count { it }
     }
 
-    override fun solve2(): Int {
-        return 0
-    }
+    override fun solve2() = 0
 
-    private fun List<String>.parseStates(): Map<Char, State> {
-        val map = mutableMapOf<Char, State>()
-        drop(3).chunked(10).forEach { chunk ->
-            val c = chunk[0].split(" ")[2][0]
-            val writeIf0 = chunk[2].dropLast(1).last() == '1'
-            val moveIf0 = if (chunk[3].split(" ").last() == "right.") 1 else -1
-            val stateIf0 = chunk[4].split(" ").last()[0]
-            val writeIf1 = chunk[6].dropLast(1).last() == '1'
-            val moveIf1 = if (chunk[7].split(" ").last() == "right.") 1 else -1
-            val stateIf1 = chunk[8].split(" ").last()[0]
-            map[c] = State {
-                if (it) {
-                    tape[cursor] = writeIf1
-                    cursor += moveIf1
-                    states[stateIf1]!!
-                } else {
-                    tape[cursor] = writeIf0
-                    cursor += moveIf0
-                    states[stateIf0]!!
-                }
+    private fun List<String>.parseStates(): Map<Char, State> = drop(3).chunked(10).map { chunk ->
+        val c = chunk[0].split(" ")[2][0]
+        val writeIf0 = chunk[2].dropLast(1).last() == '1'
+        val moveIf0 = if (chunk[3].split(" ").last() == "right.") 1 else -1
+        val stateIf0 = chunk[4].split(" ").last()[0]
+        val writeIf1 = chunk[6].dropLast(1).last() == '1'
+        val moveIf1 = if (chunk[7].split(" ").last() == "right.") 1 else -1
+        val stateIf1 = chunk[8].split(" ").last()[0]
+        c to State {
+            if (it) {
+                tape[cursor] = writeIf1
+                cursor += moveIf1
+                states[stateIf1]!!
+            } else {
+                tape[cursor] = writeIf0
+                cursor += moveIf0
+                states[stateIf0]!!
             }
         }
-        return map
-    }
+    }.toMap()
 
     private class State(val func: (Boolean) -> State)
 }
