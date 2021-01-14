@@ -36,6 +36,7 @@ var incorrect = 0
 
 fun main(args: Array<String>) {
     if (args.isNullOrEmpty() || args.size != 2) (2015..2020).forEach { if (runLatest) runLatest(it) else run(it) }
+    // with IntelliJ Program arguments: $FilePackage$ $FileNameWithoutAllExtensions$
     else if (args.size == 2) runDay(args[0].drop(1).toInt(), args[1].drop(3).toInt())
     println("Correct: $correct $ANSI_GREEN✔$ANSI_RESET")
     println("Incorrect: $incorrect $ANSI_RED⚠$ANSI_RESET")
