@@ -9,13 +9,18 @@ import kotlin.math.sign
 typealias Neighbors = (INode) -> Set<INode>
 
 private fun neighbors(current: INode) = setOf(
-        Node(current.x - 1, current.y),
-        Node(current.x + 1, current.y),
-        Node(current.x, current.y - 1),
-        Node(current.x, current.y + 1)
+    Node(current.x - 1, current.y),
+    Node(current.x + 1, current.y),
+    Node(current.x, current.y - 1),
+    Node(current.x, current.y + 1)
 )
 
-class Pathfinder(val map: BooleanArray, private val width: Int, private val height: Int, private val neighborFunction: Neighbors = ::neighbors) {
+class Pathfinder(
+    val map: BooleanArray,
+    private val width: Int,
+    private val height: Int,
+    private val neighborFunction: Neighbors = ::neighbors
+) {
     private val fringe = PriorityQueue<INode> { o1, o2 -> sign(f(o1) - f(o2)).toInt() }
     private val closed = hashSetOf<INode>()
 
@@ -37,12 +42,12 @@ class Pathfinder(val map: BooleanArray, private val width: Int, private val heig
             val current = fringe.poll() ?: break
             closed.add(current)
             if (current == end) return reconstructFrom(current)
-            for (neighbor in neighborFunction.invoke(current)) {
+            neighborFunction.invoke(current).forEach { neighbor ->
                 neighbor.parent = current
-                if (closed.contains(neighbor) || !bound(neighbor) || blocked(neighbor)) continue
+                if (closed.contains(neighbor) || !bound(neighbor) || blocked(neighbor)) return@forEach
                 val g0 = g(current) + manhattan(current, neighbor)
                 if (!fringe.contains(neighbor)) fringe.add(neighbor)
-                else if (g0 >= g(neighbor)) continue
+                else if (g0 >= g(neighbor)) return@forEach
                 g(neighbor, g0)
                 f(neighbor, g0 + manhattan(neighbor, end))
             }
@@ -62,20 +67,17 @@ class Pathfinder(val map: BooleanArray, private val width: Int, private val heig
             val cell = queue.poll()
             if (cell == end) break
 
-            for (newCell in neighborFunction.invoke(cell)) {
-                if (!bound(newCell) || blocked(newCell) || newCell in visited) continue
+            neighborFunction.invoke(cell).forEach { newCell ->
+                if (!bound(newCell) || blocked(newCell) || newCell in visited) return@forEach
                 previous[newCell] = cell
                 queue.offer(newCell)
                 visited.add(newCell)
             }
         }
-
-        val pathToStart =
-                generateSequence(previous[end]) { cell -> previous[cell] }
-                        .takeWhile { cell -> cell != start }
-                        .toList()
-                        .ifEmpty { return emptyList() }
-        return pathToStart.reversed()
+        return generateSequence(previous[end]) { cell -> previous[cell] }
+            .takeWhile { cell -> cell != start }
+            .toList()
+            .ifEmpty { return emptyList() }.reversed()
     }
 
     private fun index(x: Int, y: Int) = y * width + x
@@ -103,16 +105,16 @@ class Pathfinder(val map: BooleanArray, private val width: Int, private val heig
             list.add(p)
             p = p.parent
         }
-
         return list
     }
 
-    private fun manhattan(node0: INode, node1: INode) = max(node0.x, node1.x) - min(node0.x, node1.x) + (max(node0.y, node1.y) - min(node0.y, node1.y)).toDouble()
+    private fun manhattan(node0: INode, node1: INode) =
+        max(node0.x, node1.x) - min(node0.x, node1.x) + (max(node0.y, node1.y) - min(node0.y, node1.y)).toDouble()
 
     fun printMap(path: List<INode>) {
         println()
-        for (y in 0 until height) {
-            for (x in 0 until width) {
+        (0 until height).forEach { y ->
+            (0 until width).forEach { x ->
                 if (path.contains(Node(x, y))) print("\u001B[32m*\u001B[0m")
                 else print(if (map[y * width + x]) '#' else ' ')
             }
@@ -130,17 +132,11 @@ class Pathfinder(val map: BooleanArray, private val width: Int, private val heig
             if (javaClass != other?.javaClass) return false
 
             other as INode
-
             if (x != other.x) return false
             if (y != other.y) return false
-
             return true
         }
 
-        override fun hashCode(): Int {
-            var result = x
-            result = 31 * result + y
-            return result
-        }
+        override fun hashCode() = 31 * x + y
     }
 }
