@@ -3,6 +3,9 @@ import java.nio.file.Paths
 import kotlin.streams.toList
 import kotlin.system.measureNanoTime
 
+const val firstYear = 2015
+const val lastYear = 2020
+
 val skips = setOf(
     2015 to 22 to 1,
     2016 to 5 to 2,
@@ -27,17 +30,28 @@ const val ANSI_RESET = "\u001B[0m"
 
 const val skipLongRunning = true
 
-const val runLatest = true
-
 val expected = parseExpected()
 
 var correct = 0
 var incorrect = 0
 
+/**
+ * default: run all
+ * -y $year: run for year
+ * -d $year $day: run for day
+ * -i $FilePackage$ $FileNameWithoutAllExtensions$: IntelliJ program args for running current File
+ */
 fun main(args: Array<String>) {
-    if (args.isNullOrEmpty() || args.size != 2) (2015..2020).forEach { if (runLatest) runLatest(it) else run(it) }
-    // with IntelliJ Program arguments: $FilePackage$ $FileNameWithoutAllExtensions$
-    else if (args.size == 2) runDay(args[0].drop(1).toInt(), args[1].drop(3).toInt())
+    if (args.isEmpty()) {
+        (firstYear..lastYear).forEach { run(it) }
+        return
+    }
+    when (args[0]) {
+        "-y" -> args.getOrNull(1)?.toIntOrNull()?.takeIf { it in firstYear..lastYear }?.let { run(it) }
+        "-d" -> runDay(args[1].toInt(), args[2].toInt())
+        "-i" -> runDay(args[1].drop(1).toInt(), args[2].drop(3).toInt())
+        else -> return
+    }
     println("Correct: $correct $ANSI_GREEN✔$ANSI_RESET")
     println("Incorrect: $incorrect $ANSI_RED⚠$ANSI_RESET")
 }
@@ -93,11 +107,11 @@ fun runPart(day: Day?, part: Int): Double {
     return time
 }
 
-fun parseExpected() = getExpectedLines().map { line ->
+fun parseExpected() = getExpectedLines().associate { line ->
     val split = line.split(":")
     val part = split[0].split(",").map { it.toInt() }
     Triple(part[0], part[1], part[2]) to split[1]
-}.toMap()
+}
 
 fun getExpectedLines(): List<String> {
     Files.lines(Paths.get("src/main/resources/solutions.txt")).use { lines -> return lines.toList() }

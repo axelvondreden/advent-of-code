@@ -101,12 +101,12 @@ class Day15 : Day(2019, 15) {
 
     private fun fillOxygen(oxygenLocation: Pair<Long, Long>, map: Map<Pair<Long, Long>, Long>): Long {
         val hasOxy = mutableSetOf(oxygenLocation)
-        val points = map.keys.filter { map[it] ?: error("not in map") == 1L }
+        val points = map.keys.filter { (map[it] ?: error("not in map")) == 1L }
         var counter = 0L
         while (points.any { it !in hasOxy }) {
             counter += 1
             val newPoints = hasOxy.flatMap { point ->
-                (1L..4L).map { dir -> point.move(dir)}.filter { it in map && map[it] ?: error("not in map") == 1L }
+                (1L..4L).map { dir -> point.move(dir)}.filter { it in map && (map[it] ?: error("not in map")) == 1L }
             }
             hasOxy.addAll(newPoints)
         }

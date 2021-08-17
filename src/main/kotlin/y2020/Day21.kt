@@ -30,13 +30,12 @@ class Day21 : Day(2020, 21) {
 
     private fun Map<Set<String>, Set<String>>.ingredientsByAllergy(): MutableMap<String, MutableSet<String>> {
         val safeIngredients = safeIngredients()
-        return values.flatten().toSet().map { allergen ->
-            allergen to entries
-                .filter { allergen in it.value }
+        return values.flatten().toSet().associateWith { allergen ->
+            entries.filter { allergen in it.value }
                 .map { it.key - safeIngredients }
                 .reduce { a, b -> a intersect b }
                 .toMutableSet()
-        }.toMap().toMutableMap()
+        }.toMutableMap()
     }
 
     private fun Map<Set<String>, Set<String>>.safeIngredients() = keys.flatten().toSet().subtract(
@@ -47,9 +46,9 @@ class Day21 : Day(2020, 21) {
         }.toSet()
     )
 
-    private fun List<String>.toIngredients() = map { line ->
+    private fun List<String>.toIngredients() = associate { line ->
         val ingredients = line.substringBefore(" (").split(" ").toSet()
         val allergens = line.substringAfter("(contains ").substringBefore(")").split(", ").toSet()
         ingredients to allergens
-    }.toMap()
+    }
 }

@@ -7,7 +7,7 @@ class Day19 : Day(2020, 19) {
 
     override val input = readStrings()
 
-    private val rules = input.takeWhile { it.isNotBlank() }.map(::parseRules).toMap().toSortedMap()
+    private val rules = input.takeWhile { it.isNotBlank() }.associate(::parseRules).toSortedMap()
     private val messages = input.subList(input.indexOf("") + 1, input.size)
 
     override fun solve1() = messages.count { str -> str.verify(rules, listOf(0)) }

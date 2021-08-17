@@ -23,7 +23,7 @@ class Assembunny(private val register: MutableMap<String, Int>) {
                     index++
                 }
                 "jnz" -> {
-                    if (arg1.toIntOrNull() ?: register[arg1]!! != 0) index += arg2!!.toIntOrNull() ?: register[arg2]!! else index++
+                    if ((arg1.toIntOrNull() ?: register[arg1]!!) != 0) index += arg2!!.toIntOrNull() ?: register[arg2]!! else index++
                 }
                 "tgl" -> {
                     val move = register[arg1]!!

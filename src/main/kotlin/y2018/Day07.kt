@@ -35,7 +35,7 @@ class Day07 : Day(2018, 7) {
                         possible.add(step)
                     }
                 }
-                if (!possible.isNullOrEmpty()) {
+                if (possible.isNotEmpty()) {
                     val next = possible.minOrNull()!!
                     todo.remove(next)
                     working.add(next)

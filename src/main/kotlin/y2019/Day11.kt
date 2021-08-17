@@ -30,10 +30,10 @@ class Day11 : Day(2019, 11) {
                 panels[Point(output.first, output.second)] = output.third
             }
         } catch (e: Error) {
-            val minX = panels.keys.map { it.x }.minOrNull()!!
-            val maxX = panels.keys.map { it.x }.maxOrNull()!!
-            val minY = panels.keys.map { it.y }.minOrNull()!!
-            val maxY = panels.keys.map { it.y }.maxOrNull()!!
+            val minX = panels.keys.minOf { it.x }
+            val maxX = panels.keys.maxOf { it.x }
+            val minY = panels.keys.minOf { it.y }
+            val maxY = panels.keys.maxOf { it.y }
             (minY..maxY).forEach { y ->
                 (minX..maxX).forEach { x ->
                     ret += if (panels.getOrDefault(Point(x, y), 0L) == 1L) '#' else ' '

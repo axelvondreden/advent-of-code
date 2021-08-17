@@ -6,7 +6,7 @@ class Day18 : Day(2017, 18) {
 
     override val input = readStrings().map { it.split(" ") }
 
-    private val register = ('a'..'z').map { it to 0L }.toMap()
+    private val register = ('a'..'z').associateWith { 0L }
 
     override fun solve1(): Long {
         var index = 0

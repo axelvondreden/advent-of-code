@@ -26,7 +26,7 @@ class Day25 : Day(2017, 25) {
 
     override fun solve2() = 0
 
-    private fun List<String>.parseStates(): Map<Char, State> = drop(3).chunked(10).map { chunk ->
+    private fun List<String>.parseStates(): Map<Char, State> = drop(3).chunked(10).associate { chunk ->
         val c = chunk[0].split(" ")[2][0]
         val writeIf0 = chunk[2].dropLast(1).last() == '1'
         val moveIf0 = if (chunk[3].split(" ").last() == "right.") 1 else -1
@@ -45,7 +45,7 @@ class Day25 : Day(2017, 25) {
                 states[stateIf0]!!
             }
         }
-    }.toMap()
+    }
 
     private class State(val func: (Boolean) -> State)
 }

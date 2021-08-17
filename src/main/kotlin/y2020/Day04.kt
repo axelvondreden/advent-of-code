@@ -34,7 +34,7 @@ class Day04 : Day(2020, 4) {
     }
 
     private fun parsePassports() = passportStrings.filter { it.hasPassportFields() }.map { line ->
-        val map = line.trim().split(Regex("\\s+")).map { it.split(":")[0] to it.split(":")[1] }.toMap()
+        val map = line.trim().split(Regex("\\s+")).associate { it.split(":")[0] to it.split(":")[1] }
         Passport(map["byr"]!!, map["iyr"]!!, map["eyr"]!!, map["hgt"]!!, map["hcl"]!!, map["ecl"]!!, map["pid"]!!)
     }
 
@@ -46,9 +46,9 @@ class Day04 : Day(2020, 4) {
 
     private data class Passport(val byr: String, val iyr: String, val eyr: String, val hgt: String, val hcl: String, val ecl: String, val pid: String) {
         fun hasValidValues(): Boolean {
-            if (byr.toIntOrNull() ?: 0 !in 1920..2002) return false
-            if (iyr.toIntOrNull() ?: 0 !in 2010..2020) return false
-            if (eyr.toIntOrNull() ?: 0 !in 2020..2030) return false
+            if ((byr.toIntOrNull() ?: 0) !in 1920..2002) return false
+            if ((iyr.toIntOrNull() ?: 0) !in 2010..2020) return false
+            if ((eyr.toIntOrNull() ?: 0) !in 2020..2030) return false
             if (hgt.endsWith("cm") || hgt.endsWith("in")) {
                 val hgtValue = hgt.dropLast(2).toIntOrNull() ?: return false
                 if (hgt.endsWith("cm") && hgtValue !in 150..193) return false

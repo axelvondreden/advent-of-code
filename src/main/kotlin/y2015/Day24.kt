@@ -13,7 +13,7 @@ class Day24 : Day(2015, 24) {
             getGroups(input.sum() / 3, emptySet(), set, i)
             if (set.isNotEmpty()) {
                 val min = set.map { it.size }.minOrNull()
-                return set.filter { it.size == min }.map { it.product() }.minOrNull()!!
+                return set.filter { it.size == min }.minOf { it.product() }
             }
         }
         return 0
@@ -25,7 +25,7 @@ class Day24 : Day(2015, 24) {
             getGroups(input.sum() / 4, emptySet(), set, i)
             if (set.isNotEmpty()) {
                 val min = set.map { it.size }.minOrNull()
-                return set.filter { it.size == min }.map { it.product() }.minOrNull()!!
+                return set.filter { it.size == min }.minOf { it.product() }
             }
         }
         return 0

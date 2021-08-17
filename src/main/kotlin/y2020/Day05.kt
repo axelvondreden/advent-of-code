@@ -6,10 +6,10 @@ class Day05 : Day(2020, 5) {
 
     override val input = readStrings()
 
-    override fun solve1() = input.map { getSeatId(it) }.maxOrNull()!!
+    override fun solve1() = input.maxOf { it.getSeatId() }
 
     override fun solve2(): Int {
-        val ids = input.map { getSeatId(it) }.sorted()
+        val ids = input.map { it.getSeatId() }.sorted()
         var last = ids.first()
         (1 until ids.size).forEach { i ->
             if (ids[i] == last + 1) last = ids[i]
@@ -18,9 +18,9 @@ class Day05 : Day(2020, 5) {
         return 0
     }
 
-    private fun getSeatId(specifier: String): Int {
-        val row = specifier.substring(0, 7)
-        val col = specifier.substring(7)
+    private fun String.getSeatId(): Int {
+        val row = substring(0, 7)
+        val col = substring(7)
         var rowLower = 0
         var rowUpper = 127
         row.forEach {

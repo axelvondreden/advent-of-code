@@ -21,22 +21,18 @@ class Day13 : Day(2015, 13) {
     }
 
     private fun Map<Pair<String, String>, Int>.maxHappiness() =
-        keys.map { it.first }.distinct().toSet().permute().map {
-            it + it.first()
-        }.map { seatList ->
-            seatList.zipWithNext().map { get(it)!! }.sum() +
-                    seatList.reversed().zipWithNext().map { get(it)!! }.sum()
-        }.maxOrNull()!!
+        keys.map { it.first }.distinct().toSet().permute().map { it + it.first() }.maxOf { seatList ->
+            seatList.zipWithNext().sumOf { get(it)!! } +
+                    seatList.reversed().zipWithNext().sumOf { get(it)!! }
+        }
 
     private fun Map<Pair<String, String>, Int>.maxHappinessWithGap() =
-        keys.map { it.first }.distinct().toSet().permute().map {
-            it + it.first()
-        }.map { seatList ->
-            (0 until seatList.size - 1).map { gap ->
-                seatList.zipWithNext().dropAt(gap).map { get(it)!! }.sum() +
-                        seatList.reversed().zipWithNext().dropAt(seatList.size - 2 - gap).map { get(it)!! }.sum()
-            }.maxOrNull()!!
-        }.maxOrNull()!!
+        keys.map { it.first }.distinct().toSet().permute().map { it + it.first() }.maxOf { seatList ->
+            (0 until seatList.size - 1).maxOf { gap ->
+                seatList.zipWithNext().dropAt(gap).sumOf { get(it)!! } +
+                        seatList.reversed().zipWithNext().dropAt(seatList.size - 2 - gap).sumOf { get(it)!! }
+            }
+        }
 
     private fun <T> List<T>.dropAt(n: Int): List<T> = subList(0, n) + subList(n + 1, size)
 }

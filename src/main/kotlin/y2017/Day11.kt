@@ -9,9 +9,9 @@ class Day11 : Day(2017, 11) {
 
     override fun solve1() = input.fold(Hex(0, 0, 0)) { spot, dir -> spot.move(dir.toHexDir()) }.distance(Hex(0, 0, 0))
 
-    override fun solve2() = input.fold(listOf(Hex(0, 0, 0))) { path, dir -> path + (path.last().move(dir.toHexDir())) }
-        .map { it.distance(Hex(0, 0, 0)) }
-        .maxOrNull()!!
+    override fun solve2() = input.fold(listOf(Hex(0, 0, 0))) { path, dir ->
+        path + (path.last().move(dir.toHexDir()))
+    }.maxOf { it.distance(Hex(0, 0, 0)) }
 
     private fun String.toHexDir() = when (this) {
         "n" -> HexDir.N

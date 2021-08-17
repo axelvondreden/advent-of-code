@@ -10,16 +10,12 @@ class Day24 : Day(2017, 24) {
         Component(split[0].toInt(), split[1].toInt())
     }.toSet()
 
-    override fun solve1() = findAllBridges(input, emptyList(), 0).map {
-            bridge -> bridge.sumBy { it.port1 + it.port2 }
-    }.maxOrNull()!!
+    override fun solve1() = findAllBridges(input, emptyList(), 0).maxOf { bridge -> bridge.sumBy { it.port1 + it.port2 } }
 
     override fun solve2(): Int {
         val bridges = findAllBridges(input, emptyList(), 0)
-        val maxSize = bridges.map { it.size }.maxOrNull()!!
-        return bridges.filter { it.size == maxSize }.map {
-                bridge -> bridge.sumBy { it.port1 + it.port2 }
-        }.maxOrNull()!!
+        val maxSize = bridges.maxOf { it.size }
+        return bridges.filter { it.size == maxSize }.maxOf { bridge -> bridge.sumBy { it.port1 + it.port2 } }
     }
 
     private fun findAllBridges(components: Set<Component>, currentBridge: List<Component>, nextPort: Int): List<List<Component>> {

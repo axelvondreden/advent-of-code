@@ -26,7 +26,7 @@ object IO {
 
     fun readCharMatrix(year: Int, day: Int): Array<CharArray> {
         val list = readStrings(year, day)
-        val max = list.map { it.length }.maxOrNull()!!
+        val max = list.maxOf { it.length }
         val matrix = Array(max) { CharArray(list.size) }
         for (y in list.indices) {
             val s = list[y]

@@ -10,21 +10,15 @@ class Day12 : Day(2015, 12) {
 
     private val integerPattern = Regex("-?\\d+")
 
-    override fun solve1() = integerPattern.findAll(input).mapNotNull { it.value.toInt() }.sum()
+    override fun solve1() = integerPattern.findAll(input).map { it.value.toInt() }.sum()
 
-    override fun solve2() = jsonSum(JsonParser.parseString(input))
+    override fun solve2() = JsonParser.parseString(input).sum()
 
-    private fun jsonSum(node: JsonElement): Int {
+    private fun JsonElement.sum(): Int {
         return when {
-            node.isJsonPrimitive -> try { node.asInt } catch (e: Exception) { 0 }
-            node.isJsonArray -> node.asJsonArray.map { jsonSum(it) }.sum()
-            node.isJsonObject -> {
-                node.asJsonObject.takeIf { subNode ->
-                    subNode.entrySet().none { it.value.isRed() }
-                }?.entrySet()?.map {
-                    jsonSum(it.value)
-                }?.sum() ?: 0
-            }
+            isJsonPrimitive -> try { asInt } catch (e: Exception) { 0 }
+            isJsonArray -> asJsonArray.sumOf { it.sum() }
+            isJsonObject -> asJsonObject.takeIf { subNode -> subNode.entrySet().none { it.value.isRed() } }?.entrySet()?.sumOf { it.value.sum() } ?: 0
             else -> throw Exception("bad node type")
         }
     }

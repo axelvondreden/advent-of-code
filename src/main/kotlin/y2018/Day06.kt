@@ -27,10 +27,9 @@ class Day06 : Day(2018, 6) {
 
     override fun solve2(): Int = xRange.flatMap { x ->
         yRange.map { y ->
-            input.map { it.distance(Point(x, y)) }.sum()
+            input.sumOf { it.distance(Point(x, y)) }
         }
-    }.filter { it < 10000 }.count()
+    }.count { it < 10000 }
 
     private fun isEdge(p: Point) = p.x == xRange.first || p.x == xRange.last || p.y == yRange.first || p.y == yRange.last
-
 }

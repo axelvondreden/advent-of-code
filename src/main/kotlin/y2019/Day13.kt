@@ -49,8 +49,8 @@ class Day13 : Day(2019, 13) {
     }
 
     private fun printGame(set: Set<Triple<Long, Long, Long>>) {
-        val maxX = set.map { it.first }.maxOrNull()!!
-        val maxY = set.map { it.second }.maxOrNull()!!
+        val maxX = set.maxOf { it.first }
+        val maxY = set.maxOf { it.second }
         for (y in 0..maxY) {
             for (x in 0..maxX) {
                 print(

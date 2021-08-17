@@ -7,7 +7,7 @@ class Day23 : Day(2017, 23) {
     override val input = readStrings()
 
     override fun solve1(): Int {
-        val register = ('a'..'h').map { it to 0L }.toMap().toMutableMap()
+        val register = ('a'..'h').associateWith { 0L }.toMutableMap()
         var index = 0
         var mulCounter = 0
         while (index in input.indices) {

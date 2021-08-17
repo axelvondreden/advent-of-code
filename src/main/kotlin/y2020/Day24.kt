@@ -64,7 +64,7 @@ class Day24 : Day(2020, 24) {
         tile.move(HexDir.SE),
         tile.move(HexDir.NW),
         tile.move(HexDir.SW)
-    ).map { it to getOrDefault(it, true) }.toMap()
+    ).associateWith { getOrDefault(it, true) }
 
     private fun Map<Pair<Int, Int>, Boolean>.countBlackNeighbours(tile: Pair<Int, Int>) = getNeighbours(tile).values.count { !it }
 

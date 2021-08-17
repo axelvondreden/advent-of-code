@@ -8,7 +8,7 @@ class Day14 : Day(2019, 14) {
 
     private val reactions = input.map { list ->
         val output = Pair(list[1].split(" ")[1], list[1].split(" ")[0].toLong())
-        val inputs = list[0].split(", ").map { it.split(" ")[1] to it.split(" ")[0].toLong() }.toMap()
+        val inputs = list[0].split(", ").associate { it.split(" ")[1] to it.split(" ")[0].toLong() }
         Reaction(inputs, output)
     }
 

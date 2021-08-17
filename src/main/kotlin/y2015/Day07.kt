@@ -49,7 +49,7 @@ class Day07 : Day(2015, 7) {
         return wires
     }
 
-    private fun MutableMap<String, Wire>.getWire(i: String) = getOrPut(i, { Wire(Value(0u)) })
+    private fun MutableMap<String, Wire>.getWire(i: String) = getOrPut(i) { Wire(Value(0u)) }
 
     private abstract class IOElement {
         private var cache: UShort? = null

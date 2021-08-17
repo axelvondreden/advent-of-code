@@ -34,7 +34,7 @@ class Day11 : Day(2016, 11) {
             } else {
                 val gap = abs(floor - state.last[key]!!)
                 if (gap != 0) {
-                    val gapValue = state.gaps.getOrPut(gap, { 0 })
+                    val gapValue = state.gaps.getOrPut(gap) { 0 }
                     state.gaps[gap] = gapValue + 1
                 }
             }

@@ -16,7 +16,7 @@ class Day17 : Day(2015, 17) {
     }
 
     override fun solve2(): Int {
-        val min = combinations.map { it.size }.minOrNull()!!
+        val min = combinations.minOf { it.size }
         return combinations.count { it.size == min }
     }
 

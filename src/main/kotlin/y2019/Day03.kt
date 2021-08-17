@@ -14,7 +14,7 @@ class Day03 : Day(2019, 3) {
     override fun solve1(): Int {
         val intersections = steps1.filter { steps2.contains(it) }
         val center = Step(0, 0)
-        return intersections.map { it.distance(center) }.minOrNull()!!
+        return intersections.minOf { it.distance(center) }
     }
 
     override fun solve2() = getShortestIntersection(steps1, steps2)

@@ -25,7 +25,7 @@ class Day22 : Day(2020, 22) {
                 p2Deck.addLast(p1Card)
             }
         }
-        return (if (p1Deck.isNotEmpty()) p1Deck else p2Deck).reversed().withIndex().sumBy { (it.index + 1) * it.value }
+        return (p1Deck.ifEmpty { p2Deck }).reversed().withIndex().sumBy { (it.index + 1) * it.value }
     }
 
     override fun solve2(): Int {

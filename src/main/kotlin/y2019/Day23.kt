@@ -62,7 +62,7 @@ class Day23 : Day(2019, 23) {
 
     private fun initNetwork() {
         (0 until 50).forEach { i ->
-            comps[i] = IntCodeComputer(input.copyOf(), true, true).withInputFunction {
+            comps[i] = IntCodeComputer(input.copyOf(), outputZeroes = true, haltAfterInput = true).withInputFunction {
                 if (inputBuffer[i]!!.isNotEmpty()) inputBuffer[i]!!.removeAt(0) else -1
             }
             inputBuffer[i] = mutableListOf(i.toLong())

@@ -6,12 +6,12 @@ class Day14 : Day(2015, 14) {
 
     override val input = readStrings().map { it.split(" ") }
 
-    private val reindeers = input.map { it[0] to Reindeer(it[3].toInt(), it[6].toInt(), it[13].toInt()) }.toMap()
+    private val reindeers = input.associate { it[0] to Reindeer(it[3].toInt(), it[6].toInt(), it[13].toInt()) }
 
-    override fun solve1() = reindeers.values.map { it.getDistance(2503) }.maxOrNull()!!
+    override fun solve1() = reindeers.values.maxOf { it.getDistance(2503) }
 
     override fun solve2(): Int {
-        val scores = reindeers.keys.map { it to 0 }.toMap().toMutableMap()
+        val scores = reindeers.keys.associateWith { 0 }.toMutableMap()
         (1..2503).forEach { i ->
             val max = reindeers.map { it.value.getDistance(i) }.maxOrNull()
             reindeers.filter { it.value.getDistance(i) == max }.keys.forEach { leader ->

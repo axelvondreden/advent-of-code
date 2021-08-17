@@ -67,9 +67,7 @@ class Day17 : Day(2020, 17) {
     private fun Set<Cube>.countNeighbours(cube: Cube) =
         ((cube.x - 1)..(cube.x + 1)).sumBy { x ->
             ((cube.y - 1)..(cube.y + 1)).sumBy { y ->
-                ((cube.z - 1)..(cube.z + 1))
-                    .filter { (x != cube.x || y != cube.y || it != cube.z) && Cube(x, y, it) in this }
-                    .count()
+                ((cube.z - 1)..(cube.z + 1)).count { (x != cube.x || y != cube.y || it != cube.z) && Cube(x, y, it) in this }
             }
         }
 
@@ -77,9 +75,9 @@ class Day17 : Day(2020, 17) {
         ((cube.x - 1)..(cube.x + 1)).sumBy { x ->
             ((cube.y - 1)..(cube.y + 1)).sumBy { y ->
                 ((cube.z - 1)..(cube.z + 1)).sumBy { z ->
-                    ((cube.w - 1)..(cube.w + 1)).filter {
+                    ((cube.w - 1)..(cube.w + 1)).count {
                         (x != cube.x || y != cube.y || z != cube.z || it != cube.w) && HyperCube(x, y, z, it) in this
-                    }.count()
+                    }
                 }
             }
         }

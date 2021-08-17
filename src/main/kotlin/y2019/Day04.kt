@@ -6,9 +6,9 @@ class Day04 : Day(2019, 4) {
 
     override val input = with(readString().split("-").map { it.toInt() }) { get(0)..get(1) }
 
-    override fun solve1() = input.filter { it.toString().checkDouble() && it.toString().checkIncreasing() }.count()
+    override fun solve1() = input.count { it.toString().checkDouble() && it.toString().checkIncreasing() }
 
-    override fun solve2() = input.filter { it.toString().checkIncreasing() && it.toString().checkDoubleStrict() }.count()
+    override fun solve2() = input.count { it.toString().checkIncreasing() && it.toString().checkDoubleStrict() }
 
     private fun String.checkDouble() = (1 until length).any { get(it - 1) == get(it) }
 

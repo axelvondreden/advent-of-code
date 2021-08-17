@@ -69,7 +69,7 @@ class Day14 : Day(2017, 14) {
             repeat(length / 2) {
                 ring.swap(fromIdx, toIdx)
                 fromIdx = fromIdx.inc() % ring.size
-                toIdx = toIdx.dec().takeIf { it >= 0 } ?: ring.size - 1
+                toIdx = toIdx.dec().takeIf { it >= 0 } ?: (ring.size - 1)
             }
         }
 

@@ -19,11 +19,11 @@ class Day16 : Day(2015, 16) {
         "perfumes" to 1
     )
 
-    private val sues = input.map { s ->
+    private val sues = input.associate { s ->
         s.substringBefore(":").toInt() to s.drop(s.indexOf(":") + 2).split(", ").map {
             it.split(": ")[0] to it.split(": ")[1].toInt()
         }
-    }.toMap()
+    }
 
     override fun solve1(): Int {
         sues.forEach { (key, value) ->

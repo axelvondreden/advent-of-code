@@ -6,9 +6,9 @@ class Day07 : Day(2016, 7) {
 
     override val input = readStrings()
 
-    override fun solve1() = input.filter { it.supportsTLS() }.count()
+    override fun solve1() = input.count { it.supportsTLS() }
 
-    override fun solve2() = input.filter { it.supportsSSL() }.count()
+    override fun solve2() = input.count { it.supportsSSL() }
 
     private fun String.supportsTLS(): Boolean {
         var tls = false

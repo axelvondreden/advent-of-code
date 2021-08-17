@@ -22,8 +22,8 @@ class Day19 : Day(2019, 19) {
     }
 
     private fun find(list: List<Pair<Long, Long>>): Long {
-        val maxY = list.map { it.second }.maxOrNull()!!
-        val minX = list.filter { it.second == maxY }.map { it.first }.minOrNull()!!
+        val maxY = list.maxOf { it.second }
+        val minX = list.filter { it.second == maxY }.minOf { it.first }
         (maxY - 99..maxY).forEach { y ->
             (minX..minX + 99).forEach { x ->
                 if (list.none { it.first == x && it.second == y }) return -1

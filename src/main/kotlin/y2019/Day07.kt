@@ -8,11 +8,11 @@ class Day07 : Day(2019, 7) {
 
     override fun solve1() = listOf(0L, 1, 2, 3, 4).toAmps().map { list ->
         list.map { Amplifier(input.copyOf(), it, false) }
-    }.map { runAmplifiers(it) }.maxOrNull()!!
+    }.maxOf { runAmplifiers(it) }
 
     override fun solve2() = listOf(5L, 6, 7, 8, 9).toAmps().map { list ->
         list.map { Amplifier(input.copyOf(), it, true) }
-    }.map { runAmplifiersFeedback(it) }.maxOrNull()!!
+    }.maxOf { runAmplifiersFeedback(it) }
 
     private fun runAmplifiers(amps: List<Amplifier>): Long {
         var input = 0L

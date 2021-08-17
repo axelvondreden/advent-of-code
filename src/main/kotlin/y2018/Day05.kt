@@ -8,9 +8,7 @@ class Day05 : Day(2018, 5) {
 
     override fun solve1() = input.fullReact().length
 
-    override fun solve2() = ('a'..'z').map {
-        input.replace(it.toString(), "", ignoreCase = true).fullReact().length
-    }.minOrNull()!!
+    override fun solve2() = ('a'..'z').minOf { input.replace(it.toString(), "", ignoreCase = true).fullReact().length }
 
     private fun String.fullReact(): String {
         var poly = this

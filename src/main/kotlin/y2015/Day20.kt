@@ -28,7 +28,7 @@ class Day20 : Day(2015, 20) {
             houseNumber.getAllDivisors(divisors)
             divisors.forEach { presentCounter[it] = presentCounter[it]?.plus(1) ?: 1 }
             val value =
-                divisors.fold(0, { sum, divisor -> if (presentCounter[divisor] ?: 0 <= 50) sum + divisor else sum })
+                divisors.fold(0) { sum, divisor -> if ((presentCounter[divisor] ?: 0) <= 50) sum + divisor else sum }
         } while (value < input / 11 && houseNumber < 1000000)
         return houseNumber
     }
