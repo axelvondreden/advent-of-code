@@ -1,6 +1,7 @@
 package y2017
 
 import Day
+import utils.Dir
 import utils.Point
 import utils.sqrt
 import kotlin.math.max
@@ -122,9 +123,5 @@ class Day03 : Day(2017, 3) {
         (y - 1..y + 1).sumBy { yy ->
             if (xx != x || yy != y) getOrNull(xx)?.getOrNull(yy) ?: 0 else 0
         }
-    }
-
-    private enum class Dir {
-        UP, DOWN, LEFT, RIGHT
     }
 }
