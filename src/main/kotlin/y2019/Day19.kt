@@ -6,7 +6,7 @@ class Day19 : Day(2019, 19) {
 
     override val input = readLongArray()
 
-    override fun solve1() = (0L..49).sumBy { y ->
+    override fun solve1() = (0L..49).sumOf { y ->
         (0L..49).filter { IntCodeComputer(input.copyOf()).addInput(it).addInput(y).run().value == 1L }.size
     }
 

@@ -14,7 +14,7 @@ class Day11 : Day(2020, 11) {
             last = current
             current = current.step()
         }
-        return current.sumBy { it.count { seat -> seat == '#' } }
+        return current.sumOf { it.count { seat -> seat == '#' } }
     }
 
     override fun solve2(): Int {
@@ -24,7 +24,7 @@ class Day11 : Day(2020, 11) {
             last = current
             current = current.step2()
         }
-        return current.sumBy { it.count { seat -> seat == '#' } }
+        return current.sumOf { it.count { seat -> seat == '#' } }
     }
 
     private fun Array<CharArray>.step() = Array(size) { y ->
@@ -51,13 +51,13 @@ class Day11 : Day(2020, 11) {
         }
     }
 
-    private fun Array<CharArray>.countOccupiedNeighbours(x: Int, y: Int) = ((x - 1)..(x + 1)).sumBy { xx ->
+    private fun Array<CharArray>.countOccupiedNeighbours(x: Int, y: Int) = ((x - 1)..(x + 1)).sumOf { xx ->
         ((y - 1)..(y + 1)).count { yy ->
             xx >= 0 && yy >= 0 && xx < get(0).size && yy < size && (x != xx || y != yy) && get(yy)[xx] == '#'
         }
     }
 
-    private fun Array<CharArray>.countOccupiedVisible(x: Int, y: Int) = (-1..1).sumBy { dx ->
+    private fun Array<CharArray>.countOccupiedVisible(x: Int, y: Int) = (-1..1).sumOf { dx ->
         (-1..1).count { dy ->
             (dx != 0 || dy != 0) && isVisibleSeatOccupied(x, y, dx, dy)
         }

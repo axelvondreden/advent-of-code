@@ -12,5 +12,5 @@ class Day01 : Day(2017, 1) {
 
     private fun captcha(offset: Int) = input.indices.filter {
         input[it] == input[(it + offset) % input.length]
-    }.sumBy { input[it].toString().toInt() }
+    }.sumOf { input[it].toString().toInt() }
 }

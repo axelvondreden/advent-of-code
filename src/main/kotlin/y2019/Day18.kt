@@ -71,8 +71,8 @@ class Day18: Day(2019, 18) {
             val newLength = length + edge.length
             val newId = id + key
             if (newLength >= minLength[0]) return
-            if (edge.doors.all { it.toLowerCase() in id } && edge.keys.none { it in keys }) {
-                val searchDoors = doors.filter { it != key.toUpperCase() }
+            if (edge.doors.all { it.lowercaseChar() in id } && edge.keys.none { it in keys }) {
+                val searchDoors = doors.filter { it != key.uppercaseChar() }
                 getShortestPath(key,  keys.filter { it != key }, searchDoors, newLength, minLength, newId)
             }
         }
@@ -89,8 +89,8 @@ class Day18: Day(2019, 18) {
                 val newLength = length + edge.length
                 val newId = id + key
                 if (newLength >= minLength[0]) continue
-                if (edge.doors.all { it.toLowerCase() in id } && edge.keys.none { it in keys }) {
-                    val searchDoors = doors.filter { it != key.toUpperCase() }
+                if (edge.doors.all { it.lowercaseChar() in id } && edge.keys.none { it in keys }) {
+                    val searchDoors = doors.filter { it != key.uppercaseChar() }
                     getShortestPath(start.toMutableList().apply { remove(st); add(key) }, keys.filter { it != key }, searchDoors, newLength, minLength, newId)
                 }
             }

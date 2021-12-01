@@ -9,7 +9,7 @@ class Day14 : Day(2017, 14) {
 
     private val grid by lazy { stringsToGrid() }
 
-    override fun solve1() = input.sumBy { binaryString -> binaryString.count { it == '1' } }
+    override fun solve1() = input.sumOf { binaryString -> binaryString.count { it == '1' } }
 
     override fun solve2(): Int {
         var groups = 0
@@ -73,7 +73,7 @@ class Day14 : Day(2017, 14) {
             }
         }
 
-        private fun lengthsForString(input: String) = (input.map { it.toInt() } + magicLengths).toIntArray()
+        private fun lengthsForString(input: String) = (input.map { it.code } + magicLengths).toIntArray()
 
         private fun IntArray.swap(a: Int, b: Int): IntArray {
             val tmp = this[a]

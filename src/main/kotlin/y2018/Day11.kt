@@ -46,7 +46,7 @@ class Day11 : Day(2018, 11) {
     }
 
     private fun calcNxNScore(x: Int, y: Int, size: Int) =
-        (x..x + size).sumBy { xx -> (y..y + size).sumOf { yy -> getPowerLvl(xx, yy) } }
+        (x..x + size).sumOf { xx -> (y..y + size).sumOf { yy -> getPowerLvl(xx, yy) } }
 
     private fun getPowerLvl(x: Int, y: Int) = cache.getOrPut("$x,$y") {
         val rackId = x + 10

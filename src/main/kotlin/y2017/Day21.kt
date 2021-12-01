@@ -15,13 +15,13 @@ class Day21 : Day(2017, 21) {
     override fun solve1(): Int {
         var copy = image.copyOf()
         repeat(5) { copy = copy.step() }
-        return copy.sumBy { chars -> chars.count { it == '#' } }
+        return copy.sumOf { chars -> chars.count { it == '#' } }
     }
 
     override fun solve2(): Int {
         var copy = image.copyOf()
         repeat(18) { copy = copy.step() }
-        return copy.sumBy { chars -> chars.count { it == '#' } }
+        return copy.sumOf { chars -> chars.count { it == '#' } }
     }
 
     private fun Array<CharArray>.step() = breakUp(if (size % 2 == 0) 2 else 3).map { imgCol ->

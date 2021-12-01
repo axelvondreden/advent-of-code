@@ -6,9 +6,9 @@ class Day02 : Day(2017, 2) {
 
     override val input = readStrings()
 
-    override fun solve1() = input.sumBy { rowChecksum(it) }
+    override fun solve1() = input.sumOf { rowChecksum(it) }
 
-    override fun solve2() = input.sumBy { rowChecksum2(it) }
+    override fun solve2() = input.sumOf { rowChecksum2(it) }
 
     private fun rowChecksum(row: String): Int {
         val values = row.split(Regex("\\s+")).map { it.toInt() }

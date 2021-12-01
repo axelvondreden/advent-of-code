@@ -11,7 +11,7 @@ class Day19 : Day(2017, 19) {
         val startX = input.mapIndexed { index, chars -> index to chars[0] }.first { it.second == '|' }.first
         var point = Point(startX.toLong(), 0)
         val letters = mutableListOf<Char>()
-        val letterCount = input.sumBy { chars -> chars.count { it.isLetter() } }
+        val letterCount = input.sumOf { chars -> chars.count { it.isLetter() } }
         var lastDir = Dir.DOWN
         while (letters.size < letterCount) {
             lastDir = input.nextDir(point, lastDir, letters)
@@ -24,7 +24,7 @@ class Day19 : Day(2017, 19) {
         val startX = input.mapIndexed { index, chars -> index to chars[0] }.first { it.second == '|' }.first
         var point = Point(startX.toLong(), 0)
         val letters = mutableListOf<Char>()
-        val letterCount = input.sumBy { chars -> chars.count { it.isLetter() } }
+        val letterCount = input.sumOf { chars -> chars.count { it.isLetter() } }
         var lastDir = Dir.DOWN
         var stepCount = 0
         while (letters.size < letterCount) {

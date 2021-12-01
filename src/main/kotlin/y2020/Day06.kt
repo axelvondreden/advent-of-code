@@ -6,9 +6,9 @@ class Day06 : Day(2020, 6) {
 
     override val input = readStrings().toGroups()
 
-    override fun solve1() = input.sumBy { it.yesCount }
+    override fun solve1() = input.sumOf { it.yesCount }
 
-    override fun solve2() = input.sumBy { it.allYesCount }
+    override fun solve2() = input.sumOf { it.allYesCount }
 
     private fun List<String>.toGroups(): List<Group> {
         val groups = mutableListOf<Group>()

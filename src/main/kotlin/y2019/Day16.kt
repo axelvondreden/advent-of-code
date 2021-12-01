@@ -38,7 +38,7 @@ class Day16 : Day(2019, 16) {
 
     private fun translate(input: IntArray) = input.mapIndexed { index, _ -> multiplySignal(input, getPattern(index)) }.toIntArray()
 
-    private fun multiplySignal(input: IntArray, pattern: IntArray) = input.indices.sumBy { input[it] * pattern[it % pattern.size] }.toString().last().toString().toInt()
+    private fun multiplySignal(input: IntArray, pattern: IntArray) = input.indices.sumOf { input[it] * pattern[it % pattern.size] }.toString().last().toString().toInt()
 
     private fun getPattern(index: Int): IntArray {
         var newPattern = emptyList<Int>().toMutableList()

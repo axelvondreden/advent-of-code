@@ -14,7 +14,7 @@ class Day04 : Day(2016, 4) {
         Room(name, sector, checksum)
     }
 
-    override fun solve1() = rooms.filter { it.check() }.sumBy { it.sector }
+    override fun solve1() = rooms.filter { it.check() }.sumOf { it.sector }
 
     override fun solve2() = rooms.first { it.decrypt().contains("northpole") }.sector
 

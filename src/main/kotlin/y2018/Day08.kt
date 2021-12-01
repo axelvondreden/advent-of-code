@@ -19,11 +19,11 @@ class Day08 : Day(2018, 8) {
     }
 
     data class Node(val children: List<Node>, val metadata: List<Metadata>) {
-        val sumMetadata get(): Int = metadata.sumBy { it.value } + children.sumBy { it.sumMetadata }
+        val sumMetadata get(): Int = metadata.sumOf { it.value } + children.sumOf { it.sumMetadata }
         val value: Int
             get(): Int {
                 return if (children.isEmpty()) sumMetadata
-                else metadata.filter { it.value - 1 in children.indices }.sumBy { children[it.value - 1].value }
+                else metadata.filter { it.value - 1 in children.indices }.sumOf { children[it.value - 1].value }
             }
     }
 

@@ -18,7 +18,7 @@ class Day12 : Day(2019, 12) {
         repeat(1000) {
             step(planets)
         }
-        return planets.sumBy(::getTotalEnergy)
+        return planets.sumOf(::getTotalEnergy)
     }
 
     override fun solve2(): Long {

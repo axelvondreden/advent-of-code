@@ -33,7 +33,7 @@ class Day09 : Day(2015, 9) {
             distances.none { it.from == route[i - 1] && it.to == route[i] || (it.from == route[i] && it.to == route[i - 1]) }
         }
 
-        fun getLength(route: Array<Location>) = (1 until route.size).sumBy { i ->
+        fun getLength(route: Array<Location>) = (1 until route.size).sumOf { i ->
             distances.first {
                 it.from == route[i - 1] && it.to == route[i] || (it.from == route[i] && it.to == route[i - 1])
             }.distance

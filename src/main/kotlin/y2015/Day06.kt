@@ -17,7 +17,7 @@ class Day06 : Day(2015, 6) {
                 "utils.toggle" -> bGrid.toggle(Point(line[1]), Point(line[2]))
             }
         }
-        return bGrid.sumBy { booleans -> booleans.count { it } }
+        return bGrid.sumOf { booleans -> booleans.count { it } }
     }
 
     override fun solve2(): Int {
@@ -29,6 +29,6 @@ class Day06 : Day(2015, 6) {
                 "utils.toggle" -> iGrid.inc(Point(line[1]), Point(line[2]), 2)
             }
         }
-        return iGrid.sumBy { ints -> ints.sum() }
+        return iGrid.sumOf { ints -> ints.sum() }
     }
 }

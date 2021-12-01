@@ -23,7 +23,7 @@ class Day21 : Day(2020, 21) {
                 .toMap()
             found.putAll(singles)
             singles.keys.forEach { ingredientsByAllergy.remove(it) }
-            ingredientsByAllergy.values.forEach { it.removeAll(singles.values) }
+            ingredientsByAllergy.values.forEach { it.removeAll(singles.values.toSet()) }
         }
         return found.entries.sortedBy { it.key }.joinToString(",") { it.value }
     }

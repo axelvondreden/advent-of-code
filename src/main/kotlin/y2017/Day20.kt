@@ -17,7 +17,7 @@ class Day20 : Day(2017, 20) {
             val dupes = copy.filter { part -> copy.any { it.id != part.id && it.pos == part.pos } }
             if (dupes.isNotEmpty()) {
                 lastCollision = 0
-                copy = copy.minus(dupes)
+                copy = copy.minus(dupes.toSet())
             } else {
                 lastCollision++
             }

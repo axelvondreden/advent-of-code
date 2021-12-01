@@ -9,7 +9,7 @@ class Day08 : Day(2016, 8) {
 
     override val input = readStrings().map { it.split(" ").evaluate() }
 
-    override fun solve1() = screen.sumBy { booleans -> booleans.count { it } }
+    override fun solve1() = screen.sumOf { booleans -> booleans.count { it } }
 
     override fun solve2() = if (printScreen() == control) "RURUCEOEIL" else ""
 

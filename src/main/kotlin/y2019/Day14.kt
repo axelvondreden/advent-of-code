@@ -28,7 +28,7 @@ class Day14 : Day(2019, 14) {
         if (elem.first == "ORE") {
             elem.second.toInt()
         } else {
-            getNeededElements(reactions, elem, reserves).entries.sumBy {
+            getNeededElements(reactions, elem, reserves).entries.sumOf {
                 getOreCount(reactions, Pair(it.key, it.value), reserves)
             }
         }

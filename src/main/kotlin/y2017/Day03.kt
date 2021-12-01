@@ -119,8 +119,8 @@ class Day03 : Day(2017, 3) {
         return map
     }
 
-    private fun Array<IntArray>.sumOfNeighbours(x: Int, y: Int) = (x - 1..x + 1).sumBy { xx ->
-        (y - 1..y + 1).sumBy { yy ->
+    private fun Array<IntArray>.sumOfNeighbours(x: Int, y: Int) = (x - 1..x + 1).sumOf { xx ->
+        (y - 1..y + 1).sumOf { yy ->
             if (xx != x || yy != y) getOrNull(xx)?.getOrNull(yy) ?: 0 else 0
         }
     }

@@ -25,14 +25,14 @@ class Day22 : Day(2020, 22) {
                 p2Deck.addLast(p1Card)
             }
         }
-        return (p1Deck.ifEmpty { p2Deck }).reversed().withIndex().sumBy { (it.index + 1) * it.value }
+        return (p1Deck.ifEmpty { p2Deck }).reversed().withIndex().sumOf { (it.index + 1) * it.value }
     }
 
     override fun solve2(): Int {
         val p1Deck = parseDeck(input, 1)
         val p2Deck = parseDeck(input, 2)
         val winnerDeck = recursiveTurn(p1Deck, p2Deck, mutableSetOf()).first
-        return winnerDeck.reversed().withIndex().sumBy { (it.index + 1) * it.value }
+        return winnerDeck.reversed().withIndex().sumOf { (it.index + 1) * it.value }
     }
 
     private fun recursiveTurn(p1Deck: ArrayDeque<Int>, p2Deck: ArrayDeque<Int>, states: MutableSet<Int>): Pair<ArrayDeque<Int>, Int> {

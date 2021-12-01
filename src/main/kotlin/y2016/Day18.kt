@@ -14,7 +14,7 @@ class Day18 : Day(2016, 18) {
             map.add(currentRow)
             currentRow = currentRow.nextRow()
         }
-        return map.sumBy { row -> row.count { it == '.' } }
+        return map.sumOf { row -> row.count { it == '.' } }
     }
 
     override fun solve2(): Int {
@@ -24,7 +24,7 @@ class Day18 : Day(2016, 18) {
             map.add(currentRow)
             currentRow = currentRow.nextRow()
         }
-        return map.sumBy { row -> row.count { it == '.' } }
+        return map.sumOf { row -> row.count { it == '.' } }
     }
 
     private fun String.nextRow(): String {

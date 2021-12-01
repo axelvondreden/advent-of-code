@@ -53,7 +53,7 @@ class Day07 : Day(2017, 7) {
                     .findWrongWeight(diff ?: groupedChildren.keys.reduce { a, b -> a - b }.absoluteValue)
             }
 
-        private val combinedWeight: Int by lazy { weight + children.sumBy { it.combinedWeight } }
+        private val combinedWeight: Int by lazy { weight + children.sumOf { it.combinedWeight } }
 
         private val isBalanced: Boolean by lazy { children.map { it.combinedWeight }.distinct().size == 1 }
     }

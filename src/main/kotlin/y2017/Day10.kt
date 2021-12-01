@@ -25,7 +25,7 @@ class Day10 : Day(2017, 10) {
         var position = 0
         var skipSize = 0
         repeat(64) {
-            input.map { it.toInt() }.plus(listOf(17, 31, 73, 47, 23)).forEach {
+            input.map { it.code }.plus(listOf(17, 31, 73, 47, 23)).forEach {
                 val rotated = list.rotate(-position)
                 list = rotated.subList(0, it).reversed().plus(rotated.subList(it, rotated.size)).rotate(position)
                 position += it + skipSize

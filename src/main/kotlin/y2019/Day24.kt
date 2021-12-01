@@ -23,7 +23,7 @@ class Day24 : Day(2019, 24) {
         (-200..200).forEach { map[it] = Array(5) { CharArray(5) { '.' } } }
         map[0] = input.copy()
         repeat(200) { map = stepRecursive(map) }
-        return map.values.sumBy { arrayOfCharArrays -> arrayOfCharArrays.sumBy { chars -> chars.count { it == '#' } } }
+        return map.values.sumOf { arrayOfCharArrays -> arrayOfCharArrays.sumOf { chars -> chars.count { it == '#' } } }
     }
 
     private fun step(map: Array<CharArray>): Array<CharArray> {

@@ -3,7 +3,7 @@ import java.nio.file.Paths
 import kotlin.system.measureNanoTime
 
 const val firstYear = 2015
-const val lastYear = 2020
+const val lastYear = 2021
 
 val skips = setOf(
     2015 to 22 to 1,

@@ -113,10 +113,10 @@ class Day21 : Day(2015, 21) {
     private class You(private val weapon: Item, private val armor: Item?, private val rings: Set<Item>) : Player(100) {
 
         override fun defend(dmg: Int) {
-            hp -= max(dmg - weapon.arm - (armor?.arm ?: 0) - rings.sumBy { it.arm }, 1)
+            hp -= max(dmg - weapon.arm - (armor?.arm ?: 0) - rings.sumOf { it.arm }, 1)
         }
 
-        override fun attack() = weapon.dmg + (armor?.dmg ?: 0) + rings.sumBy { it.dmg }
+        override fun attack() = weapon.dmg + (armor?.dmg ?: 0) + rings.sumOf { it.dmg }
     }
 
     private data class Item(val cost: Int, val dmg: Int, val arm: Int)

@@ -44,14 +44,14 @@ class Day15 : Day(2015, 15) {
     private class Cookie(private val ings: Map<Ingredient, Int>) {
 
         fun getScore(): Int {
-            val capacity = ings.entries.sumBy { it.value * it.key.capacity }
-            val durability = ings.entries.sumBy { it.value * it.key.durability }
-            val flavor = ings.entries.sumBy { it.value * it.key.flavor }
-            val texture = ings.entries.sumBy { it.value * it.key.texture }
+            val capacity = ings.entries.sumOf { it.value * it.key.capacity }
+            val durability = ings.entries.sumOf { it.value * it.key.durability }
+            val flavor = ings.entries.sumOf { it.value * it.key.flavor }
+            val texture = ings.entries.sumOf { it.value * it.key.texture }
             return max(capacity, 0) * max(durability, 0) * max(flavor, 0) * max(texture, 0)
         }
 
-        fun getCalories() = ings.entries.sumBy { it.value * it.key.calories }
+        fun getCalories() = ings.entries.sumOf { it.value * it.key.calories }
     }
 
     data class Ingredient(

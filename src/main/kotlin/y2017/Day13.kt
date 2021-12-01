@@ -6,7 +6,7 @@ class Day13 : Day(2017, 13) {
 
     override val input = readStrings()
 
-    override fun solve1() = input.toLayers().filter { it.caughtAtTime(0) }.sumBy { it.severity }
+    override fun solve1() = input.toLayers().filter { it.caughtAtTime(0) }.sumOf { it.severity }
 
     override fun solve2(): Int {
         val layers = input.toLayers()

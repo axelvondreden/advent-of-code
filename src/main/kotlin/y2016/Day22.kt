@@ -14,7 +14,7 @@ class Day22 : Day(2016, 22) {
         Node(x, y, split[1].dropLast(1).toInt(), split[2].dropLast(1).toInt())
     }
 
-    override fun solve1() = input.sumBy { nodeA ->
+    override fun solve1() = input.sumOf { nodeA ->
         input.count { nodeB -> nodeA != nodeB && nodeA.used > 0 && nodeA.used <= nodeB.size - nodeB.used }
     }
 

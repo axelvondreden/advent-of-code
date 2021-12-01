@@ -19,7 +19,7 @@ class Day17 : Day(2019, 17) {
                 x = 0
                 y++
             } else {
-                map[Point(x, y)] = out.value.toChar()
+                map[Point(x, y)] = out.value.toInt().toChar()
                 x++
             }
             out = computer.run()
@@ -37,12 +37,12 @@ class Day17 : Day(2019, 17) {
 
     override fun solve2(): Long {
         val register = input.copyOf().apply { set(0, 2) }
-        val a = "L,6,R,12,L,4,L,6".map { it.toLong() }.toMutableList().apply { add(10L) }
-        val b = "R,6,L,6,R,12".map { it.toLong() }.toMutableList().apply { add(10L) }
-        val c = "L,6,L,10,L,10,R,6".map { it.toLong() }.toMutableList().apply { add(10L) }
-        val main = "A,B,B,C,A,B,C,A,B,C".map { it.toLong() }.toMutableList().apply { add(10L) }
+        val a = "L,6,R,12,L,4,L,6".map { it.code.toLong() }.toMutableList().apply { add(10L) }
+        val b = "R,6,L,6,R,12".map { it.code.toLong() }.toMutableList().apply { add(10L) }
+        val c = "L,6,L,10,L,10,R,6".map { it.code.toLong() }.toMutableList().apply { add(10L) }
+        val main = "A,B,B,C,A,B,C,A,B,C".map { it.code.toLong() }.toMutableList().apply { add(10L) }
 
-        val list = mutableListOf<Long>().apply { addAll(main); addAll(a); addAll(b); addAll(c); add('n'.toLong()); add(10L) }
+        val list = mutableListOf<Long>().apply { addAll(main); addAll(a); addAll(b); addAll(c); add('n'.code.toLong()); add(10L) }
 
         val computer2 = IntCodeComputer(register).withInputs(list.toLongArray())
         var out = computer2.run()

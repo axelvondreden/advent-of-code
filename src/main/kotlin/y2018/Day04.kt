@@ -9,7 +9,7 @@ class Day04 : Day(2018, 4) {
     override val input = readStrings().sorted().parseGuards()
 
     override fun solve1(): Int {
-        val guard = input.maxByOrNull { guard -> guard.sleepRanges.sumBy { it.minutes.count() } }
+        val guard = input.maxByOrNull { guard -> guard.sleepRanges.sumOf { it.minutes.count() } }
         val minute = guard!!.sleepRanges.flatMap { it.minutes }.groupBy { it }.maxByOrNull { it.value.size }!!.key
         return guard.id * minute
     }

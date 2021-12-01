@@ -21,7 +21,7 @@ class Day20 : Day(2020, 20) {
         )
 
         return imageToSingleTile().orientations()
-            .first { it.maskIfFound(monsterPattern) }.data.sumBy { row -> row.count { char -> char == '#' } }
+            .first { it.maskIfFound(monsterPattern) }.data.sumOf { row -> row.count { char -> char == '#' } }
     }
 
     private fun imageToSingleTile(): Tile {
