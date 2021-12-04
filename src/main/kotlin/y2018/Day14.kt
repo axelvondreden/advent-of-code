@@ -43,6 +43,7 @@ class Day14 : Day(2018, 14) {
     }
 
     private val checks = input.toString()
+
     private fun List<Int>.check(): Boolean {
         return takeLast(checks.length).joinToString("") == checks
     }
