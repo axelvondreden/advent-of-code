@@ -1,5 +1,6 @@
 package utils
 
+import kotlin.math.abs
 import kotlin.math.absoluteValue
 import kotlin.math.max
 import kotlin.math.min
@@ -13,6 +14,21 @@ data class Point(val x: Long, val y: Long) {
     fun distance(step: Point) = (max(x, step.x) - min(x, step.x)) + (max(y, step.y) - min(y, step.y))
 
     operator fun plus(p: Point) = Point(this.x + p.x, this.y + p.y)
+}
+
+data class Line(val p1: Point, val p2: Point) {
+    fun isStraight() = p1.x == p2.x || p1.y == p2.y
+    fun getPoints(): List<Point> {
+        var p = p1
+        val list = mutableListOf(p)
+        while (p != p2) {
+            val dx = (p2.x - p.x).let { if (it == 0L) 0L else it / abs(it) }
+            val dy = (p2.y - p.y).let { if (it == 0L) 0L else it / abs(it) }
+            p += Point(dx, dy)
+            list += p
+        }
+        return list
+    }
 }
 
 data class Point3D(val x: Long, val y: Long, val z: Long) {
