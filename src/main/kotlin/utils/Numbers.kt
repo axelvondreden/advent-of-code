@@ -41,3 +41,12 @@ inline fun <T> Iterable<T>.sumByLong(selector: (T) -> Long): Long {
     }
     return sum
 }
+
+fun Int.stepSum(): Int {
+    var num = this
+    var fac = num
+    while (num > 0) {
+        fac += --num
+    }
+    return fac
+}
