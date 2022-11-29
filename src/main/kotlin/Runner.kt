@@ -1,5 +1,6 @@
 import java.nio.file.Files
 import java.nio.file.Paths
+import kotlin.streams.toList
 import kotlin.system.measureNanoTime
 
 const val firstYear = 2015
@@ -59,7 +60,7 @@ fun run(year: Int) {
     (1..25).forEach {
         try {
             runDay(year, it, skipLongRunning)
-        } catch (e: ClassNotFoundException) {
+        } catch (_: ClassNotFoundException) {
         }
     }
 }
@@ -69,7 +70,7 @@ fun runLatest(year: Int) {
         try {
             runDay(year, it, skipLongRunning)
             return
-        } catch (e: ClassNotFoundException) {
+        } catch (_: ClassNotFoundException) {
         }
     }
 }
