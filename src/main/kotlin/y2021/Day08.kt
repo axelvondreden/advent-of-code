@@ -10,9 +10,7 @@ class Day08 : Day(2021, 8) {
 
     override fun solve1() = input.sumOf { line -> line.inputs.takeLast(4).count { it.size <= 4 || it.size == 7 } }
 
-    override fun solve2(): Int {
-        return input.sumOf { it.calculateValue() }
-    }
+    override fun solve2() = input.sumOf { it.calculateValue() }
 
     data class InputLine(val inputs: List<Set<Char>>) {
         private val digitValues = discoverMappings()
@@ -67,7 +65,6 @@ class Day08 : Day(2021, 8) {
             return digitToString.mapIndexed { index, chars -> chars to index }.toMap()
         }
 
-        private infix fun Set<Char>.overlaps(that: Set<Char>): Boolean =
-            this.containsAll(that)
+        private infix fun Set<Char>.overlaps(that: Set<Char>) = this.containsAll(that)
     }
 }

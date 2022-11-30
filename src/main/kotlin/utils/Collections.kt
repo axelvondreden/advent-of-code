@@ -1,7 +1,13 @@
 package utils
 
-fun Set<Long>.product(): Long {
+fun Collection<Long>.product(): Long {
     var product = 1L
+    forEach { product *= it }
+    return product
+}
+
+fun Collection<Int>.product(): Int {
+    var product = 1
     forEach { product *= it }
     return product
 }
