@@ -1,5 +1,6 @@
 package utils
 
+import kotlin.math.pow
 import kotlin.math.roundToInt
 
 fun Int.getAllDivisors(divisors: MutableSet<Int>) {
@@ -13,6 +14,8 @@ fun Int.getAllDivisors(divisors: MutableSet<Int>) {
         }
     }
 }
+
+fun Long.pow(exp: Int) = toDouble().pow(exp).toLong()
 
 fun Int.sqrt() = kotlin.math.sqrt(this.toDouble()).roundToInt()
 
