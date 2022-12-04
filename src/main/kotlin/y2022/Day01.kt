@@ -4,8 +4,8 @@ import Day
 
 class Day01 : Day(2022, 1) {
 
-    override val input = readStrings().joinToString(",").split(",,").map {
-            group -> group.split(",").map { it.toInt() }
+    override val input = readStrings().joinToString(",").split(",,").map { group ->
+        group.split(",").map { it.toInt() }
     }
 
     override fun solve1() = input.maxOf { it.sum() }
