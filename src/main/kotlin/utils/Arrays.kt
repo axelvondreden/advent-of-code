@@ -70,6 +70,17 @@ fun Array<BooleanArray>.print() {
     }
 }
 
+fun Array<BooleanArray>.toMapString(): String {
+    var s = ""
+    for (y in get(0).indices) {
+        for (x in indices) {
+            s += if (get(x)[y]) '#' else '.'
+        }
+        s += "\n"
+    }
+    return s
+}
+
 fun Array<CharArray>.deepEquals(other: Array<CharArray>): Boolean {
     indices.forEach { y -> get(0).indices.forEach { x -> if (get(y)[x] != other[y][x]) return false } }
     return true
