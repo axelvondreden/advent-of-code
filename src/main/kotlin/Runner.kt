@@ -4,7 +4,7 @@ import kotlin.streams.toList
 import kotlin.system.measureNanoTime
 
 const val firstYear = 2015
-const val lastYear = 2021
+const val lastYear = 2023
 
 val skips = setOf(
     2015 to 22 to 1,
