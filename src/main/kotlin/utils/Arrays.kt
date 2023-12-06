@@ -40,6 +40,16 @@ fun Array<CharArray>.find(c: Char): Pathfinder.Node? {
     return null
 }
 
+fun Array<CharArray>.findPoints(c: Char): List<Point> {
+    val list = mutableListOf<Point>()
+    for (y in get(0).indices) {
+        for (x in indices) {
+            if (get(x)[y] == c) list += Point(x, y)
+        }
+    }
+    return list
+}
+
 fun Array<CharArray>.print() {
     println()
     for (y in get(0).indices) {

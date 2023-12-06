@@ -1,6 +1,7 @@
 package y2023
 
 import Day
+import utils.findPoints
 
 class Day03 : Day(2023, 3) {
 
@@ -11,10 +12,21 @@ class Day03 : Day(2023, 3) {
         return nrs.filter { it.adjacent }.sumOf { it.nr }
     }
 
-    override fun solve2() = 0
+    override fun solve2(): Int {
+        val nrs = getPartNumbers()
+        val gears = input.findPoints('*')
+        return gears.map { nrs.getAdjacentPartNumbers(it.x.toInt(), it.y.toInt()) }.filter { it.size == 2 }.sumOf { it[0].nr * it[1].nr  }
+    }
 
     private data class Partnumber(val nr: Int, val x: Int, val y: Int, val adjacent: Boolean) {
         val length get() = nr.toString().length
+
+        fun isAdjacent(x: Int, y: Int): Boolean {
+            return x >= this.x - 1
+                && x <= this.x + length
+                && y >= this.y - 1
+                && y <= this.y + 1
+        }
     }
 
     private fun getPartNumbers(): List<Partnumber> {
@@ -39,7 +51,7 @@ class Day03 : Day(2023, 3) {
     }
 
     private fun partHasAdjacentSymbol(x: Int, y: Int, length: Int): Boolean {
-        for (xx in x - 1..x + 1 + length) {
+        for (xx in x - 1..x + length) {
             for (yy in y - 1..y + 1) {
                 if (xx >= 0 && yy >= 0 && xx < input.size && yy < input[0].size) {
                     if (!input[xx][yy].isDigit() && input[xx][yy] != '.') {
@@ -50,4 +62,6 @@ class Day03 : Day(2023, 3) {
         }
         return false
     }
+
+    private fun List<Partnumber>.getAdjacentPartNumbers(x: Int, y: Int) = filter { it.isAdjacent(x, y) }
 }
