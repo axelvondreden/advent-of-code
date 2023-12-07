@@ -1,12 +1,13 @@
 package y2020
 
 import Day
+import utils.toCharMatrix
 
-class Day17 : Day<List<String>>(2020, 17) {
+class Day17 : Day<Array<CharArray>>(2020, 17) {
 
-    override val input = readCharMatrix()
+    override fun List<String>.parse() = toCharMatrix()
 
-    override fun solve1(input: List<String>): Int {
+    override fun solve1(input: Array<CharArray>): Int {
         var cubes = parseCubes(input)
         repeat(6) {
             cubes = cubes.step()
@@ -14,7 +15,7 @@ class Day17 : Day<List<String>>(2020, 17) {
         return cubes.size
     }
 
-    override fun solve2(input: List<String>): Int {
+    override fun solve2(input: Array<CharArray>): Int {
         var cubes = parseHyperCubes(input)
         repeat(6) {
             cubes = cubes.step()

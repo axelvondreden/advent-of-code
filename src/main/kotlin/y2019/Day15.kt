@@ -1,18 +1,17 @@
 package y2019
 
 import Day
+import utils.toLongArray
 import java.util.*
 import kotlin.Comparator
 import kotlin.math.abs
 
-class Day15 : Day<List<String>>(2019, 15) {
-
-    override val input = IntCodeComputer(readLongArray())
+class Day15 : Day<IntCodeComputer>(2019, 15) {
 
     private var pathLength = 0
     private var oxyCounter = 0L
 
-    init {
+    override fun List<String>.parse() = IntCodeComputer(first().toLongArray()).also { pc ->
         var location = Pair(0L, 0L)
         var triedLocation: Pair<Long, Long>
         var previousMove: Long
@@ -32,13 +31,13 @@ class Day15 : Day<List<String>>(2019, 15) {
                     val d = reverseDir(target.second)
                     previousMove = d
                     triedLocation = location.move(d)
-                    output = input.addInput(d).run().value
+                    output = pc.addInput(d).run().value
                 }
             } else {
                 val selected = neighbors.first().first
                 triedLocation = location.move(selected)
                 previousMove = selected
-                output = input.addInput(selected).run().value
+                output = pc.addInput(selected).run().value
             }
 
             if (triedLocation in map) {
@@ -57,9 +56,9 @@ class Day15 : Day<List<String>>(2019, 15) {
         }
     }
 
-    override fun solve1(input: List<String>) = pathLength
+    override fun solve1(input: IntCodeComputer) = pathLength
 
-    override fun solve2(input: List<String>) = oxyCounter
+    override fun solve2(input: IntCodeComputer) = oxyCounter
 
     private fun reconstructPath(cameFrom: Map<Pair<Long, Long>, Pair<Long, Long>>, to: Pair<Long, Long>): List<Pair<Long, Long>> {
         var current = to

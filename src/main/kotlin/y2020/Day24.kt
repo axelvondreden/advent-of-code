@@ -4,13 +4,34 @@ import Day
 import kotlin.math.absoluteValue
 
 
-class Day24 : Day<List<String>>(2020, 24) {
+class Day24 : Day<MutableList<List<Day24.HexDir>>>(2020, 24) {
 
-    override fun List<String>.parse() = this.toPaths()
+    override fun List<String>.parse(): MutableList<List<HexDir>> {
+        val paths = mutableListOf<List<HexDir>>()
+        forEach {
+            var index = 0
+            val path = mutableListOf<HexDir>()
+            while (index < it.length) {
+                val next = it.substring(index, if (it[index] in listOf('e', 'w')) index + 1 else index + 2)
+                path += when (next) {
+                    "e" -> HexDir.E
+                    "w" -> HexDir.W
+                    "ne" -> HexDir.NE
+                    "se" -> HexDir.SE
+                    "nw" -> HexDir.NW
+                    "sw" -> HexDir.SW
+                    else -> throw RuntimeException("oh no!")
+                }
+                index += next.length
+            }
+            paths += path
+        }
+        return paths
+    }
 
     private val tiles = mutableMapOf<Pair<Int, Int>, Boolean>()
 
-    override fun solve1(input: List<String>): Int {
+    override fun solve1(input: MutableList<List<HexDir>>): Int {
         input.forEach { path ->
             val tile = path.fold(0 to 0) { current, dir -> current.move(dir) }
             tiles[tile] = if (tile !in tiles) false else !(tiles[tile]!!)
@@ -18,7 +39,7 @@ class Day24 : Day<List<String>>(2020, 24) {
         return tiles.values.count { !it }
     }
 
-    override fun solve2(input: List<String>): Int {
+    override fun solve2(input: MutableList<List<HexDir>>): Int {
         var tiles = this.tiles.toMap()
         repeat(100) {
             tiles = tiles.flip()
@@ -67,29 +88,6 @@ class Day24 : Day<List<String>>(2020, 24) {
     ).associateWith { getOrDefault(it, true) }
 
     private fun Map<Pair<Int, Int>, Boolean>.countBlackNeighbours(tile: Pair<Int, Int>) = getNeighbours(tile).values.count { !it }
-
-    private fun List<String>.toPaths(): List<List<HexDir>> {
-        val paths = mutableListOf<List<HexDir>>()
-        forEach {
-            var index = 0
-            val path = mutableListOf<HexDir>()
-            while (index < it.length) {
-                val next = it.substring(index, if (it[index] in listOf('e', 'w')) index + 1 else index + 2)
-                path += when (next) {
-                    "e" -> HexDir.E
-                    "w" -> HexDir.W
-                    "ne" -> HexDir.NE
-                    "se" -> HexDir.SE
-                    "nw" -> HexDir.NW
-                    "sw" -> HexDir.SW
-                    else -> throw RuntimeException("oh no!")
-                }
-                index += next.length
-            }
-            paths += path
-        }
-        return paths
-    }
 
     enum class HexDir {
         E, SE, SW, W, NW, NE

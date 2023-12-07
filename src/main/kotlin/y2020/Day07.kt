@@ -2,22 +2,9 @@ package y2020
 
 import Day
 
-class Day07 : Day<List<String>>(2020, 7) {
+class Day07 : Day<Map<String, Map<String, Int>>>(2020, 7) {
 
-    override fun List<String>.parse() = this.toBags()
-
-    override fun solve1(input: List<String>) = input.keys.count { it.canHoldColor("shiny gold") }
-
-    override fun solve2(input: List<String>) = "shiny gold".countNestedBags()
-
-    private fun String.canHoldColor(color: String): Boolean =
-        if (input[this]!!.contains(color)) true
-        else input[this]!!.any { it.key.canHoldColor(color) }
-
-    private fun String.countNestedBags(): Int =
-        input[this]!!.values.sum() + input[this]!!.map { it.key.countNestedBags() * it.value }.sum()
-
-    private fun List<String>.toBags(): Map<String, Map<String, Int>> {
+    override fun List<String>.parse(): Map<String, Map<String, Int>> {
         val map = mutableMapOf<String, Map<String, Int>>()
         forEach { line ->
             val split = line.split(" bags contain ")
@@ -33,4 +20,15 @@ class Day07 : Day<List<String>>(2020, 7) {
         }
         return map
     }
+
+    override fun solve1(input: Map<String, Map<String, Int>>) = input.keys.count { it.canHoldColor("shiny gold", input) }
+
+    override fun solve2(input: Map<String, Map<String, Int>>) = "shiny gold".countNestedBags(input)
+
+    private fun String.canHoldColor(color: String, input: Map<String, Map<String, Int>>): Boolean =
+        if (input[this]!!.contains(color)) true
+        else input[this]!!.any { it.key.canHoldColor(color, input) }
+
+    private fun String.countNestedBags(input: Map<String, Map<String, Int>>): Int =
+        input[this]!!.values.sum() + input[this]!!.map { it.key.countNestedBags(input) * it.value }.sum()
 }

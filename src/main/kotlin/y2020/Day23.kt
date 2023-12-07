@@ -3,13 +3,13 @@ package y2020
 import Day
 
 
-class Day23 : Day<List<String>>(2020, 23) {
+class Day23 : Day<String>(2020, 23) {
 
     override fun List<String>.parse() = first()
 
-    override fun solve1(input: List<String>) = Cups(input).allMoves(100).toString()
+    override fun solve1(input: String) = Cups(input).allMoves(100).toString()
 
-    override fun solve2(input: List<String>) = Cups(input, 1000000)
+    override fun solve2(input: String) = Cups(input, 1000000)
         .allMoves(10000000)
         .nextAsList(2)
         .map { it.value.toLong() }

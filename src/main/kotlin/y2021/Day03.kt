@@ -5,9 +5,9 @@ import Day
 class Day03 : Day<List<String>>(2021, 3) {
 
     override fun List<String>.parse() = this
-    val length = input[0].length
 
     override fun solve1(input: List<String>): Int {
+        val length = input[0].length
         val gamma = (0 until length).map { i -> if (input.count { it[i] == '1' } > input.size / 2) '1' else '0' }
             .joinToString("")
         val epsilon = (0 until length).map { i -> if (input.count { it[i] == '1' } > input.size / 2) '0' else '1' }

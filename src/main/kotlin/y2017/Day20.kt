@@ -3,13 +3,13 @@ package y2017
 import Day
 import utils.Point3D
 
-class Day20 : Day<List<String>>(2017, 20) {
+class Day20 : Day<Set<Day20.Particle>>(2017, 20) {
 
-    override fun List<String>.parse() = this.parseParticles()
+    override fun List<String>.parse() = parseParticles()
 
-    override fun solve1(input: List<String>) = input.minByOrNull { it.acc.abs() }!!.id
+    override fun solve1(input: Set<Particle>) = input.minByOrNull { it.acc.abs() }!!.id
 
-    override fun solve2(input: List<String>): Int {
+    override fun solve2(input: Set<Particle>): Int {
         var copy = input
         var lastCollision = 0
         while (lastCollision < 100) {

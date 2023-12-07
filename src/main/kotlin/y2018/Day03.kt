@@ -3,13 +3,13 @@ package y2018
 import Day
 import utils.Point
 
-class Day03 : Day<List<String>>(2018, 3) {
+class Day03 : Day<Set<Day03.Claim>>(2018, 3) {
 
-    override fun List<String>.parse() = this.parseClaims()
+    override fun List<String>.parse() = parseClaims()
 
-    override fun solve1(input: List<String>) = input.flatMap { it.getPoints() }.groupBy { it }.values.count { it.size > 1 }
+    override fun solve1(input: Set<Claim>) = input.flatMap { it.getPoints() }.groupBy { it }.values.count { it.size > 1 }
 
-    override fun solve2(input: List<String>) = input.first { claim ->
+    override fun solve2(input: Set<Claim>) = input.first { claim ->
         (claim.pos.x until claim.pos.x + claim.w).all { x ->
             (claim.pos.y until claim.pos.y + claim.h).all { y ->
                 input.count { it.containsPoint(Point(x, y)) } == 1

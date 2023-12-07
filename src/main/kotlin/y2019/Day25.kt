@@ -1,12 +1,13 @@
 package y2019
 
 import Day
+import utils.toLongArray
 
-class Day25 : Day<List<String>>(2019, 25) {
+class Day25 : Day<LongArray>(2019, 25) {
 
-    override val input = readLongArray()
+    override fun List<String>.parse() = first().toLongArray()
 
-    override fun solve1(input: List<String>): Int {
+    override fun solve1(input: LongArray): Int {
         val comp = IntCodeComputer(input)
         var last9 = ""
         while (true) {
@@ -15,12 +16,12 @@ class Day25 : Day<List<String>>(2019, 25) {
             last9 = last9.takeLast(8) + c
             print(c)
             if (last9 == "Command?\n") {
-                (readLine() + '\n').forEach {
+                (readlnOrNull() + '\n').forEach {
                     comp.addInput(it.code.toLong())
                 }
             }
         }
     }
 
-    override fun solve2(input: List<String>) = 0
+    override fun solve2(input: LongArray) = 0
 }

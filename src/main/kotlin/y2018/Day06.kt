@@ -3,21 +3,20 @@ package y2018
 import Day
 import utils.Point
 
-class Day06 : Day<List<String>>(2018, 6) {
+class Day06 : Day<List<Point>>(2018, 6) {
 
-    override fun List<String>.parse() = this.map { Point(it, ", ") }
+    override fun List<String>.parse() = map { Point(it, ", ") }
 
-    private val xValues = input.map { it.x }
-    private val yValues = input.map { it.y }
-    private val xRange = xValues.minOrNull()!!..xValues.maxOrNull()!!
-    private val yRange = yValues.minOrNull()!!..yValues.maxOrNull()!!
-
-    override fun solve1(input: List<String>): Int {
+    override fun solve1(input: List<Point>): Int {
+        val xValues = input.map { it.x }
+        val yValues = input.map { it.y }
+        val xRange = xValues.minOrNull()!!..xValues.maxOrNull()!!
+        val yRange = yValues.minOrNull()!!..yValues.maxOrNull()!!
         val infinite = mutableSetOf<Point>()
         return xRange.flatMap { x ->
             yRange.map { y ->
                 val closest = input.map { it to it.distance(Point(x, y)) }.sortedBy { it.second }.take(2)
-                if (isEdge(Point(x, y))) {
+                if (Point(x, y).isEdge(xRange, yRange)) {
                     infinite.add(closest[0].first)
                 }
                 closest[0].first.takeUnless { closest[0].second == closest[1].second }
@@ -25,11 +24,17 @@ class Day06 : Day<List<String>>(2018, 6) {
         }.filterNot { it in infinite }.groupingBy { it }.eachCount().maxByOrNull { it.value }!!.value
     }
 
-    override fun solve2(input: List<String>): Int = xRange.flatMap { x ->
-        yRange.map { y ->
-            input.sumOf { it.distance(Point(x, y)) }
-        }
-    }.count { it < 10000 }
+    override fun solve2(input: List<Point>): Int {
+        val xValues = input.map { it.x }
+        val yValues = input.map { it.y }
+        val xRange = xValues.minOrNull()!!..xValues.maxOrNull()!!
+        val yRange = yValues.minOrNull()!!..yValues.maxOrNull()!!
+        return xRange.flatMap { x ->
+            yRange.map { y ->
+                input.sumOf { it.distance(Point(x, y)) }
+            }
+        }.count { it < 10000 }
+    }
 
-    private fun isEdge(p: Point) = p.x == xRange.first || p.x == xRange.last || p.y == yRange.first || p.y == yRange.last
+    private fun Point.isEdge(xRange: LongRange, yRange: LongRange) = x == xRange.first || x == xRange.last || y == yRange.first || y == yRange.last
 }

@@ -3,27 +3,27 @@ package y2019
 import Day
 import utils.Point
 import utils.gcd
+import utils.toCharMatrix
 import kotlin.math.abs
 import kotlin.math.atan2
 
-class Day10 : Day<List<String>>(2019, 10) {
+class Day10 : Day<Array<CharArray>>(2019, 10) {
 
-    override val input = readCharMatrix()
+    override fun List<String>.parse() = toCharMatrix()
 
     private var station = Point(0, 0)
 
     private val asteroids = mutableListOf<Point>()
 
-    init {
+    override fun solve1(input: Array<CharArray>): Int {
+        var maxAsteroids = 0
+        station = Point(0, 0)
+        asteroids.clear()
         input.forEachIndexed { x, chars ->
             chars.forEachIndexed { y, c ->
                 if (c == '#') asteroids += Point(x, y)
             }
         }
-    }
-
-    override fun solve1(input: List<String>): Int {
-        var maxAsteroids = 0
         asteroids.forEach { asteroid ->
             var count = 0
             asteroids.forEach { otherAsteroid ->
@@ -50,7 +50,7 @@ class Day10 : Day<List<String>>(2019, 10) {
         return maxAsteroids
     }
 
-    override fun solve2(input: List<String>): Long {
+    override fun solve2(input: Array<CharArray>): Long {
         val distances = mutableListOf<Point>()
         asteroids.filter { it != station }.forEach {
             distances += Point(station.x - it.x, station.y - it.y)

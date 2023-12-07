@@ -5,7 +5,7 @@ import Day
 
 class Day22 : Day<List<String>>(2020, 22) {
 
-    override fun List<String>.parse() = this.filter { it.isNotBlank() }
+    override fun List<String>.parse() = filter { it.isNotBlank() }
 
     private fun parseDeck(input: List<String>, player: Int) = ArrayDeque(
         input.dropWhile { it != "Player $player:" }.drop(1).takeWhile { !it.startsWith("Player") }.map { it.toInt() }

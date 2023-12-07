@@ -4,17 +4,17 @@ import Day
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class Day04 : Day<List<String>>(2018, 4) {
+class Day04 : Day<Set<Day04.Guard>>(2018, 4) {
 
-    override fun List<String>.parse() = this.sorted().parseGuards()
+    override fun List<String>.parse() = sorted().parseGuards()
 
-    override fun solve1(input: List<String>): Int {
+    override fun solve1(input: Set<Guard>): Int {
         val guard = input.maxByOrNull { guard -> guard.sleepRanges.sumOf { it.minutes.count() } }
         val minute = guard!!.sleepRanges.flatMap { it.minutes }.groupBy { it }.maxByOrNull { it.value.size }!!.key
         return guard.id * minute
     }
 
-    override fun solve2(input: List<String>): Int {
+    override fun solve2(input: Set<Guard>): Int {
         var result = 0
         var maxSleepyMinutes = 0
         (0..59).forEach { minute ->
@@ -57,8 +57,7 @@ class Day04 : Day<List<String>>(2018, 4) {
             if (javaClass != other?.javaClass) return false
 
             other as Guard
-            if (id != other.id) return false
-            return true
+            return id == other.id
         }
 
         override fun hashCode() = id

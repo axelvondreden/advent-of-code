@@ -7,12 +7,16 @@ import utils.toMapString
 class Day13 : Day<List<String>>(2021, 13) {
 
     override fun List<String>.parse() = this
-    private val dots = input.takeWhile { it.isNotBlank() }.map { Point(it) }.toSet()
-    private val folds = input.dropWhile { it.isNotBlank() }.drop(1).map { it.split(" ")[2] }
 
-    override fun solve1(input: List<String>) = dots.fold(folds[0]).size
+    override fun solve1(input: List<String>): Int {
+        val dots = input.takeWhile { it.isNotBlank() }.map { Point(it) }.toSet()
+        val folds = input.dropWhile { it.isNotBlank() }.drop(1).map { it.split(" ")[2] }
+        return dots.fold(folds[0]).size
+    }
 
     override fun solve2(input: List<String>): String {
+        val dots = input.takeWhile { it.isNotBlank() }.map { Point(it) }.toSet()
+        val folds = input.dropWhile { it.isNotBlank() }.drop(1).map { it.split(" ")[2] }
         var d = dots.toSet()
         folds.forEach { d = d.fold(it) }
         val a = Array(d.maxOf { it.x + 1 }.toInt()) { BooleanArray(d.maxOf { it.y + 1 }.toInt()) }

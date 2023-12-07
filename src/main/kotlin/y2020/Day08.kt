@@ -2,13 +2,13 @@ package y2020
 
 import Day
 
-class Day08 : Day<List<String>>(2020, 8) {
+class Day08 : Day<List<Day08.Instruction>>(2020, 8) {
 
-    override fun List<String>.parse() = this.toInstructions()
+    override fun List<String>.parse() = toInstructions()
 
-    override fun solve1(input: List<String>) = Accumulator().apply { runWithoutLoop(input) }.acc
+    override fun solve1(input: List<Instruction>) = Accumulator().apply { runWithoutLoop(input) }.acc
 
-    override fun solve2(input: List<String>): Int {
+    override fun solve2(input: List<Instruction>): Int {
         val switchMax = input.count { it.cmd == "nop" || it.cmd == "jmp" }
         var switchIndex = 0
         while (switchIndex < switchMax) {

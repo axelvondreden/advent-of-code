@@ -2,43 +2,42 @@ package y2019
 
 import Day
 import pathfinding.Pathfinder
+import utils.toCharMatrix
 import utils.toPathfindingMap
 
-class Day20 : Day<List<String>>(2019, 20) {
+class Day20 : Day<Array<CharArray>>(2019, 20) {
 
-    override val input = readCharMatrix()
+    private lateinit var start: LvlNode
+    private lateinit var end: LvlNode
 
-    private val start: LvlNode
-    private val end: LvlNode
+    private lateinit var portals: Set<Portal>
 
-    private val portals: Set<Portal>
-
-    init {
+    override fun List<String>.parse() = toCharMatrix().also { matrix ->
         var key = 'a'
         val storage = mutableMapOf<String, LvlNode>()
         val tempPortals = mutableSetOf<Portal>()
-        input[0].indices.forEach { y ->
-            input.indices.forEach { x ->
-                if (input[x][y] in 'A'..'Z') {
-                    var str = input[x][y].toString()
+        matrix[0].indices.forEach { y ->
+            matrix.indices.forEach { x ->
+                if (matrix[x][y] in 'A'..'Z') {
+                    var str = matrix[x][y].toString()
                     var node: LvlNode? = null
-                    if (x + 1 < input.size && input[x + 1][y] in 'A'..'Z') {
-                        str += input[x + 1][y]
-                        node = (if (x + 2 < input.size && input[x + 2][y] == '.') LvlNode(x + 2, y, 0) else LvlNode(x - 1, y, 0))
-                    } else if (y + 1 < input[0].size && input[x][y + 1] in 'A'..'Z') {
-                        str += input[x][y + 1]
-                        node = (if (y + 2 < input[0].size && input[x][y + 2] == '.') LvlNode(x, y + 2, 0) else LvlNode(x, y - 1, 0))
+                    if (x + 1 < matrix.size && matrix[x + 1][y] in 'A'..'Z') {
+                        str += matrix[x + 1][y]
+                        node = (if (x + 2 < matrix.size && matrix[x + 2][y] == '.') LvlNode(x + 2, y, 0) else LvlNode(x - 1, y, 0))
+                    } else if (y + 1 < matrix[0].size && matrix[x][y + 1] in 'A'..'Z') {
+                        str += matrix[x][y + 1]
+                        node = (if (y + 2 < matrix[0].size && matrix[x][y + 2] == '.') LvlNode(x, y + 2, 0) else LvlNode(x, y - 1, 0))
                     }
                     if (node != null) {
                         if (storage.containsKey(str)) {
                             val storedNode = storage.remove(str)!!
-                            if (storedNode.x < 3 || storedNode.y < 3 || storedNode.x > input.size - 3 || storedNode.y > input[0].size - 3) {
+                            if (storedNode.x < 3 || storedNode.y < 3 || storedNode.x > matrix.size - 3 || storedNode.y > matrix[0].size - 3) {
                                 tempPortals.add(Portal(key, storedNode, node))
                             } else {
                                 tempPortals.add(Portal(key, node, storedNode))
                             }
-                            input[storedNode.x][storedNode.y] = key
-                            input[node.x][node.y] = key
+                            matrix[storedNode.x][storedNode.y] = key
+                            matrix[node.x][node.y] = key
                             key++
                         } else {
                             storage[str] = node
@@ -51,8 +50,8 @@ class Day20 : Day<List<String>>(2019, 20) {
         portals = tempPortals
         start = storage["AA"]!!
         end = storage["ZZ"]!!
-        input[start.x][start.y] = '1'
-        input[end.x][end.y] = '2'
+        matrix[start.x][start.y] = '1'
+        matrix[end.x][end.y] = '2'
     }
 
     private fun neighborsWithPortal(current: Pathfinder.INode): Set<Pathfinder.INode> {
@@ -81,12 +80,12 @@ class Day20 : Day<List<String>>(2019, 20) {
         return set
     }
 
-    override fun solve1(input: List<String>): Int {
+    override fun solve1(input: Array<CharArray>): Int {
         val walls = ('A'..'Z').toMutableSet().apply { addAll(listOf('#', ' ')) }
         return Pathfinder(input.toPathfindingMap(walls), input.size, input[0].size, ::neighborsWithPortal).searchBFS(Pathfinder.Node(start.x, start.y), Pathfinder.Node(end.x, end.y)).size + 1
     }
 
-    override fun solve2(input: List<String>): Int {
+    override fun solve2(input: Array<CharArray>): Int {
         val walls = ('A'..'Z').toMutableSet().apply { addAll(listOf('#', ' ')) }
         return Pathfinder(input.toPathfindingMap(walls), input.size, input[0].size, ::neighborsWithLvlPortal).searchBFS(start, end).size + 1
     }
@@ -100,8 +99,7 @@ class Day20 : Day<List<String>>(2019, 20) {
             if (!super.equals(other)) return false
 
             other as LvlNode
-            if (lvl != other.lvl) return false
-            return true
+            return lvl == other.lvl
         }
 
         override fun hashCode(): Int {

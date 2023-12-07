@@ -4,17 +4,17 @@ import Day
 
 class Day14 : Day<List<String>>(2021, 14) {
 
-    override fun List<String>.parse() = this
+    private lateinit var insertions: Map<String, String>
 
-    private val original = input[0]
-
-    private val insertions = input.subList(2, input.size).associate {
-        val split = it.split(" -> ")
-        split[0] to split[0][0] + split[1]
+    override fun List<String>.parse() = this.also { list ->
+        insertions = list.subList(2, list.size).associate {
+            val split = it.split(" -> ")
+            split[0] to split[0][0] + split[1]
+        }
     }
 
     override fun solve1(input: List<String>): Int {
-        var template = original
+        var template = input[0]
         repeat(10) {
             template = template.doInsertions()
         }
@@ -23,7 +23,7 @@ class Day14 : Day<List<String>>(2021, 14) {
     }
 
     override fun solve2(input: List<String>): Int {
-        var template = original
+        var template = input[0]
         repeat(40) {
             println(it)
             template = template.doInsertions()

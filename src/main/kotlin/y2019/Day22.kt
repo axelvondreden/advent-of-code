@@ -8,11 +8,11 @@ class Day22 : Day<List<String>>(2019, 22) {
 
     override fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>) = solve(2019, 10007, 1)
+    override fun solve1(input: List<String>) = solve(input, 2019, 10007, 1)
 
-    override fun solve2(input: List<String>) = solve(2020, 119315717514047, -101741582076661)
+    override fun solve2(input: List<String>) = solve(input, 2020, 119315717514047, -101741582076661)
 
-    private fun solve(x: Long, n: Long, k: Long): Long {
+    private fun solve(input: List<String>, x: Long, n: Long, k: Long): Long {
         var a = BigInteger.ONE
         var b = BigInteger.ZERO
         val m = n.toBigInteger()
@@ -57,7 +57,7 @@ class Day22 : Day<List<String>>(2019, 22) {
         return (x.toBigInteger() * c + d).mod(m).toLong()
     }
 
-    fun doShuffle(n: Int, k: Int): IntArray {
+    fun doShuffle(input: List<String>, n: Int, k: Int): IntArray {
         val deck = IntArray(n) { it }
         repeat(k) {
             input.forEach { ln ->

@@ -5,12 +5,12 @@ import Day
 class Day04 : Day<List<String>>(2021, 4) {
 
     override fun List<String>.parse() = this
-    private val numbers = input[0].split(",").map { it.toInt() }
-    private val maps = input.filter { it.isNotBlank() }.drop(1).chunked(5).map { list ->
-        BingoField((0..4).map { row -> list[row].trim().split(Regex("\\W+")).map { it.toInt() } })
-    }
 
     override fun solve1(input: List<String>): Int {
+        val numbers = input[0].split(",").map { it.toInt() }
+        val maps = input.filter { it.isNotBlank() }.drop(1).chunked(5).map { list ->
+            BingoField((0..4).map { row -> list[row].trim().split(Regex("\\W+")).map { it.toInt() } })
+        }
         numbers.forEach { nr ->
             maps.forEach { map ->
                 map.mark(nr)
@@ -21,6 +21,10 @@ class Day04 : Day<List<String>>(2021, 4) {
     }
 
     override fun solve2(input: List<String>): Int {
+        val numbers = input[0].split(",").map { it.toInt() }
+        val maps = input.filter { it.isNotBlank() }.drop(1).chunked(5).map { list ->
+            BingoField((0..4).map { row -> list[row].trim().split(Regex("\\W+")).map { it.toInt() } })
+        }
         maps.forEach { it.reset() }
         var unfinishedMaps = maps
         numbers.forEach { nr ->

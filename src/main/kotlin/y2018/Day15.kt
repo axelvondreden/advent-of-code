@@ -2,15 +2,15 @@ package y2018
 
 import Day
 
-class Day15 : Day<List<String>>(2018, 15) {
+class Day15 : Day<String>(2018, 15) {
 
     override fun List<String>.parse() = first()
 
-    override fun solve1(input: List<String>): String {
+    override fun solve1(input: String): String {
         return ""
     }
 
-    override fun solve2(input: List<String>): Int {
+    override fun solve2(input: String): Int {
         return 0
     }
 }

@@ -3,42 +3,44 @@ package y2019
 import Day
 import pathfinding.Pathfinder
 import utils.find
+import utils.toCharMatrix
 import utils.toPathfindingMap
 
-class Day18: Day<List<String>>(2019, 18) {
+class Day18: Day<Array<CharArray>>(2019, 18) {
 
-    override val input = readCharMatrix()
+    private lateinit var keys: List<Key>
+    private lateinit var doors: List<Door>
+    private lateinit var cache1: Map<String, Edge>
+    private lateinit var cache2: Map<String, Edge>
 
-    private val keys = ('a'..'z').mapNotNull { input.find(it)?.let { node -> Key(it, node) } }
-    private val doors = ('A'..'Z').mapNotNull { input.find(it)?.let { node -> Door(it, node) } }
-    private val cache1: Map<String, Edge>
-    private val cache2: Map<String, Edge>
+    override fun List<String>.parse() = toCharMatrix().also {  matrix ->
+        keys = ('a'..'z').mapNotNull { matrix.find(it)?.let { node -> Key(it, node) } }
+        doors = ('A'..'Z').mapNotNull { matrix.find(it)?.let { node -> Door(it, node) } }
 
-    init {
-        cache1 = getCache(keys.toMutableList().apply { add(Key('@', input.find('@')!!)) })
+        cache1 = matrix.getCache(keys.toMutableList().apply { add(Key('@', matrix.find('@')!!)) })
 
-        val midX = input.indices.last / 2
-        val midY = input[0].indices.last / 2
-        input.apply {
+        val midX = matrix.indices.last / 2
+        val midY = matrix[0].indices.last / 2
+        matrix.apply {
             get(midX - 1)[midY - 1] = '1'; get(midX)[midY - 1] = '#'; get(midX + 1)[midY - 1] = '2'
             get(midX - 1)[midY] = '#'; get(midX)[midY] = '#'; get(midX + 1)[midY] = '#'
             get(midX - 1)[midY + 1] = '3'; get(midX)[midY + 1] = '#'; get(midX + 1)[midY + 1] = '4'
         }
 
-        cache2 = getCache(keys.toMutableList().apply {
-            add(Key('1', input.find('1')!!))
-            add(Key('2', input.find('2')!!))
-            add(Key('3', input.find('3')!!))
-            add(Key('4', input.find('4')!!))
+        cache2 = matrix.getCache(keys.toMutableList().apply {
+            add(Key('1', matrix.find('1')!!))
+            add(Key('2', matrix.find('2')!!))
+            add(Key('3', matrix.find('3')!!))
+            add(Key('4', matrix.find('4')!!))
         })
     }
 
-    private fun getCache(keysWithRobot: List<Key>): MutableMap<String, Edge> {
+    private fun Array<CharArray>.getCache(keysWithRobot: List<Key>): MutableMap<String, Edge> {
         val map = mutableMapOf<String, Edge>()
         keysWithRobot.forEach { start ->
             keys.forEach { end ->
                 if (start.node != end.node) {
-                    val path = Pathfinder(input.toPathfindingMap(), input.size, input[0].size).searchAStar(start.node, end.node)
+                    val path = Pathfinder(toPathfindingMap(), size, this[0].size).searchAStar(start.node, end.node)
                     if (path.isNotEmpty()) {
                         val k = keys.filter { it.c != start.c && it.c != end.c && it.node in path }.map { it.c }.toCharArray()
                         map["${start.c}${end.c}"] = Edge(path.size - 1, doors.filter { it.node in path }.map { it.c }.toCharArray(), k)
@@ -49,13 +51,13 @@ class Day18: Day<List<String>>(2019, 18) {
         return map
     }
 
-    override fun solve1(input: List<String>): Int {
+    override fun solve1(input: Array<CharArray>): Int {
         val min = intArrayOf(Int.MAX_VALUE)
         getShortestPath('@', keys.map { it.c }, doors.map { it.c }, 0, min, "")
         return min[0]
     }
 
-    override fun solve2(input: List<String>): Int {
+    override fun solve2(input: Array<CharArray>): Int {
         val min = intArrayOf(Int.MAX_VALUE)
         getShortestPath(listOf('1', '2', '3', '4'), keys.map { it.c }, doors.map { it.c }, 0, min, "")
         return min[0]

@@ -2,13 +2,13 @@ package y2018
 
 import Day
 
-class Day08 : Day<List<String>>(2018, 8) {
+class Day08 : Day<Day08.Node>(2018, 8) {
 
     override fun List<String>.parse() = first().split(" ").map { it.toInt() }.iterator().toNode()
 
-    override fun solve1(input: List<String>) = input.sumMetadata
+    override fun solve1(input: Node) = input.sumMetadata
 
-    override fun solve2(input: List<String>) = input.value
+    override fun solve2(input: Node) = input.value
 
     private fun Iterator<Int>.toNode(): Node {
         val childCount = next()

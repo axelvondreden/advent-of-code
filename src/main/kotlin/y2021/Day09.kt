@@ -3,12 +3,13 @@ package y2021
 import Day
 import utils.Point
 import utils.product
+import utils.toCharMatrix
 
-class Day09 : Day<List<String>>(2021, 9) {
+class Day09 : Day<List<List<Int>>>(2021, 9) {
 
-    override val input = readCharMatrix().map { row -> row.map { it.toString().toInt() } }
+    override fun List<String>.parse() = toCharMatrix().map { row -> row.map { it.toString().toInt() } }
 
-    override fun solve1(input: List<String>): Int {
+    override fun solve1(input: List<List<Int>>): Int {
         var sum = 0
         for (x in input.indices) {
             for (y in input[x].indices) {
@@ -21,7 +22,7 @@ class Day09 : Day<List<String>>(2021, 9) {
         return sum
     }
 
-    override fun solve2(input: List<String>): Int {
+    override fun solve2(input: List<List<Int>>): Int {
         val basins = mutableListOf<Set<Point>>()
         for (x in input.indices) {
             for (y in input[x].indices) {
@@ -29,7 +30,7 @@ class Day09 : Day<List<String>>(2021, 9) {
                 val value = input[x][y]
                 if (value < 9 && point !in basins.flatten()) {
                     val set = mutableSetOf<Point>()
-                    getLowerNeighbours(set, point)
+                    input.getLowerNeighbours(input, set, point)
                     basins += set
                 }
             }
@@ -37,11 +38,11 @@ class Day09 : Day<List<String>>(2021, 9) {
         return basins.map { it.size }.sortedDescending().take(3).product()
     }
 
-    private fun getLowerNeighbours(set: MutableSet<Point>, point: Point) {
+    private fun List<List<Int>>.getLowerNeighbours(input: List<List<Int>>, set: MutableSet<Point>, point: Point) {
         set += point
-        point.neighbours().forEach {
-            if (input[it.x.toInt()][it.y.toInt()] < 9 && it !in set) {
-                getLowerNeighbours(set, it)
+        point.neighbours(input).forEach {
+            if (this[it.x.toInt()][it.y.toInt()] < 9 && it !in set) {
+                getLowerNeighbours(input, set, it)
             }
         }
     }
@@ -55,7 +56,7 @@ class Day09 : Day<List<String>>(2021, 9) {
         return list
     }
 
-    private fun Point.neighbours(): Set<Point> {
+    private fun Point.neighbours(input: List<List<Int>>): Set<Point> {
         val set = mutableSetOf<Point>()
         input.getOrNull(x.toInt())?.getOrNull(y.toInt() - 1)?.let { set += Point(x, y - 1) }
         input.getOrNull(x.toInt())?.getOrNull(y.toInt() + 1)?.let { set += Point(x, y + 1) }

@@ -3,13 +3,13 @@ package y2020
 import Day
 
 
-class Day15 : Day<List<String>>(2020, 15) {
+class Day15 : Day<Map<Int, Int>>(2020, 15) {
 
     override fun List<String>.parse() = first().split(",").mapIndexed { index, s -> s.toInt() to index }.toMap()
 
-    override fun solve1(input: List<String>) = getNthSpokenNumber(input.toMutableMap(), 2020)
+    override fun solve1(input: Map<Int, Int>) = getNthSpokenNumber(input.toMutableMap(), 2020)
 
-    override fun solve2(input: List<String>) = getNthSpokenNumber(input.toMutableMap(), 30000000)
+    override fun solve2(input: Map<Int, Int>) = getNthSpokenNumber(input.toMutableMap(), 30000000)
 
     private fun getNthSpokenNumber(spoken: MutableMap<Int, Int>, n: Int): Int {
         var turn = spoken.size

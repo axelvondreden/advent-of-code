@@ -6,24 +6,20 @@ class Day04 : Day<List<String>>(2020, 4) {
 
     override fun List<String>.parse() = this
 
-    private val passportStrings = parsePassportStrings()
+    override fun solve1(input: List<String>) = input.parsePassports().size
 
-    private val passports = parsePassports()
+    override fun solve2(input: List<String>) = input.parsePassports().count { it.hasValidValues() }
 
-    override fun solve1(input: List<String>) = passports.size
-
-    override fun solve2(input: List<String>) = passports.count { it.hasValidValues() }
-
-    private fun parsePassportStrings(): MutableSet<String> {
+    private fun List<String>.parsePassportStrings(): MutableSet<String> {
         var lineNr = 0
         var currentPassportLine = " "
         val list = mutableSetOf<String>()
-        while (lineNr < input.size) {
-            if (input[lineNr].isBlank()) {
+        while (lineNr < size) {
+            if (this[lineNr].isBlank()) {
                 list.add(currentPassportLine)
                 currentPassportLine = " "
             } else {
-                currentPassportLine += " " + input[lineNr]
+                currentPassportLine += " " + this[lineNr]
             }
             lineNr++
         }
@@ -33,7 +29,7 @@ class Day04 : Day<List<String>>(2020, 4) {
         return list
     }
 
-    private fun parsePassports() = passportStrings.filter { it.hasPassportFields() }.map { line ->
+    private fun List<String>.parsePassports() = parsePassportStrings().filter { it.hasPassportFields() }.map { line ->
         val map = line.trim().split(Regex("\\s+")).associate { it.split(":")[0] to it.split(":")[1] }
         Passport(map["byr"]!!, map["iyr"]!!, map["eyr"]!!, map["hgt"]!!, map["hcl"]!!, map["ecl"]!!, map["pid"]!!)
     }

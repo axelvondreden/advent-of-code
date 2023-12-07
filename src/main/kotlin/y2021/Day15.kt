@@ -1,18 +1,18 @@
 package y2021
 
 import Day
-import utils.print
+import utils.toCharMatrix
 import kotlin.math.min
 
-class Day15 : Day<List<String>>(2021, 15) {
+class Day15 : Day<Array<IntArray>>(2021, 15) {
 
-    override val input = readCharMatrix().map { chars -> chars.map { it.digitToInt() }.toIntArray() }.toTypedArray()
+    override fun List<String>.parse() = toCharMatrix().map { chars -> chars.map { it.digitToInt() }.toIntArray() }.toTypedArray()
 
-    override fun solve1(input: List<String>): Int {
+    override fun solve1(input: Array<IntArray>): Int {
         return minPathCost(input)
     }
 
-    override fun solve2(input: List<String>): Int {
+    override fun solve2(input: Array<IntArray>): Int {
         val expandedMap = Array(input.size * 5) { x ->
             IntArray(input[0].size * 5) { y ->
                 val xAdd = x / input.size

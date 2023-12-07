@@ -6,16 +6,16 @@ class Day25 : Day<List<String>>(2017, 25) {
 
     override fun List<String>.parse() = this
 
-    private val start = input[0].split(" ")[3][0]
-    private val steps = input[1].split(" ")[5].toInt()
-
     private val tape = mutableMapOf<Int, Boolean>()
     private var cursor = 0
 
-    private val states = input.parseStates()
+    private lateinit var states: Map<Char, State>
 
     override fun solve1(input: List<String>): Int {
+        val start = input[0].split(" ")[3][0]
+        val steps = input[1].split(" ")[5].toInt()
         var count = 0
+        states = input.parseStates()
         var state = states[start]
         while (count < steps) {
             count++

@@ -4,26 +4,21 @@ import Day
 
 class Day16 : Day<List<String>>(2018, 16) {
 
-    override fun List<String>.parse() = this.filter { it.isNotBlank() }
+    override fun List<String>.parse() = filter { it.isNotBlank() }
 
-    private val samples: List<Sample>
-    private val ops: List<IntArray>
-
-    init {
-        val list = mutableListOf<Sample>()
+    override fun solve1(input: List<String>): Int {
+        val samples = mutableListOf<Sample>()
         var index = 0
         while (input[index].startsWith("Before")) {
             val before = input[index].drop(9).dropLast(1).split(", ").map { it.toInt() }.toIntArray()
             val op = input[index + 1].split(" ").map { it.toInt() }.toIntArray()
             val after = input[index + 2].drop(9).dropLast(1).split(", ").map { it.toInt() }.toIntArray()
-            list += Sample(before, op, after)
+            samples += Sample(before, op, after)
             index += 3
         }
-        samples = list
-        ops = input.subList(index, input.size).map { it.split(" ").map { it.toInt() }.toIntArray() }
+        val ops = input.subList(index, input.size).map { it.split(" ").map { it.toInt() }.toIntArray() }
+        return samples.count { it.countSuccessfulOps() >= 3 }
     }
-
-    override fun solve1(input: List<String>) = samples.count { it.countSuccessfulOps() >= 3 }
 
     override fun solve2(input: List<String>): Int {
         return 0

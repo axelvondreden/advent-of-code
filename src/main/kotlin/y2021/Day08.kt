@@ -2,15 +2,15 @@ package y2021
 
 import Day
 
-class Day08 : Day<List<String>>(2021, 8) {
+class Day08 : Day<List<Day08.InputLine>>(2021, 8) {
 
-    override fun List<String>.parse() = this.map { line ->
+    override fun List<String>.parse() = map { line ->
         InputLine(line.split(" ").filterNot { it == "|" }.map { it.toSet() })
     }
 
-    override fun solve1(input: List<String>) = input.sumOf { line -> line.inputs.takeLast(4).count { it.size <= 4 || it.size == 7 } }
+    override fun solve1(input: List<InputLine>) = input.sumOf { line -> line.inputs.takeLast(4).count { it.size <= 4 || it.size == 7 } }
 
-    override fun solve2(input: List<String>) = input.sumOf { it.calculateValue() }
+    override fun solve2(input: List<InputLine>) = input.sumOf { it.calculateValue() }
 
     data class InputLine(val inputs: List<Set<Char>>) {
         private val digitValues = discoverMappings()

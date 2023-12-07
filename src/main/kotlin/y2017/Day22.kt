@@ -2,23 +2,23 @@ package y2017
 
 import Day
 import utils.Point
+import utils.toCharMatrix
 
-class Day22 : Day<List<String>>(2017, 22) {
+class Day22 : Day<Array<CharArray>>(2017, 22) {
 
-    override val input = readCharMatrix()
-
-    private val infectedNodes = input.flatMapIndexed { x, chars ->
-        chars.mapIndexed { y, c -> if (c == '#') Point(x, y) else null }.filterNotNull()
-    }
+    override fun List<String>.parse() = toCharMatrix()
 
     private val weakNodes = mutableListOf<Point>()
     private val flaggedNodes = mutableListOf<Point>()
 
     private var infectionCounter = 0
 
-    override fun solve1(input: List<String>): Int {
+    override fun solve1(input: Array<CharArray>): Int {
         infectionCounter = 0
         var current = Point((input.size / 2), (input[0].size / 2))
+        val infectedNodes = input.flatMapIndexed { x, chars ->
+            chars.mapIndexed { y, c -> if (c == '#') Point(x, y) else null }.filterNotNull()
+        }
         val list = infectedNodes.toMutableList()
         var dir = Dir.UP
         repeat(10000) {
@@ -29,9 +29,12 @@ class Day22 : Day<List<String>>(2017, 22) {
         return infectionCounter
     }
 
-    override fun solve2(input: List<String>): Int {
+    override fun solve2(input: Array<CharArray>): Int {
         infectionCounter = 0
         var current = Point((input.size / 2), (input[0].size / 2))
+        val infectedNodes = input.flatMapIndexed { x, chars ->
+            chars.mapIndexed { y, c -> if (c == '#') Point(x, y) else null }.filterNotNull()
+        }
         val infected = infectedNodes.toMutableList()
         var dir = Dir.UP
         repeat(10000000) {

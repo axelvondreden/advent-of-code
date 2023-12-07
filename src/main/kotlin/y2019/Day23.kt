@@ -1,17 +1,18 @@
 package y2019
 
 import Day
+import utils.toLongArray
 
-class Day23 : Day<List<String>>(2019, 23) {
+class Day23 : Day<LongArray>(2019, 23) {
 
-    override val input = readLongArray()
+    override fun List<String>.parse() = first().toLongArray()
 
     private val comps = mutableMapOf<Int, IntCodeComputer>()
     private val inputBuffer = mutableMapOf<Int, MutableList<Long>>()
     private val outputBuffer = mutableMapOf<Int, MutableList<Long>>()
 
-    override fun solve1(input: List<String>): Int {
-        initNetwork()
+    override fun solve1(input: LongArray): Int {
+        initNetwork(input)
         while (true) {
             (0 until 50).forEach { i ->
                 val reply = comps[i]!!.run()
@@ -28,8 +29,8 @@ class Day23 : Day<List<String>>(2019, 23) {
         }
     }
 
-    override fun solve2(input: List<String>): Int {
-        initNetwork()
+    override fun solve2(input: LongArray): Int {
+        initNetwork(input)
         var lastNatY = -1L
         var natMemory = Pair(0L, 0L)
         val lastActions = Array(50) { BooleanArray(5) { true } } //false -> received; true -> sent
@@ -60,7 +61,7 @@ class Day23 : Day<List<String>>(2019, 23) {
         }
     }
 
-    private fun initNetwork() {
+    private fun initNetwork(input: LongArray) {
         (0 until 50).forEach { i ->
             comps[i] = IntCodeComputer(input.copyOf(), outputZeroes = true, haltAfterInput = true).withInputFunction {
                 if (inputBuffer[i]!!.isNotEmpty()) inputBuffer[i]!!.removeAt(0) else -1

@@ -4,23 +4,15 @@ import Day
 import utils.Dir
 import utils.Point
 import utils.Turn
+import utils.toCharMatrix
 
-class Day13 : Day<List<String>>(2018, 13) {
+class Day13 : Day<Array<CharArray>>(2018, 13) {
 
-    override val input = readCharMatrix()
+    override fun List<String>.parse() = toCharMatrix()
 
-    private val map = input.map { chars ->
-        chars.map {
-            when (it) {
-                '<', '>' -> '-'
-                '^', 'v' -> '|'
-                else -> it
-            }
-        }.toCharArray()
-    }.toTypedArray()
-
-    override fun solve1(input: List<String>): String {
-        val carts = createCarts()
+    override fun solve1(input: Array<CharArray>): String {
+        val map = input.getMap()
+        val carts = createCarts(input, map)
         while (true) {
             carts.sortedBy { (it.y * 10000) + it.x }.forEach { cart ->
                 cart.step()
@@ -33,8 +25,9 @@ class Day13 : Day<List<String>>(2018, 13) {
         }
     }
 
-    override fun solve2(input: List<String>): String {
-        val carts = createCarts()
+    override fun solve2(input: Array<CharArray>): String {
+        val map = input.getMap()
+        val carts = createCarts(input, map)
         while (true) {
             carts.sortedBy { (it.y * 10000) + it.x }.forEach { cart ->
                 if (cart.active) {
@@ -52,7 +45,7 @@ class Day13 : Day<List<String>>(2018, 13) {
         }
     }
 
-    private fun createCarts(): List<Cart> {
+    private fun createCarts(input: Array<CharArray>, map: Array<CharArray>): List<Cart> {
         val list = mutableListOf<Cart>()
         input.indices.forEach { x ->
             input[x].indices.forEach { y ->
@@ -66,6 +59,16 @@ class Day13 : Day<List<String>>(2018, 13) {
         }
         return list
     }
+
+    private fun Array<CharArray>.getMap() = map { chars ->
+        chars.map {
+            when (it) {
+                '<', '>' -> '-'
+                '^', 'v' -> '|'
+                else -> it
+            }
+        }.toCharArray()
+    }.toTypedArray()
 
     private fun List<Cart>.getCollision() =
         filter { it.active }.map { Point(it.x, it.y) }.groupBy { it }.filterValues { it.size > 1 }.keys

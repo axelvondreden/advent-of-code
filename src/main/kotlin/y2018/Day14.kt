@@ -2,11 +2,11 @@ package y2018
 
 import Day
 
-class Day14 : Day<List<String>>(2018, 14) {
+class Day14 : Day<Int>(2018, 14) {
 
     override fun List<String>.parse() = first().toInt()
 
-    override fun solve1(input: List<String>): String {
+    override fun solve1(input: Int): String {
         val scores = mutableListOf(3, 7)
         var index1 = 0
         var index2 = 1
@@ -22,7 +22,7 @@ class Day14 : Day<List<String>>(2018, 14) {
         return scores.takeLast(10).joinToString("")
     }
 
-    override fun solve2(input: List<String>): Int {
+    override fun solve2(input: Int): Int {
         val scores = mutableListOf(3, 7)
         var index1 = 0
         var index2 = 1
@@ -31,7 +31,7 @@ class Day14 : Day<List<String>>(2018, 14) {
             val rec2 = scores[index2]
             (rec1 + rec2).toString().map { it.toString().toInt() }.forEach {
                 scores += it
-                if (scores.check()) {
+                if (scores.check(input)) {
                     return scores.size - input.toString().length
                 }
             }
@@ -42,9 +42,7 @@ class Day14 : Day<List<String>>(2018, 14) {
         }
     }
 
-    private val checks = input.toString()
-
-    private fun List<Int>.check(): Boolean {
-        return takeLast(checks.length).joinToString("") == checks
+    private fun List<Int>.check(input: Int): Boolean {
+        return takeLast(input.toString().length).joinToString("") == input.toString()
     }
 }

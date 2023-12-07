@@ -5,7 +5,7 @@ import utils.findPoints
 
 class Day03 : Day<List<String>>(2023, 3) {
 
-    override val input = readCharMatrix()
+    override fun List<String>.parse() = toCharMatrix()
 
     override fun solve1(input: List<String>): Int {
         val nrs = getPartNumbers()

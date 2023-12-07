@@ -6,12 +6,11 @@ class Day09 : Day<List<String>>(2018, 9) {
 
     override fun List<String>.parse() = first().split(" ")
 
-    private val playerCount = input[0].toInt()
-    private val marbleCount = input[6].toInt()
+    override fun solve1(input: List<String>) = getMaxScore(input[0].toInt(), input[6].toInt())
 
-    override fun solve1(input: List<String>) = getMaxScore(playerCount, marbleCount)
-
-    override fun solve2(input: List<String>) = getMaxScore(playerCount, marbleCount * 100)
+    override fun solve2(input: List<String>): Long {
+        return getMaxScore(input[0].toInt(), input[6].toInt() * 100)
+    }
 
     private fun getMaxScore(playerCount: Int, marbleCount: Int): Long {
         var playerIndex = 0

@@ -3,16 +3,20 @@ package y2020
 import Day
 
 
-class Day21 : Day<List<String>>(2020, 21) {
+class Day21 : Day<Map<Set<String>, Set<String>>>(2020, 21) {
 
-    override fun List<String>.parse() = this.toIngredients()
+    override fun List<String>.parse() = associate { line ->
+        val ingredients = line.substringBefore(" (").split(" ").toSet()
+        val allergens = line.substringAfter("(contains ").substringBefore(")").split(", ").toSet()
+        ingredients to allergens
+    }
 
-    override fun solve1(input: List<String>): Int {
+    override fun solve1(input: Map<Set<String>, Set<String>>): Int {
         val safe = input.safeIngredients()
         return input.keys.sumOf { food -> food.count { it in safe } }
     }
 
-    override fun solve2(input: List<String>): String {
+    override fun solve2(input: Map<Set<String>, Set<String>>): String {
         val ingredientsByAllergy = input.ingredientsByAllergy()
         val found = mutableMapOf<String, String>()
 
@@ -45,10 +49,4 @@ class Day21 : Day<List<String>>(2020, 21) {
                 .reduce { carry, ingredients -> ingredients intersect carry }
         }.toSet()
     )
-
-    private fun List<String>.toIngredients() = associate { line ->
-        val ingredients = line.substringBefore(" (").split(" ").toSet()
-        val allergens = line.substringAfter("(contains ").substringBefore(")").split(", ").toSet()
-        ingredients to allergens
-    }
 }

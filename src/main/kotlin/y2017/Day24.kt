@@ -3,16 +3,16 @@ package y2017
 import Day
 import kotlin.math.max
 
-class Day24 : Day<List<String>>(2017, 24) {
+class Day24 : Day<Set<Day24.Component>>(2017, 24) {
 
-    override fun List<String>.parse() = this.map {
+    override fun List<String>.parse() = map {
         val split = it.split("/")
         Component(split[0].toInt(), split[1].toInt())
     }.toSet()
 
-    override fun solve1(input: List<String>) = findAllBridges(input, emptyList(), 0).maxOf { bridge -> bridge.sumOf { it.port1 + it.port2 } }
+    override fun solve1(input: Set<Component>) = findAllBridges(input, emptyList(), 0).maxOf { bridge -> bridge.sumOf { it.port1 + it.port2 } }
 
-    override fun solve2(input: List<String>): Int {
+    override fun solve2(input: Set<Component>): Int {
         val bridges = findAllBridges(input, emptyList(), 0)
         val maxSize = bridges.maxOf { it.size }
         return bridges.filter { it.size == maxSize }.maxOf { bridge -> bridge.sumOf { it.port1 + it.port2 } }

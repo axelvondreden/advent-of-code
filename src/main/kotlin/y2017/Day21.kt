@@ -2,9 +2,9 @@ package y2017
 
 import Day
 
-class Day21 : Day<List<String>>(2017, 21) {
+class Day21 : Day<List<Day21.Pattern>>(2017, 21) {
 
-    override fun List<String>.parse() = this.parsePatterns()
+    override fun List<String>.parse() = parsePatterns()
 
     private val image = arrayOf(
         charArrayOf('.', '#', '.'),
@@ -12,23 +12,23 @@ class Day21 : Day<List<String>>(2017, 21) {
         charArrayOf('#', '#', '#')
     )
 
-    override fun solve1(input: List<String>): Int {
+    override fun solve1(input: List<Pattern>): Int {
         var copy = image.copyOf()
-        repeat(5) { copy = copy.step() }
+        repeat(5) { copy = copy.step(input) }
         return copy.sumOf { chars -> chars.count { it == '#' } }
     }
 
-    override fun solve2(input: List<String>): Int {
+    override fun solve2(input: List<Pattern>): Int {
         var copy = image.copyOf()
-        repeat(18) { copy = copy.step() }
+        repeat(18) { copy = copy.step(input) }
         return copy.sumOf { chars -> chars.count { it == '#' } }
     }
 
-    private fun Array<CharArray>.step() = breakUp(if (size % 2 == 0) 2 else 3).map { imgCol ->
-        imgCol.map { it.convert() }.toTypedArray()
+    private fun Array<CharArray>.step(input: List<Pattern>) = breakUp(if (size % 2 == 0) 2 else 3).map { imgCol ->
+        imgCol.map { it.convert(input) }.toTypedArray()
     }.toTypedArray().join()
 
-    private fun Array<CharArray>.convert() = input.first { it.input.contentDeepEquals(this) }.output
+    private fun Array<CharArray>.convert(input: List<Pattern>) = input.first { it.input.contentDeepEquals(this) }.output
 
     private fun Array<CharArray>.breakUp(blockSize: Int): Array<Array<Array<CharArray>>> {
         val ret = Array(size / blockSize) { Array(size / blockSize) { Array(blockSize) { CharArray(blockSize) } } }

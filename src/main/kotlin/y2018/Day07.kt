@@ -2,24 +2,24 @@ package y2018
 
 import Day
 
-class Day07 : Day<List<String>>(2018, 7) {
+class Day07 : Day<Set<Day07.Rule>>(2018, 7) {
 
-    override fun List<String>.parse() = this.map {
+    override fun List<String>.parse() = map {
         val split = it.split(" ")
         Rule(split[7][0], split[1][0])
     }.toSet()
 
     private var minutesPassed = 0
 
-    override fun solve1(input: List<String>) = simulateWork()
+    override fun solve1(input: Set<Rule>) = simulateWork(input)
 
-    override fun solve2(input: List<String>): Int {
+    override fun solve2(input: Set<Rule>): Int {
         minutesPassed = 0
-        simulateWork(5)
+        simulateWork(input, 5)
         return minutesPassed
     }
 
-    private fun simulateWork(workerAmount: Int = 1): String {
+    private fun simulateWork(input: Set<Rule>, workerAmount: Int = 1): String {
         val workers = List(workerAmount) { Worker() }
         val done = mutableListOf<Char>()
         val working = mutableSetOf<Char>()

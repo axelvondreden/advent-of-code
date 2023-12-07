@@ -2,11 +2,11 @@ package y2020
 
 import Day
 
-class Day10 : Day<List<String>>(2020, 10) {
+class Day10 : Day<List<Int>>(2020, 10) {
 
-    override fun List<String>.parse() = this.map { it.toInt() }
+    override fun List<String>.parse() = map { it.toInt() }
 
-    override fun solve1(input: List<String>): Int {
+    override fun solve1(input: List<Int>): Int {
         val deviceJoltage = input.maxOrNull()!! + 3
         var diff1 = 0
         var diff3 = 0
@@ -22,7 +22,7 @@ class Day10 : Day<List<String>>(2020, 10) {
         return diff1 * diff3
     }
 
-    override fun solve2(input: List<String>): Long {
+    override fun solve2(input: List<Int>): Long {
         val list = input.plus(0).sorted()
         val paths = Array(list.size) { 0L }
         paths[0] = 1L

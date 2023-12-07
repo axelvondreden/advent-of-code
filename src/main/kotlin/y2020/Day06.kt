@@ -2,13 +2,13 @@ package y2020
 
 import Day
 
-class Day06 : Day<List<String>>(2020, 6) {
+class Day06 : Day<List<Day06.Group>>(2020, 6) {
 
     override fun List<String>.parse() = this.toGroups()
 
-    override fun solve1(input: List<String>) = input.sumOf { it.yesCount }
+    override fun solve1(input: List<Group>) = input.sumOf { it.yesCount }
 
-    override fun solve2(input: List<String>) = input.sumOf { it.allYesCount }
+    override fun solve2(input: List<Group>) = input.sumOf { it.allYesCount }
 
     private fun List<String>.toGroups(): List<Group> {
         val groups = mutableListOf<Group>()

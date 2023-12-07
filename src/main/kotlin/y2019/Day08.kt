@@ -2,16 +2,16 @@ package y2019
 
 import Day
 
-class Day08 : Day<List<String>>(2019, 8) {
+class Day08 : Day<List<List<Int>>>(2019, 8) {
 
     override fun List<String>.parse() = first().map { it.toString().toInt() }.chunked(25 * 6)
 
-    override fun solve1(input: List<String>): Int {
+    override fun solve1(input: List<List<Int>>): Int {
         val minLayer = input.minByOrNull { list -> list.count { it == 0 } }!!
         return minLayer.count { it == 1 } * minLayer.count { it == 2 }
     }
 
-    override fun solve2(input: List<String>): String {
+    override fun solve2(input: List<List<Int>>): String {
         val finalImage = IntArray(25 * 6) { 2 }
         finalImage.indices.forEach { i ->
             for (layer in input) {

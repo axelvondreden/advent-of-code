@@ -2,21 +2,26 @@ package y2019
 
 import Day
 
-class Day14 : Day<List<String>>(2019, 14) {
+class Day14 : Day<List<List<String>>>(2019, 14) {
 
-    override fun List<String>.parse() = this.map { it.split(" => ") }
+    override fun List<String>.parse() = map { it.split(" => ") }
 
-    private val reactions = input.map { list ->
-        val output = Pair(list[1].split(" ")[1], list[1].split(" ")[0].toLong())
-        val inputs = list[0].split(", ").associate { it.split(" ")[1] to it.split(" ")[0].toLong() }
-        Reaction(inputs, output)
+    override fun solve1(input: List<List<String>>): Int {
+        val reactions = input.map { list ->
+            val output = Pair(list[1].split(" ")[1], list[1].split(" ")[0].toLong())
+            val inputs = list[0].split(", ").associate { it.split(" ")[1] to it.split(" ")[0].toLong() }
+            Reaction(inputs, output)
+        }
+        return getOreCount(reactions, Pair("FUEL", 1), mutableMapOf())
     }
 
-    private var oreCount = getOreCount(reactions, Pair("FUEL", 1), mutableMapOf())
-
-    override fun solve1(input: List<String>) = oreCount
-
-    override fun solve2(input: List<String>): Long {
+    override fun solve2(input: List<List<String>>): Long {
+        val reactions = input.map { list ->
+            val output = Pair(list[1].split(" ")[1], list[1].split(" ")[0].toLong())
+            val inputs = list[0].split(", ").associate { it.split(" ")[1] to it.split(" ")[0].toLong() }
+            Reaction(inputs, output)
+        }
+        val oreCount = getOreCount(reactions, Pair("FUEL", 1), mutableMapOf())
         var fuel = 1000000000000 / oreCount
         while (getOreCount(reactions, Pair("FUEL", fuel), emptyMap<String, Long>().toMutableMap()) < 1000000000000) {
             fuel++
