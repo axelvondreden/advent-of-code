@@ -4,7 +4,7 @@ import Day
 
 class Day05 : Day<List<String>>(2023, 5) {
 
-    override val input = readStrings().filter { it.isNotBlank() }
+    override fun List<String>.parse() = this.filter { it.isNotBlank() }
 
     private val seeds = input[0].removePrefix("seeds: ").split(" ").map { it.toLong() }
 

@@ -5,7 +5,7 @@ import Day
 
 class Day25 : Day<List<String>>(2016, 25) {
 
-    override val input = readStrings()
+    override fun List<String>.parse() = this
 
     override fun solve1(input: List<String>): Int {
         val regex = Regex("^(!?01)+")

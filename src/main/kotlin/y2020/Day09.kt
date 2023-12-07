@@ -4,7 +4,7 @@ import Day
 
 class Day09 : Day<List<String>>(2020, 9) {
 
-    override val input = readStrings().map { it.toLong() }
+    override fun List<String>.parse() = this.map { it.toLong() }
 
     private var wrongNumber = 0L
 

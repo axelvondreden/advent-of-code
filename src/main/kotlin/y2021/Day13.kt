@@ -6,7 +6,7 @@ import utils.toMapString
 
 class Day13 : Day<List<String>>(2021, 13) {
 
-    override val input = readStrings()
+    override fun List<String>.parse() = this
     private val dots = input.takeWhile { it.isNotBlank() }.map { Point(it) }.toSet()
     private val folds = input.dropWhile { it.isNotBlank() }.drop(1).map { it.split(" ")[2] }
 

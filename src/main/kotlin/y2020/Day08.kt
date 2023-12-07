@@ -4,7 +4,7 @@ import Day
 
 class Day08 : Day<List<String>>(2020, 8) {
 
-    override val input = readStrings().toInstructions()
+    override fun List<String>.parse() = this.toInstructions()
 
     override fun solve1(input: List<String>) = Accumulator().apply { runWithoutLoop(input) }.acc
 

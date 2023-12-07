@@ -4,7 +4,7 @@ import Day
 
 class Day12 : Day<List<String>>(2021, 12) {
 
-    override val input = readStrings()
+    override fun List<String>.parse() = this
     private val caves = input.map { it.split("-") }
         .flatMap { listOf(it.first() to it.last(), it.last() to it.first()) }
         .groupBy({ it.first }, { it.second })

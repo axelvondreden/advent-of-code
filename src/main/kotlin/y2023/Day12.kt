@@ -4,7 +4,7 @@ import Day
 
 class Day12 : Day<List<String>>(2023, 12) {
 
-    override val input = readStrings()
+    override fun List<String>.parse() = this
 
     override fun solve1(input: List<String>) = 0
 

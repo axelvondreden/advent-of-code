@@ -5,23 +5,27 @@ import pathfinding.Pathfinder
 import utils.toPathfindingMap
 import kotlin.math.abs
 
-class Day13 : Day<List<String>>(2016, 13) {
+class Day13 : Day<Int>(2016, 13) {
 
-    override val input = readString().toInt()
+    override fun List<String>.parse() = first().toInt()
 
-    private val map = Array(mapSize) { x ->
-        CharArray(mapSize) { y ->
-            if (((x * x) + (3 * x) + (2 * x * y) + y + (y * y) + input).countOneBits() % 2 == 0) '.' else '#'
+    override fun solve1(input: Int): Int {
+        val map = Array(mapSize) { x ->
+            CharArray(mapSize) { y ->
+                if (((x * x) + (3 * x) + (2 * x * y) + y + (y * y) + input).countOneBits() % 2 == 0) '.' else '#'
+            }
         }
-    }
-
-    override fun solve1(input: List<String>): Int {
         val pf = Pathfinder(map.toPathfindingMap(), mapSize, mapSize)
         val path = pf.searchBFS(startNode, endNode)
         return path.size + 1
     }
 
-    override fun solve2(input: List<String>): Int {
+    override fun solve2(input: Int): Int {
+        val map = Array(mapSize) { x ->
+            CharArray(mapSize) { y ->
+                if (((x * x) + (3 * x) + (2 * x * y) + y + (y * y) + input).countOneBits() % 2 == 0) '.' else '#'
+            }
+        }
         val coords = mutableSetOf(startNode)
         val pf = Pathfinder(map.toPathfindingMap(), mapSize, mapSize)
         (startNode.x - 50 until startNode.x + 51).forEach { x ->

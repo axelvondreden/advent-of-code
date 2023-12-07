@@ -4,7 +4,7 @@ import Day
 
 class Day07 : Day<List<String>>(2023, 7) {
 
-    override val input = readStrings()
+    override fun List<String>.parse() = this
 
     private val games = input.map { line ->
         val s = line.split(" ")

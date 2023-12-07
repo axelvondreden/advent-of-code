@@ -4,7 +4,7 @@ import Day
 
 class Day04 : Day<List<String>>(2020, 4) {
 
-    override val input = readStrings()
+    override fun List<String>.parse() = this
 
     private val passportStrings = parsePassportStrings()
 

@@ -4,7 +4,7 @@ import Day
 
 class Day07 : Day<List<String>>(2018, 7) {
 
-    override val input = readStrings().map {
+    override fun List<String>.parse() = this.map {
         val split = it.split(" ")
         Rule(split[7][0], split[1][0])
     }.toSet()

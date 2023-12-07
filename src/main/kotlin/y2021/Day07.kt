@@ -7,7 +7,7 @@ import kotlin.math.min
 
 class Day07 : Day<List<String>>(2021, 7) {
 
-    override val input = readString().split(",").map { it.toInt() }
+    override fun List<String>.parse() = first().split(",").map { it.toInt() }
 
     override fun solve1(input: List<String>): Int {
         var minFuel = Int.MAX_VALUE

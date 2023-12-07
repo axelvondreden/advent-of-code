@@ -2,13 +2,13 @@ package y2017
 
 import Day
 
-class Day18 : Day<List<String>>(2017, 18) {
+class Day18 : Day<List<List<String>>>(2017, 18) {
 
-    override val input = readStrings().map { it.split(" ") }
+    override fun List<String>.parse() = map { it.split(" ") }
 
     private val register = ('a'..'z').associateWith { 0L }
 
-    override fun solve1(input: List<String>): Long {
+    override fun solve1(input: List<List<String>>): Long {
         var index = 0
         val reg = register.toMutableMap()
         val sounds = mutableListOf<Long>()
@@ -21,7 +21,7 @@ class Day18 : Day<List<String>>(2017, 18) {
     }
 
     // TODO: make nice
-    override fun solve2(input: List<String>): Int {
+    override fun solve2(input: List<List<String>>): Int {
         var waiting1 = false
         var waiting2 = false
         val queue1 = ArrayDeque<Long>()

@@ -6,7 +6,7 @@ import utils.Point3D
 
 class Day11 : Day<List<String>>(2018, 11) {
 
-    override val input = readString().toInt()
+    override fun List<String>.parse() = first().toInt()
     private val cache = mutableMapOf<String, Int>()
 
     override fun solve1(input: List<String>) = highest3x3Chunk()

@@ -6,7 +6,7 @@ import kotlin.math.abs
 
 class Day09 : Day<List<String>>(2022, 9) {
 
-    override val input = readStrings().map { line -> line.split(" ").let { it[0] to it[1].toInt() } }
+    override fun List<String>.parse() = this.map { line -> line.split(" ").let { it[0] to it[1].toInt() } }
 
     override fun solve1(input: List<String>): Int {
         var head = Point(0, 0)

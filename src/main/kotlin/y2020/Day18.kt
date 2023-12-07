@@ -5,7 +5,7 @@ import Day
 
 class Day18 : Day<List<String>>(2020, 18) {
 
-    override val input = readStrings().map { it.replace(" ", "") }
+    override fun List<String>.parse() = this.map { it.replace(" ", "") }
 
     override fun solve1(input: List<String>) = input.sumOf { eval1(it.iterator()) }
 

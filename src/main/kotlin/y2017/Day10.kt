@@ -2,11 +2,11 @@ package y2017
 
 import Day
 
-class Day10 : Day<List<String>>(2017, 10) {
+class Day10 : Day<String>(2017, 10) {
 
-    override val input = readString()
+    override fun List<String>.parse() = first()
 
-    override fun solve1(input: List<String>): Int {
+    override fun solve1(input: String): Int {
         var list = (0..255).toList()
         var position = 0
         var skipSize = 0
@@ -20,7 +20,7 @@ class Day10 : Day<List<String>>(2017, 10) {
         return list[0] * list[1]
     }
 
-    override fun solve2(input: List<String>): String {
+    override fun solve2(input: String): String {
         var list = (0..255).toList()
         var position = 0
         var skipSize = 0

@@ -4,7 +4,7 @@ import Day
 
 class Day25 : Day<List<String>>(2017, 25) {
 
-    override val input = readStrings()
+    override fun List<String>.parse() = this
 
     private val start = input[0].split(" ")[3][0]
     private val steps = input[1].split(" ")[5].toInt()

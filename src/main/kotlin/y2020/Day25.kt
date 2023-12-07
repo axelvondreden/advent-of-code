@@ -5,7 +5,7 @@ import Day
 
 class Day25 : Day<List<String>>(2020, 25) {
 
-    override val input = readStrings()
+    override fun List<String>.parse() = this
 
     private val cardPublic = input[0].toLong()
     private val doorPublic = input[1].toLong()

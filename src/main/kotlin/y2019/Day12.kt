@@ -5,7 +5,7 @@ import kotlin.math.absoluteValue
 
 class Day12 : Day<List<String>>(2019, 12) {
 
-    override val input = readStrings().map { it.drop(1).dropLast(1).split(", ") }
+    override fun List<String>.parse() = this.map { it.drop(1).dropLast(1).split(", ") }
 
     override fun solve1(input: List<String>): Int {
         val planets = input.map {

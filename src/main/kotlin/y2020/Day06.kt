@@ -4,7 +4,7 @@ import Day
 
 class Day06 : Day<List<String>>(2020, 6) {
 
-    override val input = readStrings().toGroups()
+    override fun List<String>.parse() = this.toGroups()
 
     override fun solve1(input: List<String>) = input.sumOf { it.yesCount }
 

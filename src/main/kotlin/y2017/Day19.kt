@@ -2,12 +2,13 @@ package y2017
 
 import Day
 import utils.Point
+import utils.toCharMatrix
 
-class Day19 : Day<List<String>>(2017, 19) {
+class Day19 : Day<Array<CharArray>>(2017, 19) {
 
-    override val input = readCharMatrix()
+    override fun List<String>.parse() = toCharMatrix()
 
-    override fun solve1(input: List<String>): String {
+    override fun solve1(input: Array<CharArray>): String {
         val startX = input.mapIndexed { index, chars -> index to chars[0] }.first { it.second == '|' }.first
         var point = Point(startX.toLong(), 0)
         val letters = mutableListOf<Char>()
@@ -20,7 +21,7 @@ class Day19 : Day<List<String>>(2017, 19) {
         return letters.joinToString("")
     }
 
-    override fun solve2(input: List<String>): Int {
+    override fun solve2(input: Array<CharArray>): Int {
         val startX = input.mapIndexed { index, chars -> index to chars[0] }.first { it.second == '|' }.first
         var point = Point(startX.toLong(), 0)
         val letters = mutableListOf<Char>()

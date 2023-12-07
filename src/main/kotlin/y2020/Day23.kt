@@ -5,7 +5,7 @@ import Day
 
 class Day23 : Day<List<String>>(2020, 23) {
 
-    override val input = readString()
+    override fun List<String>.parse() = first()
 
     override fun solve1(input: List<String>) = Cups(input).allMoves(100).toString()
 

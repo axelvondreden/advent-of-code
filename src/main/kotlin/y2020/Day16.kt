@@ -5,7 +5,7 @@ import Day
 
 class Day16 : Day<List<String>>(2020, 16) {
 
-    override val input = readStrings()
+    override fun List<String>.parse() = this
 
     private val rules = input.takeWhile { it.isNotBlank() }.map { line ->
         val lineSplit = line.split(": ")

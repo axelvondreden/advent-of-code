@@ -3,15 +3,16 @@ package y2016
 import Day
 import pathfinding.Pathfinder
 import utils.permute
+import utils.toCharMatrix
 import utils.toPathfindingMap
 import kotlin.math.min
 
 
-class Day24 : Day<List<String>>(2016, 24) {
+class Day24 : Day<Array<CharArray>>(2016, 24) {
 
-    override val input = readCharMatrix()
+    override fun List<String>.parse() = toCharMatrix()
 
-    override fun solve1(input: List<String>): Int {
+    override fun solve1(input: Array<CharArray>): Int {
         val pf = Pathfinder(input.toPathfindingMap(), input.size, input[0].size)
         val points = input.flatMapIndexed { x, chars ->
             chars.mapIndexed { y, c -> if (c.isDigit() && c != '0') Pathfinder.Node(x, y) else null }
@@ -32,7 +33,7 @@ class Day24 : Day<List<String>>(2016, 24) {
         return minLength
     }
 
-    override fun solve2(input: List<String>): Int {
+    override fun solve2(input: Array<CharArray>): Int {
         val pf = Pathfinder(input.toPathfindingMap(), input.size, input[0].size)
         val points = input.flatMapIndexed { x, chars ->
             chars.mapIndexed { y, c -> if (c.isDigit() && c != '0') Pathfinder.Node(x, y) else null }

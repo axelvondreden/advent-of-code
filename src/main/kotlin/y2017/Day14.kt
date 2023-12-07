@@ -5,30 +5,29 @@ import java.math.BigInteger
 
 class Day14 : Day<List<String>>(2017, 14) {
 
-    override val input = readString().toBinaryStrings()
-
-    private val grid by lazy { stringsToGrid() }
+    override fun List<String>.parse() = first().toBinaryStrings()
 
     override fun solve1(input: List<String>) = input.sumOf { binaryString -> binaryString.count { it == '1' } }
 
     override fun solve2(input: List<String>): Int {
         var groups = 0
+        val grid = stringsToGrid(input)
         grid.forEachIndexed { x, row ->
             row.forEachIndexed { y, spot ->
                 if (spot == 1) {
                     groups += 1
-                    markNeighbors(x, y)
+                    markNeighbors(grid, x, y)
                 }
             }
         }
         return groups
     }
 
-    private fun markNeighbors(x: Int, y: Int) {
+    private fun markNeighbors(grid: List<IntArray>, x: Int, y: Int) {
         if (grid[x][y] == 1) {
             grid[x][y] = 0
             neighborsOf(x, y).forEach {
-                markNeighbors(it.first, it.second)
+                markNeighbors(grid, it.first, it.second)
             }
         }
     }
@@ -37,7 +36,8 @@ class Day14 : Day<List<String>>(2017, 14) {
         .filter { it.first in 0..127 }
         .filter { it.second in 0..127 }
 
-    private fun stringsToGrid() = input.map { s -> s.map { it.toString().toInt() } }.map { it.toIntArray() }
+    private fun stringsToGrid(input: List<String>) =
+        input.map { s -> s.map { it.toString().toInt() } }.map { it.toIntArray() }
 
     private fun String.toBinaryStrings() = (0..127).map { KnotHash.hash("$this-$it") }
         .map { BigInteger(it, 16).toString(2).padStart(128, '0') }

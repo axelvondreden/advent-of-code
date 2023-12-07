@@ -4,7 +4,7 @@ import Day
 
 class Day23 : Day<List<String>>(2017, 23) {
 
-    override val input = readStrings()
+    override fun List<String>.parse() = this
 
     override fun solve1(input: List<String>): Int {
         val register = ('a'..'h').associateWith { 0L }.toMutableMap()

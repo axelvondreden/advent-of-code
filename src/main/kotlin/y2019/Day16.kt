@@ -4,7 +4,7 @@ import Day
 
 class Day16 : Day<List<String>>(2019, 16) {
 
-    override val input = readString().map { it.toString().toInt() }.toIntArray()
+    override fun List<String>.parse() = first().map { it.toString().toInt() }.toIntArray()
 
     override fun solve1(input: List<String>): String {
         var txt = input.copyOf()

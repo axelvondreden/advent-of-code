@@ -5,7 +5,7 @@ import utils.Point
 
 class Day06 : Day<List<String>>(2018, 6) {
 
-    override val input = readStrings().map { Point(it, ", ") }
+    override fun List<String>.parse() = this.map { Point(it, ", ") }
 
     private val xValues = input.map { it.x }
     private val yValues = input.map { it.y }

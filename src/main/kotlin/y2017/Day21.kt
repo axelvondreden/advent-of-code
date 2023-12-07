@@ -4,7 +4,7 @@ import Day
 
 class Day21 : Day<List<String>>(2017, 21) {
 
-    override val input = readStrings().parsePatterns()
+    override fun List<String>.parse() = this.parsePatterns()
 
     private val image = arrayOf(
         charArrayOf('.', '#', '.'),

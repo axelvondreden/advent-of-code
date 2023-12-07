@@ -4,7 +4,7 @@ import Day
 
 class Day08 : Day<List<String>>(2019, 8) {
 
-    override val input = readString().map { it.toString().toInt() }.chunked(25 * 6)
+    override fun List<String>.parse() = first().map { it.toString().toInt() }.chunked(25 * 6)
 
     override fun solve1(input: List<String>): Int {
         val minLayer = input.minByOrNull { list -> list.count { it == 0 } }!!

@@ -2,15 +2,15 @@ package y2017
 
 import Day
 
-class Day01 : Day<List<String>>(2017, 1) {
+class Day01 : Day<String>(2017, 1) {
 
-    override val input = readString()
+    override fun List<String>.parse() = first()
 
-    override fun solve1(input: List<String>) = captcha(1)
+    override fun solve1(input: String) = input.captcha(1)
 
-    override fun solve2(input: List<String>) = captcha(input.length / 2)
+    override fun solve2(input: String) = input.captcha(input.length / 2)
 
-    private fun captcha(offset: Int) = input.indices.filter {
-        input[it] == input[(it + offset) % input.length]
-    }.sumOf { input[it].toString().toInt() }
+    private fun String.captcha(offset: Int) = indices.filter {
+        this[it] == this[(it + offset) % length]
+    }.sumOf { this[it].toString().toInt() }
 }

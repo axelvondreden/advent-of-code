@@ -4,7 +4,7 @@ import Day
 
 class Day02 : Day<List<String>>(2020, 2) {
 
-    override val input = readStrings().map {
+    override fun List<String>.parse() = this.map {
         val split = it.split(":")
         val range = split[0].split(" ")[0].split("-")
         Password(range[0].toInt()..range[1].toInt(), split[0].split(" ")[1][0], split[1].trim())

@@ -4,7 +4,7 @@ import Day
 
 class Day10 : Day<List<String>>(2020, 10) {
 
-    override val input = readStrings().map { it.toInt() }
+    override fun List<String>.parse() = this.map { it.toInt() }
 
     override fun solve1(input: List<String>): Int {
         val deviceJoltage = input.maxOrNull()!! + 3

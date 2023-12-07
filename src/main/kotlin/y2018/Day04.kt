@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter
 
 class Day04 : Day<List<String>>(2018, 4) {
 
-    override val input = readStrings().sorted().parseGuards()
+    override fun List<String>.parse() = this.sorted().parseGuards()
 
     override fun solve1(input: List<String>): Int {
         val guard = input.maxByOrNull { guard -> guard.sleepRanges.sumOf { it.minutes.count() } }

@@ -2,17 +2,17 @@ package y2017
 
 import Day
 
-class Day12 : Day<List<String>>(2017, 12) {
+class Day12 : Day<Set<Day12.Program>>(2017, 12) {
 
-    override val input = readStrings().toPrograms()
+    override fun List<String>.parse() = toPrograms()
 
-    override fun solve1(input: List<String>): Int {
+    override fun solve1(input: Set<Program>): Int {
         val output = mutableSetOf<Program>()
         input.first { it.id == 0 }.getConnectionCount(output)
         return output.size
     }
 
-    override fun solve2(input: List<String>): Int {
+    override fun solve2(input: Set<Program>): Int {
         val groups = mutableSetOf<Set<Program>>()
         input.forEach {
             val output = mutableSetOf<Program>()

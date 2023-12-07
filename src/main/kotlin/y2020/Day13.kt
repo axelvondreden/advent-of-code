@@ -5,7 +5,7 @@ import Day
 
 class Day13 : Day<List<String>>(2020, 13) {
 
-    override val input = readStrings()
+    override fun List<String>.parse() = this
 
     override fun solve1(input: List<String>): Int {
         val earliest = input[0].toInt()

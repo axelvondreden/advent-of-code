@@ -5,7 +5,7 @@ import utils.Point
 
 class Day03 : Day<List<String>>(2018, 3) {
 
-    override val input = readStrings().parseClaims()
+    override fun List<String>.parse() = this.parseClaims()
 
     override fun solve1(input: List<String>) = input.flatMap { it.getPoints() }.groupBy { it }.values.count { it.size > 1 }
 

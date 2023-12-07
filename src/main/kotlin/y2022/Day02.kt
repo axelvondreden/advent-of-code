@@ -4,7 +4,7 @@ import Day
 
 class Day02 : Day<List<String>>(2022, 2) {
 
-    override val input = readStrings().map { it[0] to it[2] }
+    override fun List<String>.parse() = this.map { it[0] to it[2] }
 
     override fun solve1(input: List<String>) = input.sumOf {
         val move = when (it.second) {

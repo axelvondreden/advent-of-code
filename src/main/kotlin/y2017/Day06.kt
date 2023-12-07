@@ -2,11 +2,11 @@ package y2017
 
 import Day
 
-class Day06 : Day<List<String>>(2017, 6) {
+class Day06 : Day<List<Int>>(2017, 6) {
 
-    override val input = readString().split(Regex("\\s+")).map { it.toInt() }
+    override fun List<String>.parse() = first().split(Regex("\\s+")).map { it.toInt() }
 
-    override fun solve1(input: List<String>): Int {
+    override fun solve1(input: List<Int>): Int {
         val states = mutableSetOf<String>()
         var steps = 0
         var banks = input.toIntArray()
@@ -18,7 +18,7 @@ class Day06 : Day<List<String>>(2017, 6) {
         return steps
     }
 
-    override fun solve2(input: List<String>): Int {
+    override fun solve2(input: List<Int>): Int {
         val states = mutableListOf<String>()
         var banks = input.toIntArray()
         while (!states.contains(banks.joinToString("|"))) {

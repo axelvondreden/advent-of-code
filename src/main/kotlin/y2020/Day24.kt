@@ -6,7 +6,7 @@ import kotlin.math.absoluteValue
 
 class Day24 : Day<List<String>>(2020, 24) {
 
-    override val input = readStrings().toPaths()
+    override fun List<String>.parse() = this.toPaths()
 
     private val tiles = mutableMapOf<Pair<Int, Int>, Boolean>()
 

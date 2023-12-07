@@ -4,7 +4,7 @@ import Day
 
 class Day04 : Day<List<String>>(2017, 4) {
 
-    override val input = readStrings()
+    override fun List<String>.parse() = this
 
     override fun solve1(input: List<String>) = input.count {
         val split = it.split(" ")

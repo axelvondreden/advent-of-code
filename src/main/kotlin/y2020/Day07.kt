@@ -4,7 +4,7 @@ import Day
 
 class Day07 : Day<List<String>>(2020, 7) {
 
-    override val input = readStrings().toBags()
+    override fun List<String>.parse() = this.toBags()
 
     override fun solve1(input: List<String>) = input.keys.count { it.canHoldColor("shiny gold") }
 

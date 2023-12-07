@@ -4,7 +4,7 @@ import Day
 
 class Day10 : Day<List<String>>(2021, 10) {
 
-    override val input = readStrings()
+    override fun List<String>.parse() = this
 
     private val scoreMapping = mapOf(
         ')' to 3,

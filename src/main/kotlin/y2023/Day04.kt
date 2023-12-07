@@ -5,7 +5,7 @@ import kotlin.math.pow
 
 class Day04 : Day<List<String>>(2023, 4) {
 
-    override val input = readStrings()
+    override fun List<String>.parse() = this
 
     private val games = input.map { line ->
         val split = line.removePrefix("Card ").split(":")

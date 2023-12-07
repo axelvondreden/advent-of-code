@@ -4,7 +4,7 @@ import Day
 
 class Day15 : Day<List<String>>(2017, 15) {
 
-    override val input = readStrings()
+    override fun List<String>.parse() = this
 
     override fun solve1(input: List<String>): Int {
         val genA = Generator(input[0].split(" ")[4].toLong(), genAFactor)

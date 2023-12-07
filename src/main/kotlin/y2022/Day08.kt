@@ -5,7 +5,7 @@ import kotlin.math.max
 
 class Day08 : Day<List<String>>(2022, 8) {
 
-    override val input = readStrings().map { line -> line.map { it.digitToInt() }.toIntArray() }.toTypedArray()
+    override fun List<String>.parse() = this.map { line -> line.map { it.digitToInt() }.toIntArray() }.toTypedArray()
 
     override fun solve1(input: List<String>) = input.indices.sumOf { x -> input[x].indices.count { y -> input.isVisible(x, y) } }
 

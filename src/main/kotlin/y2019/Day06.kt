@@ -4,7 +4,7 @@ import Day
 
 class Day06 : Day<List<String>>(2019, 6) {
 
-    override val input = readStrings().map { it.split(")") }
+    override fun List<String>.parse() = this.map { it.split(")") }
 
     private val map = mutableMapOf<String, ArrayList<String>>()
 

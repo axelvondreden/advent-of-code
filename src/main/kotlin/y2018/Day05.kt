@@ -4,7 +4,7 @@ import Day
 
 class Day05 : Day<List<String>>(2018, 5) {
 
-    override val input = readString()
+    override fun List<String>.parse() = first()
 
     override fun solve1(input: List<String>) = input.fullReact().length
 

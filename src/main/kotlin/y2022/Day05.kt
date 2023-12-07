@@ -5,7 +5,7 @@ import java.util.*
 
 class Day05 : Day<List<String>>(2022, 5) {
 
-    override val input = readStrings()
+    override fun List<String>.parse() = this
     private val stackLines = input.takeWhile { it.isNotEmpty() }
     private val instructions = input.dropWhile { it.isNotEmpty() }.drop(1).map {
         val s = it.split(" ")

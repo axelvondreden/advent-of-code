@@ -4,7 +4,7 @@ import Day
 
 class Day01 : Day<List<String>>(2019, 1) {
 
-    override val input = readStrings()
+    override fun List<String>.parse() = this
 
     override fun solve1(input: List<String>) = input.sumOf { (it.toInt() / 3) - 2 }
 

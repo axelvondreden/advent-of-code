@@ -4,7 +4,7 @@ import Day
 
 class Day06 : Day<List<String>>(2022, 6) {
 
-    override val input = readString()
+    override fun List<String>.parse() = first()
 
     override fun solve1(input: List<String>) = input.findMarker(4)
 

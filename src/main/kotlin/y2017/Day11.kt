@@ -5,7 +5,7 @@ import kotlin.math.absoluteValue
 
 class Day11 : Day<List<String>>(2017, 11) {
 
-    override val input = readString().split(",")
+    override fun List<String>.parse() = first().split(",")
 
     override fun solve1(input: List<String>) = input.fold(Hex(0, 0, 0)) { spot, dir -> spot.move(dir.toHexDir()) }.distance(Hex(0, 0, 0))
 

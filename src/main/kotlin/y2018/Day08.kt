@@ -4,7 +4,7 @@ import Day
 
 class Day08 : Day<List<String>>(2018, 8) {
 
-    override val input = readString().split(" ").map { it.toInt() }.iterator().toNode()
+    override fun List<String>.parse() = first().split(" ").map { it.toInt() }.iterator().toNode()
 
     override fun solve1(input: List<String>) = input.sumMetadata
 

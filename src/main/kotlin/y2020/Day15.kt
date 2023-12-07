@@ -5,7 +5,7 @@ import Day
 
 class Day15 : Day<List<String>>(2020, 15) {
 
-    override val input = readString().split(",").mapIndexed { index, s -> s.toInt() to index }.toMap()
+    override fun List<String>.parse() = first().split(",").mapIndexed { index, s -> s.toInt() to index }.toMap()
 
     override fun solve1(input: List<String>) = getNthSpokenNumber(input.toMutableMap(), 2020)
 

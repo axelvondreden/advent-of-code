@@ -5,7 +5,7 @@ import Day
 
 class Day21 : Day<List<String>>(2020, 21) {
 
-    override val input = readStrings().toIngredients()
+    override fun List<String>.parse() = this.toIngredients()
 
     override fun solve1(input: List<String>): Int {
         val safe = input.safeIngredients()

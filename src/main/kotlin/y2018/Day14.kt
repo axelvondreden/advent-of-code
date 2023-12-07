@@ -4,7 +4,7 @@ import Day
 
 class Day14 : Day<List<String>>(2018, 14) {
 
-    override val input = readString().toInt()
+    override fun List<String>.parse() = first().toInt()
 
     override fun solve1(input: List<String>): String {
         val scores = mutableListOf(3, 7)

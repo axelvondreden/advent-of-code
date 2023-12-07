@@ -4,7 +4,7 @@ import Day
 
 class Day14 : Day<List<String>>(2019, 14) {
 
-    override val input = readStrings().map { it.split(" => ") }
+    override fun List<String>.parse() = this.map { it.split(" => ") }
 
     private val reactions = input.map { list ->
         val output = Pair(list[1].split(" ")[1], list[1].split(" ")[0].toLong())

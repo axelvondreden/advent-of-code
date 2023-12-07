@@ -6,7 +6,7 @@ import kotlin.math.abs
 
 class Day12 : Day<List<String>>(2020, 12) {
 
-    override val input = readStrings()
+    override fun List<String>.parse() = this
 
     override fun solve1(input: List<String>): Long {
         val p = move(input)

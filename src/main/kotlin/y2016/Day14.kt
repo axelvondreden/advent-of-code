@@ -3,20 +3,20 @@ package y2016
 import Day
 import utils.md5
 
-class Day14 : Day<List<String>>(2016, 14) {
+class Day14 : Day<String>(2016, 14) {
 
-    override val input = readString()
+    override fun List<String>.parse() = first()
 
     private val cache = mutableMapOf<Int, String>()
 
-    override fun solve1(input: List<String>): Int {
+    override fun solve1(input: String): Int {
         cache.clear()
         var index = 0
         val keys = mutableSetOf<Int>()
         while (keys.size < 64) {
-            val hash = getHash(index)
+            val hash = input.getHash(index)
             val letter = getTripleLetter(hash)
-            if (letter != null && testForKey(index, letter)) {
+            if (letter != null && testForKey(input, index, letter)) {
                 keys.add(index)
             }
             index++
@@ -24,14 +24,14 @@ class Day14 : Day<List<String>>(2016, 14) {
         return keys.maxOrNull()!!
     }
 
-    override fun solve2(input: List<String>): Int {
+    override fun solve2(input: String): Int {
         cache.clear()
         var index = 0
         val keys = mutableSetOf<Int>()
         while (keys.size < 64) {
-            val hash = getHash2016(index)
+            val hash = input.getHash2016(index)
             val letter = getTripleLetter(hash)
-            if (letter != null && testForKey2016(index, letter)) {
+            if (letter != null && testForKey2016(input, index, letter)) {
                 keys.add(index)
             }
             index++
@@ -51,21 +51,21 @@ class Day14 : Day<List<String>>(2016, 14) {
             .firstOrNull { hash[it] == hash[it + 1] && hash[it] == hash[it + 2] }
             ?.let { hash[it] }
 
-    private fun testForKey(index: Int, char: Char): Boolean {
+    private fun testForKey(input: String, index: Int, char: Char): Boolean {
         val testString = char.toString().repeat(5)
         return ((index + 1)..(index + 1000))
-                .map { getHash(it) }
+                .map { input.getHash(it) }
                 .any { it.contains(testString) }
     }
 
-    private fun testForKey2016(index: Int, char: Char): Boolean {
+    private fun testForKey2016(input: String, index: Int, char: Char): Boolean {
         val testString = char.toString().repeat(5)
         return ((index + 1)..(index + 1000))
-                .map { getHash2016(it) }
+                .map { input.getHash2016(it) }
                 .any { it.contains(testString) }
     }
 
-    private fun getHash(index: Int) = cache.getOrPut(index) { (input + index).md5() }
+    private fun String.getHash(index: Int) = cache.getOrPut(index) { (this + index).md5() }
 
-    private fun getHash2016(index: Int) = cache.getOrPut(index) { hash2016((input + index).md5()) }
+    private fun String.getHash2016(index: Int) = cache.getOrPut(index) { hash2016((this + index).md5()) }
 }

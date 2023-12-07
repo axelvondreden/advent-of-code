@@ -4,7 +4,7 @@ import Day
 
 class Day09 : Day<List<String>>(2018, 9) {
 
-    override val input = readString().split(" ")
+    override fun List<String>.parse() = first().split(" ")
 
     private val playerCount = input[0].toInt()
     private val marbleCount = input[6].toInt()

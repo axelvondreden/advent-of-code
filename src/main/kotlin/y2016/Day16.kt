@@ -3,11 +3,11 @@ package y2016
 import Day
 
 
-class Day16 : Day<List<String>>(2016, 16) {
+class Day16 : Day<String>(2016, 16) {
 
-    override val input = readString()
+    override fun List<String>.parse() = first()
 
-    override fun solve1(input: List<String>): String {
+    override fun solve1(input: String): String {
         var string = input
         while (string.length < maxLength1) {
             string = string.dragonCurve()
@@ -15,7 +15,7 @@ class Day16 : Day<List<String>>(2016, 16) {
         return string.substring(0, maxLength1).checksum()
     }
 
-    override fun solve2(input: List<String>): String {
+    override fun solve2(input: String): String {
         var string = input
         while (string.length < maxLength2) {
             string = string.dragonCurve()
@@ -27,7 +27,7 @@ class Day16 : Day<List<String>>(2016, 16) {
 
     private fun String.checksum(): String {
         val checksum = StringBuilder()
-        (0 until length step 2).forEach {
+        (indices step 2).forEach {
             checksum.append(if (get(it) == get(it + 1)) '1' else '0')
         }
         if (checksum.length % 2 == 0) return checksum.toString().checksum()

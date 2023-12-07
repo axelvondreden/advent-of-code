@@ -7,7 +7,7 @@ import utils.sqrt
 
 class Day20 : Day<List<String>>(2020, 20) {
 
-    override val input = readStrings().joinToString("|").toTiles()
+    override fun List<String>.parse() = this.joinToString("|").toTiles()
     private val img = createImage()
 
     override fun solve1(input: List<String>) =

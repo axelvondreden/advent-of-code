@@ -5,7 +5,7 @@ import kotlin.math.max
 
 class Day24 : Day<List<String>>(2017, 24) {
 
-    override val input = readStrings().map {
+    override fun List<String>.parse() = this.map {
         val split = it.split("/")
         Component(split[0].toInt(), split[1].toInt())
     }.toSet()

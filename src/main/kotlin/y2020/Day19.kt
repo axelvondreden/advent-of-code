@@ -5,7 +5,7 @@ import Day
 
 class Day19 : Day<List<String>>(2020, 19) {
 
-    override val input = readStrings()
+    override fun List<String>.parse() = this
 
     private val rules = input.takeWhile { it.isNotBlank() }.associate(::parseRules).toSortedMap()
     private val messages = input.subList(input.indexOf("") + 1, input.size)

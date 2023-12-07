@@ -4,7 +4,7 @@ import Day
 
 class Day16 : Day<List<String>>(2018, 16) {
 
-    override val input = readStrings().filter { it.isNotBlank() }
+    override fun List<String>.parse() = this.filter { it.isNotBlank() }
 
     private val samples: List<Sample>
     private val ops: List<IntArray>

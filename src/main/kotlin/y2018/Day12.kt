@@ -4,7 +4,7 @@ import Day
 
 class Day12 : Day<List<String>>(2018, 12) {
 
-    override val input = readStrings()
+    override fun List<String>.parse() = this
 
     private val initialState = input[0].removePrefix("initial state: ").mapIndexed { index, c -> index.toLong() to (c == '#') }.toMap()
     private val rules = input.subList(2, input.lastIndex + 1).mapNotNull {

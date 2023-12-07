@@ -3,11 +3,11 @@ package y2016
 import Day
 
 
-class Day18 : Day<List<String>>(2016, 18) {
+class Day18 : Day<String>(2016, 18) {
 
-    override val input = readString()
+    override fun List<String>.parse() = first()
 
-    override fun solve1(input: List<String>): Int {
+    override fun solve1(input: String): Int {
         var currentRow = input
         val map = mutableListOf<String>()
         repeat(40) {
@@ -17,7 +17,7 @@ class Day18 : Day<List<String>>(2016, 18) {
         return map.sumOf { row -> row.count { it == '.' } }
     }
 
-    override fun solve2(input: List<String>): Int {
+    override fun solve2(input: String): Int {
         var currentRow = input
         val map = mutableListOf<String>()
         repeat(400000) {

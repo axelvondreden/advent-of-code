@@ -7,7 +7,7 @@ import kotlin.math.max
 
 class Day05 : Day<List<String>>(2021, 5) {
 
-    override val input = readStrings().map { with(it.split(" -> ")) { Line(Point(this[0]), Point(this[1])) } }
+    override fun List<String>.parse() = this.map { with(it.split(" -> ")) { Line(Point(this[0]), Point(this[1])) } }
 
     override fun solve1(input: List<String>) = input.filter { it.isStraight() }.calculateDangerZones()
 

@@ -4,7 +4,7 @@ import Day
 
 class Day06 : Day<List<String>>(2021, 6) {
 
-    override val input = readString().split(",").map { it.toInt() }
+    override fun List<String>.parse() = first().split(",").map { it.toInt() }
 
     override fun solve1(input: List<String>) = calculateSize(80)
 
