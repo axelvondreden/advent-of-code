@@ -2,18 +2,18 @@ package y2015
 
 import Day
 
-class Day18 : Day(2015, 18) {
+class Day18 : Day<CharArray>(2015, 18) {
 
-    override val input = readStrings().joinToString("").toCharArray()
+    override fun List<String>.parse() = joinToString("").toCharArray()
 
-    override fun solve1(): Int {
+    override fun solve1(input: CharArray): Int {
         Grid(100, 100, input.clone()).let { grid ->
             repeat(100) { grid.tick() }
             return grid.onCells()
         }
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: CharArray): Int {
         input[0] = '#'
         input[100 - 1] = '#'
         input[100 * 100 - 100] = '#'

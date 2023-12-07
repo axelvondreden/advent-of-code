@@ -2,7 +2,7 @@ package y2023
 
 import Day
 
-class Day05 : Day(2023, 5) {
+class Day05 : Day<Any?>(2023, 5) {
 
     override val input = readStrings().filter { it.isNotBlank() }
 
@@ -36,7 +36,7 @@ class Day05 : Day(2023, 5) {
         maps = list
     }
 
-    override fun solve1(): Long {
+    override fun solve1(input: List<String>): Long {
         val values = seeds.toTypedArray()
         maps.forEach { map ->
             values.indices.forEach {
@@ -46,7 +46,7 @@ class Day05 : Day(2023, 5) {
         return values.min()
     }
 
-    override fun solve2(): Long {
+    override fun solve2(input: List<String>): Long {
         val values = seeds.chunked(2).map { (it[0] until it[0] + it[1]).toList() }.flatten().toTypedArray()
         maps.forEach { map ->
             values.indices.forEach {

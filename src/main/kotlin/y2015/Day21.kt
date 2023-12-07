@@ -4,11 +4,11 @@ import Day
 import kotlin.math.max
 import kotlin.math.min
 
-class Day21 : Day(2015, 21) {
+class Day21 : Day<Triple<Int, Int, Int>>(2015, 21) {
 
-    override val input = with(readStrings().map { it.split(": ")[1].toInt() }) { Triple(get(0), get(1), get(2)) }
+    override fun List<String>.parse() = with(map { it.split(": ")[1].toInt() }) { Triple(get(0), get(1), get(2)) }
 
-    override fun solve1(): Int {
+    override fun solve1(input: Triple<Int, Int, Int>): Int {
         var minGold = Integer.MAX_VALUE
         weapons.forEach { weapon ->
             if (simulate(You(weapon, null, emptySet()), Boss(input.first, input.second, input.third))) {
@@ -37,28 +37,38 @@ class Day21 : Day(2015, 21) {
         return minGold
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: Triple<Int, Int, Int>): Int {
         var maxGold = 0
-        weapons.filterNot { simulate(You(it, null, emptySet()), Boss(input.first, input.second, input.third)) }.forEach { weapon ->
-            maxGold = max(maxGold, weapon.cost)
-            rings.filterNot {
-                simulate(You(weapon, null, setOf(it)), Boss(input.first, input.second, input.third))
-            }.forEach { ring ->
-                maxGold = max(maxGold, weapon.cost + ring.cost)
-                rings.filter { it != ring }.filterNot {
-                    simulate(You(weapon, null, setOf(ring, it)), Boss(input.first, input.second, input.third))
-                }.forEach { maxGold = max(maxGold, weapon.cost + ring.cost + it.cost) }
-            }
-            armors.filterNot { simulate(You(weapon, it, emptySet()), Boss(input.first, input.second, input.third)) }.forEach { armor ->
-                maxGold = max(maxGold, weapon.cost + armor.cost)
-                rings.filterNot { simulate(You(weapon, armor, setOf(it)), Boss(input.first, input.second, input.third)) }.forEach { ring ->
-                    maxGold = max(maxGold, weapon.cost + armor.cost + ring.cost)
+        weapons.filterNot { simulate(You(it, null, emptySet()), Boss(input.first, input.second, input.third)) }
+            .forEach { weapon ->
+                maxGold = max(maxGold, weapon.cost)
+                rings.filterNot {
+                    simulate(You(weapon, null, setOf(it)), Boss(input.first, input.second, input.third))
+                }.forEach { ring ->
+                    maxGold = max(maxGold, weapon.cost + ring.cost)
                     rings.filter { it != ring }.filterNot {
-                        simulate(You(weapon, armor, setOf(ring, it)), Boss(input.first, input.second, input.third))
-                    }.forEach { maxGold = max(maxGold, weapon.cost + armor.cost + ring.cost + it.cost) }
+                        simulate(You(weapon, null, setOf(ring, it)), Boss(input.first, input.second, input.third))
+                    }.forEach { maxGold = max(maxGold, weapon.cost + ring.cost + it.cost) }
                 }
+                armors.filterNot { simulate(You(weapon, it, emptySet()), Boss(input.first, input.second, input.third)) }
+                    .forEach { armor ->
+                        maxGold = max(maxGold, weapon.cost + armor.cost)
+                        rings.filterNot {
+                            simulate(
+                                You(weapon, armor, setOf(it)),
+                                Boss(input.first, input.second, input.third)
+                            )
+                        }.forEach { ring ->
+                            maxGold = max(maxGold, weapon.cost + armor.cost + ring.cost)
+                            rings.filter { it != ring }.filterNot {
+                                simulate(
+                                    You(weapon, armor, setOf(ring, it)),
+                                    Boss(input.first, input.second, input.third)
+                                )
+                            }.forEach { maxGold = max(maxGold, weapon.cost + armor.cost + ring.cost + it.cost) }
+                        }
+                    }
             }
-        }
         return maxGold
     }
 

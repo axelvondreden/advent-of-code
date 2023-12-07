@@ -3,13 +3,13 @@ package y2016
 import Day
 
 
-class Day15 : Day(2016,  15) {
+class Day15 : Day<Any?>(2016,  15) {
 
     override val input = readStrings()
 
-    override fun solve1() = simulate(parseDisks(input))
+    override fun solve1(input: List<String>) = simulate(parseDisks(input))
 
-    override fun solve2() = simulate(parseDisks(input).plus(Disc(11, 0)))
+    override fun solve2(input: List<String>) = simulate(parseDisks(input).plus(Disc(11, 0)))
 
     private fun parseDisks(input: List<String>) = input.map {
         val split = it.split(" ")

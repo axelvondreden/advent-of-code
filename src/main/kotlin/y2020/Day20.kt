@@ -5,15 +5,15 @@ import utils.Point
 import utils.sqrt
 
 
-class Day20 : Day(2020, 20) {
+class Day20 : Day<Any?>(2020, 20) {
 
     override val input = readStrings().joinToString("|").toTiles()
     private val img = createImage()
 
-    override fun solve1() =
+    override fun solve1(input: List<String>) =
         img.first().first().id * img.first().last().id * img.last().first().id * img.last().last().id
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         val monsterPattern = listOf(
             Point(0, 18), Point(1, 0), Point(1, 5), Point(1, 6), Point(1, 11),
             Point(1, 12), Point(1, 17), Point(1, 18), Point(1, 19), Point(2, 1),

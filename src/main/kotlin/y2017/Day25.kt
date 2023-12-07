@@ -2,7 +2,7 @@ package y2017
 
 import Day
 
-class Day25 : Day(2017, 25) {
+class Day25 : Day<Any?>(2017, 25) {
 
     override val input = readStrings()
 
@@ -14,7 +14,7 @@ class Day25 : Day(2017, 25) {
 
     private val states = input.parseStates()
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         var count = 0
         var state = states[start]
         while (count < steps) {
@@ -24,7 +24,7 @@ class Day25 : Day(2017, 25) {
         return tape.values.count { it }
     }
 
-    override fun solve2() = 0
+    override fun solve2(input: List<String>) = 0
 
     private fun List<String>.parseStates(): Map<Char, State> = drop(3).chunked(10).associate { chunk ->
         val c = chunk[0].split(" ")[2][0]

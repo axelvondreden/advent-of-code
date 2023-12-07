@@ -2,15 +2,15 @@ package y2019
 
 import Day
 
-class Day19 : Day(2019, 19) {
+class Day19 : Day<Any?>(2019, 19) {
 
     override val input = readLongArray()
 
-    override fun solve1() = (0L..49).sumOf { y ->
+    override fun solve1(input: List<String>) = (0L..49).sumOf { y ->
         (0L..49).filter { IntCodeComputer(input.copyOf()).addInput(it).addInput(y).run().value == 1L }.size
     }
 
-    override fun solve2(): Long {
+    override fun solve2(input: List<String>): Long {
         val list = mutableListOf<Pair<Long, Long>>()
         var i = 0L
         while (true) {

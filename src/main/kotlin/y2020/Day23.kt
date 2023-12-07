@@ -3,13 +3,13 @@ package y2020
 import Day
 
 
-class Day23 : Day(2020, 23) {
+class Day23 : Day<Any?>(2020, 23) {
 
     override val input = readString()
 
-    override fun solve1() = Cups(input).allMoves(100).toString()
+    override fun solve1(input: List<String>) = Cups(input).allMoves(100).toString()
 
-    override fun solve2() = Cups(input, 1000000)
+    override fun solve2(input: List<String>) = Cups(input, 1000000)
         .allMoves(10000000)
         .nextAsList(2)
         .map { it.value.toLong() }

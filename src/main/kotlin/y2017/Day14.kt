@@ -3,15 +3,15 @@ package y2017
 import Day
 import java.math.BigInteger
 
-class Day14 : Day(2017, 14) {
+class Day14 : Day<Any?>(2017, 14) {
 
     override val input = readString().toBinaryStrings()
 
     private val grid by lazy { stringsToGrid() }
 
-    override fun solve1() = input.sumOf { binaryString -> binaryString.count { it == '1' } }
+    override fun solve1(input: List<String>) = input.sumOf { binaryString -> binaryString.count { it == '1' } }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         var groups = 0
         grid.forEachIndexed { x, row ->
             row.forEachIndexed { y, spot ->

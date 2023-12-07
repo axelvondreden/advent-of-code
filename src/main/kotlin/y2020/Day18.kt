@@ -3,13 +3,13 @@ package y2020
 import Day
 
 
-class Day18 : Day(2020, 18) {
+class Day18 : Day<Any?>(2020, 18) {
 
     override val input = readStrings().map { it.replace(" ", "") }
 
-    override fun solve1() = input.sumOf { eval1(it.iterator()) }
+    override fun solve1(input: List<String>) = input.sumOf { eval1(it.iterator()) }
 
-    override fun solve2() = input.sumOf { eval2(it.iterator()) }
+    override fun solve2(input: List<String>) = input.sumOf { eval2(it.iterator()) }
 
     private fun eval1(equation: CharIterator): Long {
         val numbers = mutableListOf<Long>()

@@ -2,7 +2,7 @@ package y2019
 
 import Day
 
-class Day14 : Day(2019, 14) {
+class Day14 : Day<Any?>(2019, 14) {
 
     override val input = readStrings().map { it.split(" => ") }
 
@@ -14,9 +14,9 @@ class Day14 : Day(2019, 14) {
 
     private var oreCount = getOreCount(reactions, Pair("FUEL", 1), mutableMapOf())
 
-    override fun solve1() = oreCount
+    override fun solve1(input: List<String>) = oreCount
 
-    override fun solve2(): Long {
+    override fun solve2(input: List<String>): Long {
         var fuel = 1000000000000 / oreCount
         while (getOreCount(reactions, Pair("FUEL", fuel), emptyMap<String, Long>().toMutableMap()) < 1000000000000) {
             fuel++

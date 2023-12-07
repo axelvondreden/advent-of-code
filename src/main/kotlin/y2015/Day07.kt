@@ -3,17 +3,18 @@ package y2015
 import Day
 
 @ExperimentalUnsignedTypes
-@Suppress("EXPERIMENTAL_UNSIGNED_LITERALS")
-class Day07 : Day(2015, 7) {
+class Day07 : Day<List<List<String>>>(2015, 7) {
 
-    override val input = readStrings().map { it.split(" -> ") }
+    override fun List<String>.parse() = map { it.split(" -> ") }
 
-    private val firstA = buildWires(input).getValue("a").get()
+    override fun solve1(input: List<List<String>>) = input.firstA()
 
+    override fun solve2(input: List<List<String>>): UShort {
+        val firstA = input.firstA()
+        return buildWires(input).apply { get("b")!!.a = Value(firstA) }.getValue("a").get()
+    }
 
-    override fun solve1() = firstA
-
-    override fun solve2() = buildWires(input).apply { get("b")!!.a = Value(firstA) }.getValue("a").get()
+    private fun List<List<String>>.firstA() = buildWires(this).getValue("a").get()
 
     private fun buildWires(instructions: List<List<String>>): Map<String, Wire> {
         val wires = mutableMapOf<String, Wire>()

@@ -4,7 +4,7 @@ import Day
 import pathfinding.Pathfinder
 import utils.toPathfindingMap
 
-class Day20 : Day(2019, 20) {
+class Day20 : Day<Any?>(2019, 20) {
 
     override val input = readCharMatrix()
 
@@ -81,12 +81,12 @@ class Day20 : Day(2019, 20) {
         return set
     }
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         val walls = ('A'..'Z').toMutableSet().apply { addAll(listOf('#', ' ')) }
         return Pathfinder(input.toPathfindingMap(walls), input.size, input[0].size, ::neighborsWithPortal).searchBFS(Pathfinder.Node(start.x, start.y), Pathfinder.Node(end.x, end.y)).size + 1
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         val walls = ('A'..'Z').toMutableSet().apply { addAll(listOf('#', ' ')) }
         return Pathfinder(input.toPathfindingMap(walls), input.size, input[0].size, ::neighborsWithLvlPortal).searchBFS(start, end).size + 1
     }

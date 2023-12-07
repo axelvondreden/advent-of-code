@@ -3,16 +3,16 @@ package y2020
 import Day
 
 
-class Day21 : Day(2020, 21) {
+class Day21 : Day<Any?>(2020, 21) {
 
     override val input = readStrings().toIngredients()
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         val safe = input.safeIngredients()
         return input.keys.sumOf { food -> food.count { it in safe } }
     }
 
-    override fun solve2(): String {
+    override fun solve2(input: List<String>): String {
         val ingredientsByAllergy = input.ingredientsByAllergy()
         val found = mutableMapOf<String, String>()
 

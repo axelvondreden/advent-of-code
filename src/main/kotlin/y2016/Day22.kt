@@ -4,7 +4,7 @@ import Day
 import kotlin.math.abs
 
 
-class Day22 : Day(2016, 22) {
+class Day22 : Day<Any?>(2016, 22) {
 
     override val input = readStrings().drop(2).map {
         val split = it.split(Regex("\\s+"))
@@ -14,11 +14,11 @@ class Day22 : Day(2016, 22) {
         Node(x, y, split[1].dropLast(1).toInt(), split[2].dropLast(1).toInt())
     }
 
-    override fun solve1() = input.sumOf { nodeA ->
+    override fun solve1(input: List<String>) = input.sumOf { nodeA ->
         input.count { nodeB -> nodeA != nodeB && nodeA.used > 0 && nodeA.used <= nodeB.size - nodeB.used }
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         val xMax = input.maxByOrNull { it.x }!!.x
         val wall = input.filter { it.size > 250 }.minByOrNull { it.x }!!
         val empty = input.first { it.used == 0 }

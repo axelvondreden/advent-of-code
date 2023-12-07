@@ -3,11 +3,11 @@ package y2020
 import Day
 import utils.deepEquals
 
-class Day11 : Day(2020, 11) {
+class Day11 : Day<Any?>(2020, 11) {
 
     override val input = readCharMatrix()
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         var last = input
         var current = last.step()
         while (!current.deepEquals(last)) {
@@ -17,7 +17,7 @@ class Day11 : Day(2020, 11) {
         return current.sumOf { it.count { seat -> seat == '#' } }
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         var last = input
         var current = last.step2()
         while (!current.deepEquals(last)) {

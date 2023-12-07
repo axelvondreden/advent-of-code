@@ -3,14 +3,14 @@ package y2016
 import Day
 
 
-class Day20 : Day(2016, 20) {
+class Day20 : Day<Any?>(2016, 20) {
 
     override val input = readStrings().map {
         val split = it.split("-")
         split[0].toLong()..split[1].toLong()
     }.sortedBy { it.first }
 
-    override fun solve1(): Long {
+    override fun solve1(input: List<String>): Long {
         var ip = 0L
         while (ip <= 4294967295L) {
             val range = input.firstOrNull { ip in it }
@@ -19,7 +19,7 @@ class Day20 : Day(2016, 20) {
         return 0
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         var ip = 0L
         var count = 0
         while (ip <= 4294967295L) {

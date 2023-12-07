@@ -2,7 +2,7 @@ package y2020
 
 import Day
 
-class Day02 : Day(2020, 2) {
+class Day02 : Day<Any?>(2020, 2) {
 
     override val input = readStrings().map {
         val split = it.split(":")
@@ -10,9 +10,9 @@ class Day02 : Day(2020, 2) {
         Password(range[0].toInt()..range[1].toInt(), split[0].split(" ")[1][0], split[1].trim())
     }
 
-    override fun solve1() = input.count { it.isValid() }
+    override fun solve1(input: List<String>) = input.count { it.isValid() }
 
-    override fun solve2() = input.count { it.isValid2() }
+    override fun solve2(input: List<String>) = input.count { it.isValid2() }
 
     data class Password(val range: IntRange, val char: Char, val password: String) {
         fun isValid() = password.count { it == char } in range

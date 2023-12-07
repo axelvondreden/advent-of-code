@@ -6,7 +6,7 @@ import utils.gcd
 import kotlin.math.abs
 import kotlin.math.atan2
 
-class Day10 : Day(2019, 10) {
+class Day10 : Day<Any?>(2019, 10) {
 
     override val input = readCharMatrix()
 
@@ -22,7 +22,7 @@ class Day10 : Day(2019, 10) {
         }
     }
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         var maxAsteroids = 0
         asteroids.forEach { asteroid ->
             var count = 0
@@ -50,7 +50,7 @@ class Day10 : Day(2019, 10) {
         return maxAsteroids
     }
 
-    override fun solve2(): Long {
+    override fun solve2(input: List<String>): Long {
         val distances = mutableListOf<Point>()
         asteroids.filter { it != station }.forEach {
             distances += Point(station.x - it.x, station.y - it.y)

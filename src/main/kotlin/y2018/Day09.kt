@@ -2,16 +2,16 @@ package y2018
 
 import Day
 
-class Day09 : Day(2018, 9) {
+class Day09 : Day<Any?>(2018, 9) {
 
     override val input = readString().split(" ")
 
     private val playerCount = input[0].toInt()
     private val marbleCount = input[6].toInt()
 
-    override fun solve1() = getMaxScore(playerCount, marbleCount)
+    override fun solve1(input: List<String>) = getMaxScore(playerCount, marbleCount)
 
-    override fun solve2() = getMaxScore(playerCount, marbleCount * 100)
+    override fun solve2(input: List<String>) = getMaxScore(playerCount, marbleCount * 100)
 
     private fun getMaxScore(playerCount: Int, marbleCount: Int): Long {
         var playerIndex = 0

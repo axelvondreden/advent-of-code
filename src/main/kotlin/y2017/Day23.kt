@@ -2,11 +2,11 @@ package y2017
 
 import Day
 
-class Day23 : Day(2017, 23) {
+class Day23 : Day<Any?>(2017, 23) {
 
     override val input = readStrings()
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         val register = ('a'..'h').associateWith { 0L }.toMutableMap()
         var index = 0
         var mulCounter = 0
@@ -19,7 +19,7 @@ class Day23 : Day(2017, 23) {
         return mulCounter
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         val b = input[0].split(" ")[2].toInt() * 100 + 100000
         return (b..b + 17000 step 17).count { !it.toBigInteger().isProbablePrime(2) }
     }

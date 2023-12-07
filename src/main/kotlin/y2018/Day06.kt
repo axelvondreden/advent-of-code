@@ -3,7 +3,7 @@ package y2018
 import Day
 import utils.Point
 
-class Day06 : Day(2018, 6) {
+class Day06 : Day<Any?>(2018, 6) {
 
     override val input = readStrings().map { Point(it, ", ") }
 
@@ -12,7 +12,7 @@ class Day06 : Day(2018, 6) {
     private val xRange = xValues.minOrNull()!!..xValues.maxOrNull()!!
     private val yRange = yValues.minOrNull()!!..yValues.maxOrNull()!!
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         val infinite = mutableSetOf<Point>()
         return xRange.flatMap { x ->
             yRange.map { y ->
@@ -25,7 +25,7 @@ class Day06 : Day(2018, 6) {
         }.filterNot { it in infinite }.groupingBy { it }.eachCount().maxByOrNull { it.value }!!.value
     }
 
-    override fun solve2(): Int = xRange.flatMap { x ->
+    override fun solve2(input: List<String>): Int = xRange.flatMap { x ->
         yRange.map { y ->
             input.sumOf { it.distance(Point(x, y)) }
         }

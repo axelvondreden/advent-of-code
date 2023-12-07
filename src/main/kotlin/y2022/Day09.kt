@@ -4,11 +4,11 @@ import Day
 import utils.Point
 import kotlin.math.abs
 
-class Day09 : Day(2022, 9) {
+class Day09 : Day<Any?>(2022, 9) {
 
     override val input = readStrings().map { line -> line.split(" ").let { it[0] to it[1].toInt() } }
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         var head = Point(0, 0)
         var tail = Point(0, 0)
         val tailSpots = mutableSetOf(tail.copy())
@@ -22,7 +22,7 @@ class Day09 : Day(2022, 9) {
         return tailSpots.size
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         val knots = Array(10) { Point(0, 0) }
         val tailSpots = mutableSetOf(knots.last().copy())
         input.forEach { entry ->

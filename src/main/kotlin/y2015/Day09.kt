@@ -3,12 +3,12 @@ package y2015
 import Day
 import utils.permute
 
-class Day09 : Day(2015, 9) {
+class Day09 : Day<List<List<String>>>(2015, 9) {
 
     private val locations = mutableListOf<Location>()
     private val distances = mutableListOf<Distance>()
 
-    override val input = readStrings().map { line ->
+    override fun List<String>.parse() = map { line ->
         line.split(" ").also { split ->
             distances += Distance(
                 Location(split[0]).also { locations += it },
@@ -18,15 +18,19 @@ class Day09 : Day(2015, 9) {
         }
     }
 
-    private val nav = Navigation(distances)
-    private val allRoutes = locations.distinct().permute()
+    override fun solve1(input: List<List<String>>): Int {
+        val nav = Navigation(distances)
+        val allRoutes = locations.distinct().permute()
+        return nav.getLength(allRoutes.filter { nav.isPathPossible(it.toTypedArray()) }
+            .minByOrNull { nav.getLength(it.toTypedArray()) }!!.toTypedArray())
 
-    override fun solve1() = nav.getLength(allRoutes.filter { nav.isPathPossible(it.toTypedArray()) }
-        .minByOrNull { nav.getLength(it.toTypedArray()) }!!.toTypedArray())
-
-    override fun solve2() = nav.getLength(allRoutes.filter { nav.isPathPossible(it.toTypedArray()) }
-        .maxByOrNull { nav.getLength(it.toTypedArray()) }!!.toTypedArray())
-
+    }
+    override fun solve2(input: List<List<String>>): Int {
+        val nav = Navigation(distances)
+        val allRoutes = locations.distinct().permute()
+        return nav.getLength(allRoutes.filter { nav.isPathPossible(it.toTypedArray()) }
+            .maxByOrNull { nav.getLength(it.toTypedArray()) }!!.toTypedArray())
+    }
     private class Navigation(private val distances: List<Distance>) {
 
         fun isPathPossible(route: Array<Location>) = (1 until route.size).none { i ->

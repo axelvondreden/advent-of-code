@@ -2,13 +2,13 @@ package y2018
 
 import Day
 
-class Day05 : Day(2018, 5) {
+class Day05 : Day<Any?>(2018, 5) {
 
     override val input = readString()
 
-    override fun solve1() = input.fullReact().length
+    override fun solve1(input: List<String>) = input.fullReact().length
 
-    override fun solve2() = ('a'..'z').minOf { input.replace(it.toString(), "", ignoreCase = true).fullReact().length }
+    override fun solve2(input: List<String>) = ('a'..'z').minOf { input.replace(it.toString(), "", ignoreCase = true).fullReact().length }
 
     private fun String.fullReact(): String {
         var poly = this

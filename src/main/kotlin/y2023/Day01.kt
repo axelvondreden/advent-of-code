@@ -2,7 +2,7 @@ package y2023
 
 import Day
 
-class Day01 : Day(2023, 1) {
+class Day01 : Day<Any?>(2023, 1) {
 
     override val input = readStrings()
 
@@ -18,9 +18,9 @@ class Day01 : Day(2023, 1) {
         "nine" to 9
     )
 
-    override fun solve1() = input.calc()
+    override fun solve1(input: List<String>) = input.calc()
 
-    override fun solve2() = input.sumOf { line ->
+    override fun solve2(input: List<String>) = input.sumOf { line ->
         (line.firstDigit().toString() + line.lastDigit().toString()).toInt()
     }
 

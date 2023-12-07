@@ -2,11 +2,11 @@ package y2017
 
 import Day
 
-class Day05 : Day(2017, 5) {
+class Day05 : Day<Any?>(2017, 5) {
 
     override val input = readStrings().map { it.toInt() }
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         val instructions = input.toIntArray()
         var index = 0
         var count = 0
@@ -19,7 +19,7 @@ class Day05 : Day(2017, 5) {
         return count
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         val instructions = input.toIntArray()
         var index = 0
         var count = 0

@@ -4,16 +4,16 @@ import Day
 import utils.Point
 import kotlin.math.abs
 
-class Day12 : Day(2020, 12) {
+class Day12 : Day<Any?>(2020, 12) {
 
     override val input = readStrings()
 
-    override fun solve1(): Long {
+    override fun solve1(input: List<String>): Long {
         val p = move(input)
         return abs(p.x) + abs(p.y)
     }
 
-    override fun solve2(): Long {
+    override fun solve2(input: List<String>): Long {
         val p = moveByWaypoint(input)
         return abs(p.x) + abs(p.y)
     }

@@ -2,7 +2,7 @@ package y2019
 
 import Day
 
-class Day23 : Day(2019, 23) {
+class Day23 : Day<Any?>(2019, 23) {
 
     override val input = readLongArray()
 
@@ -10,7 +10,7 @@ class Day23 : Day(2019, 23) {
     private val inputBuffer = mutableMapOf<Int, MutableList<Long>>()
     private val outputBuffer = mutableMapOf<Int, MutableList<Long>>()
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         initNetwork()
         while (true) {
             (0 until 50).forEach { i ->
@@ -28,7 +28,7 @@ class Day23 : Day(2019, 23) {
         }
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         initNetwork()
         var lastNatY = -1L
         var natMemory = Pair(0L, 0L)

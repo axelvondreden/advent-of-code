@@ -4,11 +4,11 @@ import Day
 import kotlin.math.pow
 
 
-class Day14 : Day(2020, 14) {
+class Day14 : Day<Any?>(2020, 14) {
 
     override val input = readStrings()
 
-    override fun solve1(): Long {
+    override fun solve1(input: List<String>): Long {
         var currentMask = ""
         val memory = mutableMapOf<Int, Long>()
         input.forEach {
@@ -24,7 +24,7 @@ class Day14 : Day(2020, 14) {
         return memory.values.sum()
     }
 
-    override fun solve2(): Long {
+    override fun solve2(input: List<String>): Long {
         var currentMask = ""
         val memory = mutableMapOf<Long, Long>()
         input.forEach {

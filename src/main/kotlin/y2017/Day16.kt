@@ -2,13 +2,13 @@ package y2017
 
 import Day
 
-class Day16 : Day(2017, 16) {
+class Day16 : Day<Any?>(2017, 16) {
 
     override val input = readString().split(",").toInstructions()
 
     private val programs = CharArray(16) { 'a' + it }
 
-    override fun solve1(): String {
+    override fun solve1(input: List<String>): String {
         val progs = programs.copyOf()
         input.forEach {
             it.move(progs)
@@ -16,7 +16,7 @@ class Day16 : Day(2017, 16) {
         return progs.joinToString("")
     }
 
-    override fun solve2(): String {
+    override fun solve2(input: List<String>): String {
         val progs = programs.copyOf()
         repeat(1_000_000_000) {
             input.forEach {

@@ -2,7 +2,7 @@ package y2021
 
 import Day
 
-class Day14 : Day(2021, 14) {
+class Day14 : Day<Any?>(2021, 14) {
 
     override val input = readStrings()
 
@@ -13,7 +13,7 @@ class Day14 : Day(2021, 14) {
         split[0] to split[0][0] + split[1]
     }
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         var template = original
         repeat(10) {
             template = template.doInsertions()
@@ -22,7 +22,7 @@ class Day14 : Day(2021, 14) {
         return grouped.values.max() - grouped.values.min()
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         var template = original
         repeat(40) {
             println(it)

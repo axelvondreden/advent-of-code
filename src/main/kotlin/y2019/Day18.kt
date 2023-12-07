@@ -5,7 +5,7 @@ import pathfinding.Pathfinder
 import utils.find
 import utils.toPathfindingMap
 
-class Day18: Day(2019, 18) {
+class Day18: Day<Any?>(2019, 18) {
 
     override val input = readCharMatrix()
 
@@ -49,13 +49,13 @@ class Day18: Day(2019, 18) {
         return map
     }
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         val min = intArrayOf(Int.MAX_VALUE)
         getShortestPath('@', keys.map { it.c }, doors.map { it.c }, 0, min, "")
         return min[0]
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         val min = intArrayOf(Int.MAX_VALUE)
         getShortestPath(listOf('1', '2', '3', '4'), keys.map { it.c }, doors.map { it.c }, 0, min, "")
         return min[0]

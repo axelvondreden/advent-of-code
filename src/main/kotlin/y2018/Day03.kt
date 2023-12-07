@@ -3,13 +3,13 @@ package y2018
 import Day
 import utils.Point
 
-class Day03 : Day(2018, 3) {
+class Day03 : Day<Any?>(2018, 3) {
 
     override val input = readStrings().parseClaims()
 
-    override fun solve1() = input.flatMap { it.getPoints() }.groupBy { it }.values.count { it.size > 1 }
+    override fun solve1(input: List<String>) = input.flatMap { it.getPoints() }.groupBy { it }.values.count { it.size > 1 }
 
-    override fun solve2() = input.first { claim ->
+    override fun solve2(input: List<String>) = input.first { claim ->
         (claim.pos.x until claim.pos.x + claim.w).all { x ->
             (claim.pos.y until claim.pos.y + claim.h).all { y ->
                 input.count { it.containsPoint(Point(x, y)) } == 1

@@ -2,7 +2,7 @@ package y2023
 
 import Day
 
-class Day06 : Day(2023, 6) {
+class Day06 : Day<Any?>(2023, 6) {
 
     override val input = readStrings().map { line ->
         line.split(":")[1].trim().split(Regex("\\s+")).map { it.toLong() }
@@ -11,9 +11,9 @@ class Day06 : Day(2023, 6) {
     private val times = input[0]
     private val highscores = input[1]
 
-    override fun solve1() = times.indices.map { times[it].countWins(highscores[it]) }.reduce { acc, i -> acc * i }
+    override fun solve1(input: List<String>) = times.indices.map { times[it].countWins(highscores[it]) }.reduce { acc, i -> acc * i }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         val singleTime = times.joinToString("").toLong()
         val singleHighscore = highscores.joinToString("").toLong()
         return singleTime.countWins(singleHighscore)

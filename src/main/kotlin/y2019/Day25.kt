@@ -2,11 +2,11 @@ package y2019
 
 import Day
 
-class Day25 : Day(2019, 25) {
+class Day25 : Day<Any?>(2019, 25) {
 
     override val input = readLongArray()
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         val comp = IntCodeComputer(input)
         var last9 = ""
         while (true) {
@@ -22,5 +22,5 @@ class Day25 : Day(2019, 25) {
         }
     }
 
-    override fun solve2() = 0
+    override fun solve2(input: List<String>) = 0
 }

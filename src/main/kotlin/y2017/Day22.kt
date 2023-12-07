@@ -3,7 +3,7 @@ package y2017
 import Day
 import utils.Point
 
-class Day22 : Day(2017, 22) {
+class Day22 : Day<Any?>(2017, 22) {
 
     override val input = readCharMatrix()
 
@@ -16,7 +16,7 @@ class Day22 : Day(2017, 22) {
 
     private var infectionCounter = 0
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         infectionCounter = 0
         var current = Point((input.size / 2), (input[0].size / 2))
         val list = infectedNodes.toMutableList()
@@ -29,7 +29,7 @@ class Day22 : Day(2017, 22) {
         return infectionCounter
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         infectionCounter = 0
         var current = Point((input.size / 2), (input[0].size / 2))
         val infected = infectedNodes.toMutableList()

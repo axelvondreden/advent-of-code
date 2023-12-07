@@ -2,7 +2,7 @@ package y2018
 
 import Day
 
-class Day16 : Day(2018, 16) {
+class Day16 : Day<Any?>(2018, 16) {
 
     override val input = readStrings().filter { it.isNotBlank() }
 
@@ -23,9 +23,9 @@ class Day16 : Day(2018, 16) {
         ops = input.subList(index, input.size).map { it.split(" ").map { it.toInt() }.toIntArray() }
     }
 
-    override fun solve1() = samples.count { it.countSuccessfulOps() >= 3 }
+    override fun solve1(input: List<String>) = samples.count { it.countSuccessfulOps() >= 3 }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         return 0
     }
 

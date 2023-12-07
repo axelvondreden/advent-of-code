@@ -2,13 +2,13 @@ package y2018
 
 import Day
 
-class Day01 : Day(2018, 1) {
+class Day01 : Day<Any?>(2018, 1) {
 
     override val input = readStrings().map { it.toInt() }
 
-    override fun solve1() = input.fold(0) { sum, frq -> sum + frq }
+    override fun solve1(input: List<String>) = input.fold(0) { sum, frq -> sum + frq }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         val frequencies = mutableSetOf(0)
         var current = 0
         var index = 0

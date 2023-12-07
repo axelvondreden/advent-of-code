@@ -2,11 +2,11 @@ package y2017
 
 import Day
 
-class Day15 : Day(2017, 15) {
+class Day15 : Day<Any?>(2017, 15) {
 
     override val input = readStrings()
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         val genA = Generator(input[0].split(" ")[4].toLong(), genAFactor)
         val genB = Generator(input[1].split(" ")[4].toLong(), genBFactor)
         return (0 until 40_000_000).count {
@@ -16,7 +16,7 @@ class Day15 : Day(2017, 15) {
         }
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         val genA = Generator(input[0].split(" ")[4].toLong(), genAFactor) { it % 4 == 0L }
         val genB = Generator(input[1].split(" ")[4].toLong(), genBFactor) { it % 8 == 0L }
         return (0 until 5_000_000).count {

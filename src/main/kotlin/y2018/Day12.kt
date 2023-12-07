@@ -2,7 +2,7 @@ package y2018
 
 import Day
 
-class Day12 : Day(2018, 12) {
+class Day12 : Day<Any?>(2018, 12) {
 
     override val input = readStrings()
 
@@ -12,7 +12,7 @@ class Day12 : Day(2018, 12) {
         if (split[2] == "#") split[0] else null
     }
 
-    override fun solve1(): Long {
+    override fun solve1(input: List<String>): Long {
         var plants = initialState
         repeat(20) {
             plants = plants.generate()
@@ -20,7 +20,7 @@ class Day12 : Day(2018, 12) {
         return plants.filter { it.value }.keys.sum()
     }
 
-    override fun solve2(): Long {
+    override fun solve2(input: List<String>): Long {
         var plants = initialState
         repeat(100) {
             repeat(500000000) {

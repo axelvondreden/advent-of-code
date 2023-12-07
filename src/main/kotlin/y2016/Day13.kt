@@ -5,7 +5,7 @@ import pathfinding.Pathfinder
 import utils.toPathfindingMap
 import kotlin.math.abs
 
-class Day13 : Day(2016, 13) {
+class Day13 : Day<Any?>(2016, 13) {
 
     override val input = readString().toInt()
 
@@ -15,13 +15,13 @@ class Day13 : Day(2016, 13) {
         }
     }
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         val pf = Pathfinder(map.toPathfindingMap(), mapSize, mapSize)
         val path = pf.searchBFS(startNode, endNode)
         return path.size + 1
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         val coords = mutableSetOf(startNode)
         val pf = Pathfinder(map.toPathfindingMap(), mapSize, mapSize)
         (startNode.x - 50 until startNode.x + 51).forEach { x ->

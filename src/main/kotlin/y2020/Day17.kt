@@ -2,11 +2,11 @@ package y2020
 
 import Day
 
-class Day17 : Day(2020, 17) {
+class Day17 : Day<Any?>(2020, 17) {
 
     override val input = readCharMatrix()
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         var cubes = parseCubes(input)
         repeat(6) {
             cubes = cubes.step()
@@ -14,7 +14,7 @@ class Day17 : Day(2020, 17) {
         return cubes.size
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         var cubes = parseHyperCubes(input)
         repeat(6) {
             cubes = cubes.step()

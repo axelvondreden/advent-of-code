@@ -3,11 +3,11 @@ package y2016
 import Day
 
 
-class Day21 : Day(2016, 21) {
+class Day21 : Day<Any?>(2016, 21) {
 
     override val input = readStrings().toOperations()
 
-    override fun solve1(): String {
+    override fun solve1(input: List<String>): String {
         var str = "abcdefgh"
         input.forEach {
             str = it.scramble(str)
@@ -15,7 +15,7 @@ class Day21 : Day(2016, 21) {
         return str
     }
 
-    override fun solve2(): String {
+    override fun solve2(input: List<String>): String {
         var str = "fbgdceah"
         input.reversed().forEach {
             str = it.unscramble(str)

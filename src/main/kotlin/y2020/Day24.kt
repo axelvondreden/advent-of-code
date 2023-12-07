@@ -4,13 +4,13 @@ import Day
 import kotlin.math.absoluteValue
 
 
-class Day24 : Day(2020, 24) {
+class Day24 : Day<Any?>(2020, 24) {
 
     override val input = readStrings().toPaths()
 
     private val tiles = mutableMapOf<Pair<Int, Int>, Boolean>()
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         input.forEach { path ->
             val tile = path.fold(0 to 0) { current, dir -> current.move(dir) }
             tiles[tile] = if (tile !in tiles) false else !(tiles[tile]!!)
@@ -18,7 +18,7 @@ class Day24 : Day(2020, 24) {
         return tiles.values.count { !it }
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         var tiles = this.tiles.toMap()
         repeat(100) {
             tiles = tiles.flip()

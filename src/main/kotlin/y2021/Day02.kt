@@ -2,17 +2,17 @@ package y2021
 
 import Day
 
-class Day02 : Day(2021, 2) {
+class Day02 : Day<Any?>(2021, 2) {
 
     override val input = readStrings()
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         val sub = SimpleSubmarine()
         input.forEach { sub.step(it) }
         return sub.hpos * sub.depth
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         val sub = AimingSubmarine()
         input.forEach { sub.step(it) }
         return sub.hpos * sub.depth

@@ -2,13 +2,13 @@ package y2015
 
 import Day
 
-class Day01 : Day(2015, 1) {
+class Day01 : Day<String>(2015, 1) {
 
-    override val input = readString()
+    override fun List<String>.parse() = this[0]
 
-    override fun solve1() = input.count { it == '(' } - input.count { it == ')' }
+    override fun solve1(input: String) = input.count { it == '(' } - input.count { it == ')' }
 
-    override fun solve2(): Int {
+    override fun solve2(input: String): Int {
         var floor = 0
         for ((index, c) in input.withIndex()) {
             when (c) {

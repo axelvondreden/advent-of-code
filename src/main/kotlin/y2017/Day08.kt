@@ -3,20 +3,20 @@ package y2017
 import Day
 import kotlin.math.max
 
-class Day08 : Day(2017, 8) {
+class Day08 : Day<Any?>(2017, 8) {
 
     override val input = readStrings().map {
         val split = it.split(" ")
         Instruction(split[0], split[1], split[2].toInt(), Condition(split[4], split[5].toOp(), split[6].toInt()))
     }
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         val register = mutableMapOf<String, Int>()
         input.forEach { if (it.condition.verify(register)) it.execute(register) }
         return register.values.maxOrNull()!!
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         val register = mutableMapOf<String, Int>()
         var max = 0
         input.forEach {

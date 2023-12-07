@@ -3,13 +3,13 @@ package y2017
 import Day
 import kotlin.math.absoluteValue
 
-class Day07 : Day(2017, 7) {
+class Day07 : Day<Any?>(2017, 7) {
 
     override val input = readStrings().toMainProgram()
 
-    override fun solve1() = input.name
+    override fun solve1(input: List<String>) = input.name
 
-    override fun solve2() = input.findWrongWeight()
+    override fun solve2(input: List<String>) = input.findWrongWeight()
 
     private fun List<String>.toMainProgram(): Program {
         val left = toMutableList()

@@ -3,11 +3,11 @@ package y2016
 import Day
 
 
-class Day25 : Day(2016, 25) {
+class Day25 : Day<Any?>(2016, 25) {
 
     override val input = readStrings()
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         val regex = Regex("^(!?01)+")
         var output = ""
         var value = -1
@@ -22,5 +22,5 @@ class Day25 : Day(2016, 25) {
         return value
     }
 
-    override fun solve2() = 0
+    override fun solve2(input: List<String>) = 0
 }

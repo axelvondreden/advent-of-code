@@ -4,15 +4,15 @@ import Day
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser
 
-class Day12 : Day(2015, 12) {
+class Day12 : Day<String>(2015, 12) {
 
-    override val input = readString()
+    override fun List<String>.parse() = this[0]
 
     private val integerPattern = Regex("-?\\d+")
 
-    override fun solve1() = integerPattern.findAll(input).map { it.value.toInt() }.sum()
+    override fun solve1(input: String) = integerPattern.findAll(input).map { it.value.toInt() }.sum()
 
-    override fun solve2() = JsonParser.parseString(input).sum()
+    override fun solve2(input: String) = JsonParser.parseString(input).sum()
 
     private fun JsonElement.sum(): Int {
         return when {

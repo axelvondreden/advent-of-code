@@ -2,15 +2,18 @@ package y2015
 
 import Day
 
-class Day14 : Day(2015, 14) {
+class Day14 : Day<List<List<String>>>(2015, 14) {
 
-    override val input = readStrings().map { it.split(" ") }
+    override fun List<String>.parse() = map { it.split(" ") }
 
-    private val reindeers = input.associate { it[0] to Reindeer(it[3].toInt(), it[6].toInt(), it[13].toInt()) }
+    override fun solve1(input: List<List<String>>) {
+        input.associate {
+            it[0] to Reindeer(it[3].toInt(), it[6].toInt(), it[13].toInt())
+        }.values.maxOf { it.getDistance(2503) }
+    }
 
-    override fun solve1() = reindeers.values.maxOf { it.getDistance(2503) }
-
-    override fun solve2(): Int {
+    override fun solve2(input: List<List<String>>): Int {
+        val reindeers = input.associate { it[0] to Reindeer(it[3].toInt(), it[6].toInt(), it[13].toInt()) }
         val scores = reindeers.keys.associateWith { 0 }.toMutableMap()
         (1..2503).forEach { i ->
             val max = reindeers.map { it.value.getDistance(i) }.maxOrNull()

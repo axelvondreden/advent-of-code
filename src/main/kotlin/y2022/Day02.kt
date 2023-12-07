@@ -2,11 +2,11 @@ package y2022
 
 import Day
 
-class Day02 : Day(2022, 2) {
+class Day02 : Day<Any?>(2022, 2) {
 
     override val input = readStrings().map { it[0] to it[2] }
 
-    override fun solve1() = input.sumOf {
+    override fun solve1(input: List<String>) = input.sumOf {
         val move = when (it.second) {
             'X' -> 1
             'Y' -> 2
@@ -19,7 +19,7 @@ class Day02 : Day(2022, 2) {
         }
     }
 
-    override fun solve2() = input.sumOf {
+    override fun solve2(input: List<String>) = input.sumOf {
         when (it.second) {
             'X' -> when (it.first) {
                 'A' -> 3

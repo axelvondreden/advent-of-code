@@ -2,16 +2,16 @@ package y2017
 
 import Day
 
-class Day17 : Day(2017, 17) {
+class Day17 : Day<Any?>(2017, 17) {
 
     override val input = readString().toInt()
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         val buffer = fillBuffer(2017)
         return buffer[buffer.indexOf(2017) + 1]
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         val buffer = fillBuffer(50000000)
         return buffer[buffer.indexOf(0) + 1]
     }

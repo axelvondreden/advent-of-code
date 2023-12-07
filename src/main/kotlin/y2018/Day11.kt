@@ -4,14 +4,14 @@ import Day
 import utils.Point
 import utils.Point3D
 
-class Day11 : Day(2018, 11) {
+class Day11 : Day<Any?>(2018, 11) {
 
     override val input = readString().toInt()
     private val cache = mutableMapOf<String, Int>()
 
-    override fun solve1() = highest3x3Chunk()
+    override fun solve1(input: List<String>) = highest3x3Chunk()
 
-    override fun solve2() = highestNxNChunk()
+    override fun solve2(input: List<String>) = highestNxNChunk()
 
     private fun highest3x3Chunk(): String {
         var best = Point(0, 0)

@@ -3,13 +3,13 @@ package y2017
 import Day
 import utils.Point3D
 
-class Day20 : Day(2017, 20) {
+class Day20 : Day<Any?>(2017, 20) {
 
     override val input = readStrings().parseParticles()
 
-    override fun solve1() = input.minByOrNull { it.acc.abs() }!!.id
+    override fun solve1(input: List<String>) = input.minByOrNull { it.acc.abs() }!!.id
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         var copy = input
         var lastCollision = 0
         while (lastCollision < 100) {

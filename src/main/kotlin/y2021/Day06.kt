@@ -2,13 +2,13 @@ package y2021
 
 import Day
 
-class Day06 : Day(2021, 6) {
+class Day06 : Day<Any?>(2021, 6) {
 
     override val input = readString().split(",").map { it.toInt() }
 
-    override fun solve1() = calculateSize(80)
+    override fun solve1(input: List<String>) = calculateSize(80)
 
-    override fun solve2() = calculateSize(256)
+    override fun solve2(input: List<String>) = calculateSize(256)
 
     private fun calculateSize(days: Int): Long {
         var array = LongArray(9)

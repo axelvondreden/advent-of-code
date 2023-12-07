@@ -1,9 +1,9 @@
 package y2022
 
 import Day
-import java.util.Stack
+import java.util.*
 
-class Day05 : Day(2022, 5) {
+class Day05 : Day<Any?>(2022, 5) {
 
     override val input = readStrings()
     private val stackLines = input.takeWhile { it.isNotEmpty() }
@@ -12,13 +12,13 @@ class Day05 : Day(2022, 5) {
         Instruction(s[3].toInt(), s[5].toInt(), s[1].toInt())
     }
 
-    override fun solve1(): String {
+    override fun solve1(input: List<String>): String {
         val stacks = Stacks(stackLines)
         instructions.forEach { stacks.move(it) }
         return stacks.getTopChars()
     }
 
-    override fun solve2(): String {
+    override fun solve2(input: List<String>): String {
         val stacks = Stacks(stackLines)
         instructions.forEach { stacks.move2(it) }
         return stacks.getTopChars()

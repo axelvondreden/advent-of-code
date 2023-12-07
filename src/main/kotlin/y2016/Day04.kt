@@ -2,7 +2,7 @@ package y2016
 
 import Day
 
-class Day04 : Day(2016, 4) {
+class Day04 : Day<Any?>(2016, 4) {
 
     override val input = readStrings().map { it.dropLast(1).split("[") }
 
@@ -14,9 +14,9 @@ class Day04 : Day(2016, 4) {
         Room(name, sector, checksum)
     }
 
-    override fun solve1() = rooms.filter { it.check() }.sumOf { it.sector }
+    override fun solve1(input: List<String>) = rooms.filter { it.check() }.sumOf { it.sector }
 
-    override fun solve2() = rooms.first { it.decrypt().contains("northpole") }.sector
+    override fun solve2(input: List<String>) = rooms.first { it.decrypt().contains("northpole") }.sector
 
 
     private data class Room(val name: String, val sector: Int, val checksum: String) {

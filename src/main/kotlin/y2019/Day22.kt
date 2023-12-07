@@ -4,13 +4,13 @@ import Day
 import java.math.BigInteger
 import kotlin.math.abs
 
-class Day22 : Day(2019, 22) {
+class Day22 : Day<Any?>(2019, 22) {
 
     override val input = readStrings()
 
-    override fun solve1() = solve(2019, 10007, 1)
+    override fun solve1(input: List<String>) = solve(2019, 10007, 1)
 
-    override fun solve2() = solve(2020, 119315717514047, -101741582076661)
+    override fun solve2(input: List<String>) = solve(2020, 119315717514047, -101741582076661)
 
     private fun solve(x: Long, n: Long, k: Long): Long {
         var a = BigInteger.ONE

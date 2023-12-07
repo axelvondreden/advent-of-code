@@ -2,13 +2,13 @@ package y2015
 
 import Day
 
-class Day23 : Day(2015, 23) {
+class Day23 : Day<Any?>(2015, 23) {
 
     override val input = readStrings().map { it.replace(",", "") }
 
     var index = 0
 
-    override fun solve1(): Long {
+    override fun solve1(input: List<String>): Long {
         index = 0
         val register = mutableMapOf("a" to 0L, "b" to 0L)
         while (index in input.indices) {
@@ -17,7 +17,7 @@ class Day23 : Day(2015, 23) {
         return register["b"]!!
     }
 
-    override fun solve2(): Long {
+    override fun solve2(input: List<String>): Long {
         index = 0
         val register = mutableMapOf("a" to 1L, "b" to 0L)
         while (index in input.indices) {

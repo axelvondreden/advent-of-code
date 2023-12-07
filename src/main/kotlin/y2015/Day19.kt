@@ -2,23 +2,25 @@ package y2015
 
 import Day
 
-class Day19 : Day(2015, 19) {
+class Day19 : Day<Day19.ReplacementInput>(2015, 19) {
 
-    override val input = readStrings().takeWhile { it.isNotBlank() }.map {
-        Replacement(
-            it.split(" => ")[0],
-            it.split(" => ")[1]
-        )
+    override fun List<String>.parse(): ReplacementInput {
+        val replacements = takeWhile { it.isNotBlank() }.map {
+            Replacement(
+                it.split(" => ")[0],
+                it.split(" => ")[1]
+            )
+        }
+        return ReplacementInput(last(), replacements)
     }
 
-    private var start = readStrings().last()
+    override fun solve1(input: ReplacementInput) = input.replacements.flatMap { input.start.getReplacements(it) }.distinct().size
 
-    override fun solve1() = input.flatMap { start.getReplacements(it) }.distinct().size
-
-    override fun solve2(): Int {
+    override fun solve2(input: ReplacementInput): Int {
         var count = 0
+        var start = input.start
         while (start != "e") {
-            input.forEach { (input, output) ->
+            input.replacements.forEach { (input, output) ->
                 if (start.contains(output)) {
                     start = replace(start, output, input, start.lastIndexOf(output))
                     count++
@@ -40,6 +42,8 @@ class Day19 : Day(2015, 19) {
         }
         return list
     }
+
+    data class ReplacementInput(val start: String, val replacements: List<Replacement>)
 
     data class Replacement(val input: String, val output: String)
 }

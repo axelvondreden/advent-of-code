@@ -4,20 +4,20 @@ import Day
 import kotlin.math.max
 import kotlin.math.min
 
-class Day03 : Day(2019, 3) {
+class Day03 : Day<Any?>(2019, 3) {
 
     override val input = readStrings()
 
     private val steps1 = getSteps(input[0].split(","))
     private val steps2 = getSteps(input[1].split(","))
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         val intersections = steps1.filter { steps2.contains(it) }
         val center = Step(0, 0)
         return intersections.minOf { it.distance(center) }
     }
 
-    override fun solve2() = getShortestIntersection(steps1, steps2)
+    override fun solve2(input: List<String>) = getShortestIntersection(steps1, steps2)
 
     private fun getShortestIntersection(steps1: List<Step>, steps2: List<Step>): Int {
         var min = Int.MAX_VALUE

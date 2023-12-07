@@ -2,7 +2,7 @@ package y2021
 
 import Day
 
-class Day04 : Day(2021, 4) {
+class Day04 : Day<Any?>(2021, 4) {
 
     override val input = readStrings()
     private val numbers = input[0].split(",").map { it.toInt() }
@@ -10,7 +10,7 @@ class Day04 : Day(2021, 4) {
         BingoField((0..4).map { row -> list[row].trim().split(Regex("\\W+")).map { it.toInt() } })
     }
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         numbers.forEach { nr ->
             maps.forEach { map ->
                 map.mark(nr)
@@ -20,7 +20,7 @@ class Day04 : Day(2021, 4) {
         return 0
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         maps.forEach { it.reset() }
         var unfinishedMaps = maps
         numbers.forEach { nr ->

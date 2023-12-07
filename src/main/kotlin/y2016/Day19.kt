@@ -3,11 +3,11 @@ package y2016
 import Day
 
 
-class Day19 : Day(2016, 19) {
+class Day19 : Day<Any?>(2016, 19) {
 
     override val input = readString().toInt()
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         val map = Array(input) { Elf(it + 1, 1) }
         var thief = 0
         while (true) {
@@ -26,7 +26,7 @@ class Day19 : Day(2016, 19) {
         }
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         val map = (0 until input).map { Elf(it + 1, 1) }.toMutableList()
         var thief = 0
         while (map.size > 1) {

@@ -7,11 +7,11 @@ import utils.toPathfindingMap
 import kotlin.math.min
 
 
-class Day24 : Day(2016, 24) {
+class Day24 : Day<Any?>(2016, 24) {
 
     override val input = readCharMatrix()
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         val pf = Pathfinder(input.toPathfindingMap(), input.size, input[0].size)
         val points = input.flatMapIndexed { x, chars ->
             chars.mapIndexed { y, c -> if (c.isDigit() && c != '0') Pathfinder.Node(x, y) else null }
@@ -32,7 +32,7 @@ class Day24 : Day(2016, 24) {
         return minLength
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         val pf = Pathfinder(input.toPathfindingMap(), input.size, input[0].size)
         val points = input.flatMapIndexed { x, chars ->
             chars.mapIndexed { y, c -> if (c.isDigit() && c != '0') Pathfinder.Node(x, y) else null }

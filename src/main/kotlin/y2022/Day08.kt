@@ -3,13 +3,13 @@ package y2022
 import Day
 import kotlin.math.max
 
-class Day08 : Day(2022, 8) {
+class Day08 : Day<Any?>(2022, 8) {
 
     override val input = readStrings().map { line -> line.map { it.digitToInt() }.toIntArray() }.toTypedArray()
 
-    override fun solve1() = input.indices.sumOf { x -> input[x].indices.count { y -> input.isVisible(x, y) } }
+    override fun solve1(input: List<String>) = input.indices.sumOf { x -> input[x].indices.count { y -> input.isVisible(x, y) } }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         var max = 0
         for (x in input.indices) {
             for (y in input[0].indices) {

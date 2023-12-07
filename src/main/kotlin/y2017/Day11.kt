@@ -3,13 +3,13 @@ package y2017
 import Day
 import kotlin.math.absoluteValue
 
-class Day11 : Day(2017, 11) {
+class Day11 : Day<Any?>(2017, 11) {
 
     override val input = readString().split(",")
 
-    override fun solve1() = input.fold(Hex(0, 0, 0)) { spot, dir -> spot.move(dir.toHexDir()) }.distance(Hex(0, 0, 0))
+    override fun solve1(input: List<String>) = input.fold(Hex(0, 0, 0)) { spot, dir -> spot.move(dir.toHexDir()) }.distance(Hex(0, 0, 0))
 
-    override fun solve2() = input.fold(listOf(Hex(0, 0, 0))) { path, dir ->
+    override fun solve2(input: List<String>) = input.fold(listOf(Hex(0, 0, 0))) { path, dir ->
         path + (path.last().move(dir.toHexDir()))
     }.maxOf { it.distance(Hex(0, 0, 0)) }
 

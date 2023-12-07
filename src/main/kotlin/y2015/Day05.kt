@@ -2,13 +2,13 @@ package y2015
 
 import Day
 
-class Day05 : Day(2015, 5) {
+class Day05 : Day<List<String>>(2015, 5) {
 
-    override val input = readStrings()
+    override fun List<String>.parse() = this
 
-    override fun solve1() = input.count { it.hasMinVowels(3) && it.hasDoubleLetter() && it.hasNoBadWords() }
+    override fun solve1(input: List<String>) = input.count { it.hasMinVowels(3) && it.hasDoubleLetter() && it.hasNoBadWords() }
 
-    override fun solve2() = input.count { it.hasLetterPair() && it.hasDoubleWithOffset() }
+    override fun solve2(input: List<String>) = input.count { it.hasLetterPair() && it.hasDoubleWithOffset() }
 
     private fun String.hasMinVowels(vowels: Int) = count { "aeiou".contains(it) } >= vowels
 

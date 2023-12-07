@@ -2,15 +2,15 @@ package y2019
 
 import Day
 
-class Day07 : Day(2019, 7) {
+class Day07 : Day<Any?>(2019, 7) {
 
     override val input = readLongArray()
 
-    override fun solve1() = listOf(0L, 1, 2, 3, 4).toAmps().map { list ->
+    override fun solve1(input: List<String>) = listOf(0L, 1, 2, 3, 4).toAmps().map { list ->
         list.map { Amplifier(input.copyOf(), it, false) }
     }.maxOf { runAmplifiers(it) }
 
-    override fun solve2() = listOf(5L, 6, 7, 8, 9).toAmps().map { list ->
+    override fun solve2(input: List<String>) = listOf(5L, 6, 7, 8, 9).toAmps().map { list ->
         list.map { Amplifier(input.copyOf(), it, true) }
     }.maxOf { runAmplifiersFeedback(it) }
 

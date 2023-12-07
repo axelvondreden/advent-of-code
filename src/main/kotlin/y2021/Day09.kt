@@ -4,11 +4,11 @@ import Day
 import utils.Point
 import utils.product
 
-class Day09 : Day(2021, 9) {
+class Day09 : Day<Any?>(2021, 9) {
 
     override val input = readCharMatrix().map { row -> row.map { it.toString().toInt() } }
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         var sum = 0
         for (x in input.indices) {
             for (y in input[x].indices) {
@@ -21,7 +21,7 @@ class Day09 : Day(2021, 9) {
         return sum
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         val basins = mutableListOf<Set<Point>>()
         for (x in input.indices) {
             for (y in input[x].indices) {

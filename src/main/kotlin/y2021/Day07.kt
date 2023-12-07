@@ -5,11 +5,11 @@ import utils.stepSum
 import kotlin.math.max
 import kotlin.math.min
 
-class Day07 : Day(2021, 7) {
+class Day07 : Day<Any?>(2021, 7) {
 
     override val input = readString().split(",").map { it.toInt() }
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         var minFuel = Int.MAX_VALUE
         (input.minOrNull()!!..input.maxOrNull()!!).forEach {  pos ->
             minFuel = min(minFuel, input.sumOf { max(it, pos) - min(it, pos) })
@@ -17,7 +17,7 @@ class Day07 : Day(2021, 7) {
         return minFuel
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         var minFuel = Int.MAX_VALUE
         (input.minOrNull()!!..input.maxOrNull()!!).forEach {  pos ->
             minFuel = min(minFuel, input.sumOf { (max(it, pos) - min(it, pos)).stepSum() })

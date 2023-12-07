@@ -5,7 +5,7 @@ import java.util.*
 import kotlin.Comparator
 import kotlin.math.abs
 
-class Day15 : Day(2019, 15) {
+class Day15 : Day<Any?>(2019, 15) {
 
     override val input = IntCodeComputer(readLongArray())
 
@@ -57,9 +57,9 @@ class Day15 : Day(2019, 15) {
         }
     }
 
-    override fun solve1() = pathLength
+    override fun solve1(input: List<String>) = pathLength
 
-    override fun solve2() = oxyCounter
+    override fun solve2(input: List<String>) = oxyCounter
 
     private fun reconstructPath(cameFrom: Map<Pair<Long, Long>, Pair<Long, Long>>, to: Pair<Long, Long>): List<Pair<Long, Long>> {
         var current = to

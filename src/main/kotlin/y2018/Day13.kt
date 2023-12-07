@@ -5,7 +5,7 @@ import utils.Dir
 import utils.Point
 import utils.Turn
 
-class Day13 : Day(2018, 13) {
+class Day13 : Day<Any?>(2018, 13) {
 
     override val input = readCharMatrix()
 
@@ -19,7 +19,7 @@ class Day13 : Day(2018, 13) {
         }.toCharArray()
     }.toTypedArray()
 
-    override fun solve1(): String {
+    override fun solve1(input: List<String>): String {
         val carts = createCarts()
         while (true) {
             carts.sortedBy { (it.y * 10000) + it.x }.forEach { cart ->
@@ -33,7 +33,7 @@ class Day13 : Day(2018, 13) {
         }
     }
 
-    override fun solve2(): String {
+    override fun solve2(input: List<String>): String {
         val carts = createCarts()
         while (true) {
             carts.sortedBy { (it.y * 10000) + it.x }.forEach { cart ->

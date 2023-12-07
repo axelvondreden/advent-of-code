@@ -3,7 +3,7 @@ package y2020
 import Day
 
 
-class Day16 : Day(2020, 16) {
+class Day16 : Day<Any?>(2020, 16) {
 
     override val input = readStrings()
 
@@ -20,9 +20,9 @@ class Day16 : Day(2020, 16) {
     private val nearbyTickets = input.subList(input.indexOf("nearby tickets:") + 1, input.size)
         .map { line -> line.split(",").map { it.toInt() } }
 
-    override fun solve1() = nearbyTickets.flatten().filter { nr -> rules.none { it.isValid(nr) } }.sum()
+    override fun solve1(input: List<String>) = nearbyTickets.flatten().filter { nr -> rules.none { it.isValid(nr) } }.sum()
 
-    override fun solve2(): Long {
+    override fun solve2(input: List<String>): Long {
         val validTickets = nearbyTickets.filter { numbers -> numbers.all { nr -> rules.any { it.isValid(nr) } } }
         val unassignedRules = rules.toMutableSet()
         val ruleOrder = arrayOfNulls<Rule>(rules.size)

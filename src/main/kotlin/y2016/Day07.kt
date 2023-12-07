@@ -2,13 +2,13 @@ package y2016
 
 import Day
 
-class Day07 : Day(2016, 7) {
+class Day07 : Day<Any?>(2016, 7) {
 
     override val input = readStrings()
 
-    override fun solve1() = input.count { it.supportsTLS() }
+    override fun solve1(input: List<String>) = input.count { it.supportsTLS() }
 
-    override fun solve2() = input.count { it.supportsSSL() }
+    override fun solve2(input: List<String>) = input.count { it.supportsSSL() }
 
     private fun String.supportsTLS(): Boolean {
         var tls = false

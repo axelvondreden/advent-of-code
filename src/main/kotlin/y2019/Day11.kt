@@ -3,11 +3,11 @@ package y2019
 import Day
 import utils.Point
 
-class Day11 : Day(2019, 11) {
+class Day11 : Day<Any?>(2019, 11) {
 
     override val input = readLongArray()
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         val robot = HullRobot(input.copyOf())
         val panels = mutableMapOf<Point, Long>()
         try {
@@ -20,7 +20,7 @@ class Day11 : Day(2019, 11) {
         }
     }
 
-    override fun solve2() {
+    override fun solve2(input: List<String>) {
         var ret = "\n"
         val robot = HullRobot(input)
         val panels = mutableMapOf(Point(0, 0) to 1L)

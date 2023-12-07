@@ -2,13 +2,13 @@ package y2015
 
 import Day
 
-class Day11 : Day(2015, 11) {
+class Day11 : Day<String>(2015, 11) {
 
-    override val input = readString()
+    override fun List<String>.parse() = this[0]
 
     private var nextPw: String? = null
 
-    override fun solve1(): String {
+    override fun solve1(input: String): String {
         var pw = input.inc()
         while (!pw.isValidPw()) {
             pw = pw.inc()
@@ -17,7 +17,7 @@ class Day11 : Day(2015, 11) {
         return pw
     }
 
-    override fun solve2(): String {
+    override fun solve2(input: String): String {
         while (!nextPw!!.isValidPw()) {
             nextPw = nextPw!!.inc()
         }

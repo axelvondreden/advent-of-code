@@ -3,17 +3,17 @@ package y2015
 import Day
 
 
-class Day10 : Day(2015, 10) {
+class Day10 : Day<String>(2015, 10) {
 
-    override val input = readString()
+    override fun List<String>.parse() = this[0]
 
-    override fun solve1(): Int {
+    override fun solve1(input: String): Int {
         var value = input
         repeat(40) { value = value.lookAndSay() }
         return value.length
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: String): Int {
         var value = input
         repeat(50) { value = value.lookAndSay() }
         return value.length

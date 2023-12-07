@@ -2,7 +2,7 @@ package y2022
 
 import Day
 
-class Day07 : Day(2022, 7) {
+class Day07 : Day<Any?>(2022, 7) {
 
     override val input = readStrings()
     private val rootDir: Directory = Directory("/", null)
@@ -41,9 +41,9 @@ class Day07 : Day(2022, 7) {
         }
     }
 
-    override fun solve1() = rootDir.getAll().filter { it.size <= 100000 }.sumOf { it.size }
+    override fun solve1(input: List<String>) = rootDir.getAll().filter { it.size <= 100000 }.sumOf { it.size }
 
-    override fun solve2() = rootDir.getAll().filter { 70000000 - rootDir.size + it.size >= 30000000 }.minByOrNull { it.size }!!.size
+    override fun solve2(input: List<String>) = rootDir.getAll().filter { 70000000 - rootDir.size + it.size >= 30000000 }.minByOrNull { it.size }!!.size
 
     private class Directory(val name: String, val parent: Directory?) {
         val files = mutableListOf<File>()

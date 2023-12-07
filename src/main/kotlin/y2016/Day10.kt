@@ -2,7 +2,7 @@ package y2016
 
 import Day
 
-class Day10 : Day(2016, 10) {
+class Day10 : Day<Any?>(2016, 10) {
 
     override val input = readStrings()
 
@@ -15,9 +15,9 @@ class Day10 : Day(2016, 10) {
         insertValues()
     }
 
-    override fun solve1() = part1BotNr!!
+    override fun solve1(input: List<String>) = part1BotNr!!
 
-    override fun solve2() = outputs.first { it.nr == 0 }.values.first() *
+    override fun solve2(input: List<String>) = outputs.first { it.nr == 0 }.values.first() *
             outputs.first { it.nr == 1 }.values.first() * outputs.first { it.nr == 2 }.values.first()
 
     private fun parseOutputs(): Set<Output> {

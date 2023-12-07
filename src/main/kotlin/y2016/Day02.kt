@@ -2,11 +2,11 @@ package y2016
 
 import Day
 
-class Day02 : Day(2016, 2) {
+class Day02 : Day<Any?>(2016, 2) {
 
     override val input = readStrings()
 
-    override fun solve1(): String {
+    override fun solve1(input: List<String>): String {
         var code = ""
         input.forEach { input ->
             var nr = 5
@@ -24,7 +24,7 @@ class Day02 : Day(2016, 2) {
         return code
     }
 
-    override fun solve2(): String {
+    override fun solve2(input: List<String>): String {
         var code = ""
         input.forEach { input ->
             var nr = 5

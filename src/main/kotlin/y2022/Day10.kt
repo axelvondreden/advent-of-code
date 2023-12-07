@@ -2,20 +2,20 @@ package y2022
 
 import Day
 
-class Day10 : Day(2022, 10) {
+class Day10 : Day<Any?>(2022, 10) {
 
     override val input = readStrings()
     private val rows = 6
     private val columns = 40
 
-    override fun solve1() = input.asSequence()
+    override fun solve1(input: List<String>) = input.asSequence()
         .toInstructions()
         .toStates()
         .filter { it.pc >= 20 }
         .filter { (it.pc - 20) % 40 == 0 }
         .sumOf { it.pc * it.x }
 
-    override fun solve2(): String {
+    override fun solve2(input: List<String>): String {
         val res = input.asSequence()
             .toInstructions()
             .toStates()

@@ -3,13 +3,13 @@ package y2016
 import Day
 import utils.md5
 
-class Day14 : Day(2016, 14) {
+class Day14 : Day<Any?>(2016, 14) {
 
     override val input = readString()
 
     private val cache = mutableMapOf<Int, String>()
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         cache.clear()
         var index = 0
         val keys = mutableSetOf<Int>()
@@ -24,7 +24,7 @@ class Day14 : Day(2016, 14) {
         return keys.maxOrNull()!!
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         cache.clear()
         var index = 0
         val keys = mutableSetOf<Int>()

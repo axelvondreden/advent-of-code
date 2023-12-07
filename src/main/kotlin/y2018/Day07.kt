@@ -2,7 +2,7 @@ package y2018
 
 import Day
 
-class Day07 : Day(2018, 7) {
+class Day07 : Day<Any?>(2018, 7) {
 
     override val input = readStrings().map {
         val split = it.split(" ")
@@ -11,9 +11,9 @@ class Day07 : Day(2018, 7) {
 
     private var minutesPassed = 0
 
-    override fun solve1() = simulateWork()
+    override fun solve1(input: List<String>) = simulateWork()
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         minutesPassed = 0
         simulateWork(5)
         return minutesPassed

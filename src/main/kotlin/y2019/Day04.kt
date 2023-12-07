@@ -2,13 +2,13 @@ package y2019
 
 import Day
 
-class Day04 : Day(2019, 4) {
+class Day04 : Day<Any?>(2019, 4) {
 
     override val input = with(readString().split("-").map { it.toInt() }) { get(0)..get(1) }
 
-    override fun solve1() = input.count { it.toString().checkDouble() && it.toString().checkIncreasing() }
+    override fun solve1(input: List<String>) = input.count { it.toString().checkDouble() && it.toString().checkIncreasing() }
 
-    override fun solve2() = input.count { it.toString().checkIncreasing() && it.toString().checkDoubleStrict() }
+    override fun solve2(input: List<String>) = input.count { it.toString().checkIncreasing() && it.toString().checkDoubleStrict() }
 
     private fun String.checkDouble() = (1 until length).any { get(it - 1) == get(it) }
 

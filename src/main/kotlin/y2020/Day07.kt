@@ -2,13 +2,13 @@ package y2020
 
 import Day
 
-class Day07 : Day(2020, 7) {
+class Day07 : Day<Any?>(2020, 7) {
 
     override val input = readStrings().toBags()
 
-    override fun solve1() = input.keys.count { it.canHoldColor("shiny gold") }
+    override fun solve1(input: List<String>) = input.keys.count { it.canHoldColor("shiny gold") }
 
-    override fun solve2() = "shiny gold".countNestedBags()
+    override fun solve2(input: List<String>) = "shiny gold".countNestedBags()
 
     private fun String.canHoldColor(color: String): Boolean =
         if (input[this]!!.contains(color)) true

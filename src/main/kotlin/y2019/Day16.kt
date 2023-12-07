@@ -2,11 +2,11 @@ package y2019
 
 import Day
 
-class Day16 : Day(2019, 16) {
+class Day16 : Day<Any?>(2019, 16) {
 
     override val input = readString().map { it.toString().toInt() }.toIntArray()
 
-    override fun solve1(): String {
+    override fun solve1(input: List<String>): String {
         var txt = input.copyOf()
         repeat(100) {
             txt = translate(txt)
@@ -14,7 +14,7 @@ class Day16 : Day(2019, 16) {
         return txt.joinToString(separator = "").substring(0..7)
     }
 
-    override fun solve2(): String {
+    override fun solve2(input: List<String>): String {
         val input2 = mutableListOf<Int>()
         repeat(10000) {
             input2.addAll(input.toList())

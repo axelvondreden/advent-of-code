@@ -2,7 +2,7 @@ package y2021
 
 import Day
 
-class Day10 : Day(2021, 10) {
+class Day10 : Day<Any?>(2021, 10) {
 
     override val input = readStrings()
 
@@ -20,9 +20,9 @@ class Day10 : Day(2021, 10) {
         '>' to 4
     )
 
-    override fun solve1() = input.mapNotNull { it.findCorruptedChar() }.sumOf { scoreMapping[it]!! }
+    override fun solve1(input: List<String>) = input.mapNotNull { it.findCorruptedChar() }.sumOf { scoreMapping[it]!! }
 
-    override fun solve2(): Long {
+    override fun solve2(input: List<String>): Long {
         val scores = input.mapNotNull { it.findAutocomplete() }.map {
             it.fold(0L) { acc, c -> (acc * 5) + (scoreMapping2[c] ?: 0) }
         }

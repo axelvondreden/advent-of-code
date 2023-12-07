@@ -3,11 +3,11 @@ package y2015
 import Day
 import utils.product
 
-class Day24 : Day(2015, 24) {
+class Day24 : Day<Any?>(2015, 24) {
 
     override val input = readInts().map { it.toLong() }
 
-    override fun solve1(): Long {
+    override fun solve1(input: List<String>): Long {
         (1..input.size).forEach { i ->
             val set = mutableSetOf<Set<Long>>()
             getGroups(input.sum() / 3, emptySet(), set, i)
@@ -19,7 +19,7 @@ class Day24 : Day(2015, 24) {
         return 0
     }
 
-    override fun solve2(): Long {
+    override fun solve2(input: List<String>): Long {
         (1..input.size).forEach { i ->
             val set = mutableSetOf<Set<Long>>()
             getGroups(input.sum() / 4, emptySet(), set, i)

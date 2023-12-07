@@ -2,7 +2,7 @@ package y2020
 
 import Day
 
-class Day04 : Day(2020, 4) {
+class Day04 : Day<Any?>(2020, 4) {
 
     override val input = readStrings()
 
@@ -10,9 +10,9 @@ class Day04 : Day(2020, 4) {
 
     private val passports = parsePassports()
 
-    override fun solve1() = passports.size
+    override fun solve1(input: List<String>) = passports.size
 
-    override fun solve2() = passports.count { it.hasValidValues() }
+    override fun solve2(input: List<String>) = passports.count { it.hasValidValues() }
 
     private fun parsePassportStrings(): MutableSet<String> {
         var lineNr = 0

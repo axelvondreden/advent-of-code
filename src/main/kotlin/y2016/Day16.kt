@@ -3,11 +3,11 @@ package y2016
 import Day
 
 
-class Day16 : Day(2016, 16) {
+class Day16 : Day<Any?>(2016, 16) {
 
     override val input = readString()
 
-    override fun solve1(): String {
+    override fun solve1(input: List<String>): String {
         var string = input
         while (string.length < maxLength1) {
             string = string.dragonCurve()
@@ -15,7 +15,7 @@ class Day16 : Day(2016, 16) {
         return string.substring(0, maxLength1).checksum()
     }
 
-    override fun solve2(): String {
+    override fun solve2(input: List<String>): String {
         var string = input
         while (string.length < maxLength2) {
             string = string.dragonCurve()

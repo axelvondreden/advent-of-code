@@ -3,13 +3,13 @@ package y2016
 import Day
 import kotlin.math.abs
 
-class Day11 : Day(2016, 11) {
+class Day11 : Day<Any?>(2016, 11) {
 
     override val input = readStrings()
 
-    override fun solve1(): String = input.collectState().calculateState().toString()
+    override fun solve1(input: List<String>): String = input.collectState().calculateState().toString()
 
-    override fun solve2(): String = input.mapIndexed { i, s ->
+    override fun solve2(input: List<String>): String = input.mapIndexed { i, s ->
         when (i) {
             0 -> "$s An elerium generator. An elerium-compatible microchip. A dilithium generator. A dilithium-compatible microchip."
             else -> s

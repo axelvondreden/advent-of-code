@@ -2,11 +2,11 @@ package y2018
 
 import Day
 
-class Day14 : Day(2018, 14) {
+class Day14 : Day<Any?>(2018, 14) {
 
     override val input = readString().toInt()
 
-    override fun solve1(): String {
+    override fun solve1(input: List<String>): String {
         val scores = mutableListOf(3, 7)
         var index1 = 0
         var index2 = 1
@@ -22,7 +22,7 @@ class Day14 : Day(2018, 14) {
         return scores.takeLast(10).joinToString("")
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         val scores = mutableListOf(3, 7)
         var index1 = 0
         var index2 = 1

@@ -2,16 +2,16 @@ package y2021
 
 import Day
 
-class Day12 : Day(2021, 12) {
+class Day12 : Day<Any?>(2021, 12) {
 
     override val input = readStrings()
     private val caves = input.map { it.split("-") }
         .flatMap { listOf(it.first() to it.last(), it.last() to it.first()) }
         .groupBy({ it.first }, { it.second })
 
-    override fun solve1() = travel(cond = { n, p -> n.isUpperCase() || n !in p }).size
+    override fun solve1(input: List<String>) = travel(cond = { n, p -> n.isUpperCase() || n !in p }).size
 
-    override fun solve2() = travel(cond = { n, p ->
+    override fun solve2(input: List<String>) = travel(cond = { n, p ->
         when {
             n.isUpperCase() -> true
             n == "start" -> false

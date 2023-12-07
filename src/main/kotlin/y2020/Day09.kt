@@ -2,15 +2,15 @@ package y2020
 
 import Day
 
-class Day09 : Day(2020, 9) {
+class Day09 : Day<Any?>(2020, 9) {
 
     override val input = readStrings().map { it.toLong() }
 
     private var wrongNumber = 0L
 
-    override fun solve1() = getFirstWrongNumber(input, 25).also { wrongNumber = it }
+    override fun solve1(input: List<String>) = getFirstWrongNumber(input, 25).also { wrongNumber = it }
 
-    override fun solve2(): Long {
+    override fun solve2(input: List<String>): Long {
         val subList = input.indices.map { input.findSubListToSum(it, wrongNumber) }.first { it.isNotEmpty() }
         return subList.minOrNull()!! + subList.maxOrNull()!!
     }

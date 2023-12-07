@@ -2,9 +2,9 @@ package y2015
 
 import Day
 
-class Day16 : Day(2015, 16) {
+class Day16 : Day<List<String>>(2015, 16) {
 
-    override val input = readStrings().map { it.removePrefix("Sue ") }
+    override fun List<String>.parse() = map { it.removePrefix("Sue ") }
 
     private val searchValues = mutableMapOf(
         "children" to 3,
@@ -19,13 +19,12 @@ class Day16 : Day(2015, 16) {
         "perfumes" to 1
     )
 
-    private val sues = input.associate { s ->
-        s.substringBefore(":").toInt() to s.drop(s.indexOf(":") + 2).split(", ").map {
-            it.split(": ")[0] to it.split(": ")[1].toInt()
+    override fun solve1(input: List<String>): Int {
+        val sues = input.associate { s ->
+            s.substringBefore(":").toInt() to s.drop(s.indexOf(":") + 2).split(", ").map {
+                it.split(": ")[0] to it.split(": ")[1].toInt()
+            }
         }
-    }
-
-    override fun solve1(): Int {
         sues.forEach { (key, value) ->
             var found = true
             for ((first, second) in value) {
@@ -39,7 +38,12 @@ class Day16 : Day(2015, 16) {
         return 0
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
+        val sues = input.associate { s ->
+            s.substringBefore(":").toInt() to s.drop(s.indexOf(":") + 2).split(", ").map {
+                it.split(": ")[0] to it.split(": ")[1].toInt()
+            }
+        }
         sues.forEach { (key, value) ->
             var found = true
             value.forEach { (first, second) ->

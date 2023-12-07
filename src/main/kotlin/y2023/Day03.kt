@@ -3,16 +3,16 @@ package y2023
 import Day
 import utils.findPoints
 
-class Day03 : Day(2023, 3) {
+class Day03 : Day<Any?>(2023, 3) {
 
     override val input = readCharMatrix()
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         val nrs = getPartNumbers()
         return nrs.filter { it.adjacent }.sumOf { it.nr }
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         val nrs = getPartNumbers()
         val gears = input.findPoints('*')
         return gears.map { nrs.getAdjacentPartNumbers(it.x.toInt(), it.y.toInt()) }.filter { it.size == 2 }.sumOf { it[0].nr * it[1].nr  }

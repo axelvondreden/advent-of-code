@@ -2,14 +2,14 @@ package y2018
 
 import Day
 
-class Day02 : Day(2018, 2) {
+class Day02 : Day<Any?>(2018, 2) {
 
     override val input = readStrings()
 
-    override fun solve1() = input.count { id -> id.groupBy { it }.any { it.value.size == 2 } } *
+    override fun solve1(input: List<String>) = input.count { id -> id.groupBy { it }.any { it.value.size == 2 } } *
             input.count { id -> id.groupBy { it }.any { it.value.size == 3 } }
 
-    override fun solve2(): String {
+    override fun solve2(input: List<String>): String {
         val similarIDs = input.findSimilarIDs()
         return similarIDs.first.indices
             .filter { similarIDs.first[it] == similarIDs.second[it] }

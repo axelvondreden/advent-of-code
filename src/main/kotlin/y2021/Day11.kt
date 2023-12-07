@@ -2,11 +2,11 @@ package y2021
 
 import Day
 
-class Day11 : Day(2021, 11) {
+class Day11 : Day<Any?>(2021, 11) {
 
     override val input = readCharMatrix().map { chars -> chars.map { it.digitToInt() }.toIntArray() }
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         var sum = 0
         val copy = input.toTypedArray()
         repeat(100) {
@@ -15,7 +15,7 @@ class Day11 : Day(2021, 11) {
         return sum
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         var round = 0
         val copy = input.toTypedArray()
         var flashes = 0

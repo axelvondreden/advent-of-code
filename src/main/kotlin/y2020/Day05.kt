@@ -2,13 +2,13 @@ package y2020
 
 import Day
 
-class Day05 : Day(2020, 5) {
+class Day05 : Day<Any?>(2020, 5) {
 
     override val input = readStrings()
 
-    override fun solve1() = input.maxOf { it.getSeatId() }
+    override fun solve1(input: List<String>) = input.maxOf { it.getSeatId() }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         val ids = input.map { it.getSeatId() }.sorted()
         var last = ids.first()
         (1 until ids.size).forEach { i ->

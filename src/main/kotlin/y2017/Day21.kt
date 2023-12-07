@@ -2,7 +2,7 @@ package y2017
 
 import Day
 
-class Day21 : Day(2017, 21) {
+class Day21 : Day<Any?>(2017, 21) {
 
     override val input = readStrings().parsePatterns()
 
@@ -12,13 +12,13 @@ class Day21 : Day(2017, 21) {
         charArrayOf('#', '#', '#')
     )
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         var copy = image.copyOf()
         repeat(5) { copy = copy.step() }
         return copy.sumOf { chars -> chars.count { it == '#' } }
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         var copy = image.copyOf()
         repeat(18) { copy = copy.step() }
         return copy.sumOf { chars -> chars.count { it == '#' } }

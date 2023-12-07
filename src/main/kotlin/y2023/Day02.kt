@@ -2,7 +2,7 @@ package y2023
 
 import Day
 
-class Day02 : Day(2023, 2) {
+class Day02 : Day<Any?>(2023, 2) {
 
     override val input = readStrings()
 
@@ -20,9 +20,9 @@ class Day02 : Day(2023, 2) {
         Game(id, rounds)
     }
 
-    override fun solve1() = games.filter { it.isPossible(12, 13, 14) }.sumOf { it.id }
+    override fun solve1(input: List<String>) = games.filter { it.isPossible(12, 13, 14) }.sumOf { it.id }
 
-    override fun solve2() = games.sumOf { it.getLowestProduct() }
+    override fun solve2(input: List<String>) = games.sumOf { it.getLowestProduct() }
     
     private data class Game(val id: Int, val rounds: List<Gameround>) {
 

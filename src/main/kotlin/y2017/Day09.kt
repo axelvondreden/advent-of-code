@@ -2,13 +2,13 @@ package y2017
 
 import Day
 
-class Day09 : Day(2017, 9) {
+class Day09 : Day<Any?>(2017, 9) {
 
     override val input = readString()
 
-    override fun solve1() = input.filterGarbage().calcGroupScore()
+    override fun solve1(input: List<String>) = input.filterGarbage().calcGroupScore()
 
-    override fun solve2() = input.countGarbage()
+    override fun solve2(input: List<String>) = input.countGarbage()
 
     private fun String.filterGarbage(): String {
         var new = ""

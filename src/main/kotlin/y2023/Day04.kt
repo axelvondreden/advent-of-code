@@ -3,7 +3,7 @@ package y2023
 import Day
 import kotlin.math.pow
 
-class Day04 : Day(2023, 4) {
+class Day04 : Day<Any?>(2023, 4) {
 
     override val input = readStrings()
 
@@ -17,9 +17,9 @@ class Day04 : Day(2023, 4) {
         )
     }
 
-    override fun solve1() = games.sumOf { it.score }
+    override fun solve1(input: List<String>) = games.sumOf { it.score }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         val array = IntArray(games.size) { 1 }
         games.forEachIndexed { index, game ->
             for (i in index + 1..index + game.winnerCount) {

@@ -3,15 +3,15 @@ package y2016
 import Day
 import utils.copy
 
-class Day08 : Day(2016, 8) {
+class Day08 : Day<Any?>(2016, 8) {
 
     private val screen = Array(50) { BooleanArray(6) }
 
     override val input = readStrings().map { it.split(" ").evaluate() }
 
-    override fun solve1() = screen.sumOf { booleans -> booleans.count { it } }
+    override fun solve1(input: List<String>) = screen.sumOf { booleans -> booleans.count { it } }
 
-    override fun solve2() = if (printScreen() == control) "RURUCEOEIL" else ""
+    override fun solve2(input: List<String>) = if (printScreen() == control) "RURUCEOEIL" else ""
 
     private fun List<String>.evaluate() {
         val old = screen.copy()

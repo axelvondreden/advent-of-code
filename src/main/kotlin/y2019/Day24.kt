@@ -4,11 +4,11 @@ import Day
 import utils.copy
 import kotlin.math.pow
 
-class Day24 : Day(2019, 24) {
+class Day24 : Day<Any?>(2019, 24) {
 
     override val input = readCharMatrix()
 
-    override fun solve1(): Int {
+    override fun solve1(input: List<String>): Int {
         val states = mutableSetOf(input.toFlatString())
         var new = step(input.copy())
         while (!states.contains(new.toFlatString())) {
@@ -18,7 +18,7 @@ class Day24 : Day(2019, 24) {
         return new.toFlatString().mapIndexed { i, c -> if (c == '#') 2.toDouble().pow(i).toInt() else 0 }.sum()
     }
 
-    override fun solve2(): Int {
+    override fun solve2(input: List<String>): Int {
         var map = mutableMapOf<Int, Array<CharArray>>()
         (-200..200).forEach { map[it] = Array(5) { CharArray(5) { '.' } } }
         map[0] = input.copy()

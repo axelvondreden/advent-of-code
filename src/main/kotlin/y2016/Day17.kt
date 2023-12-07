@@ -5,15 +5,15 @@ import utils.Point
 import utils.md5
 
 
-class Day17 : Day(2016, 17) {
+class Day17 : Day<Any?>(2016, 17) {
 
     override val input = readString()
 
     private val pathList = mutableSetOf<String>().also { testWalk(Point(0, 0), "", it) }
 
-    override fun solve1() = pathList.minByOrNull { it.length }!!
+    override fun solve1(input: List<String>) = pathList.minByOrNull { it.length }!!
 
-    override fun solve2() = pathList.maxByOrNull { it.length }!!.length
+    override fun solve2(input: List<String>) = pathList.maxByOrNull { it.length }!!.length
 
     private fun testWalk(current: Point, path: String, finishes: MutableSet<String>) {
         if (current == Point(3, 3)) {
