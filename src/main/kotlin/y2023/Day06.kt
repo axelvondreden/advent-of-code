@@ -4,7 +4,7 @@ import Day
 
 class Day06 : Day<List<String>>(2023, 6) {
 
-    override fun List<String>.parse() = this.map { line ->
+    override fun List<String>.parse() = map { line ->
         line.split(":")[1].trim().split(Regex("\\s+")).map { it.toLong() }
     }
 

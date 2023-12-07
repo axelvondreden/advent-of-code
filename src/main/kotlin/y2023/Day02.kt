@@ -2,11 +2,9 @@ package y2023
 
 import Day
 
-class Day02 : Day<List<String>>(2023, 2) {
+class Day02 : Day<List<Day02.Game>>(2023, 2) {
 
-    override fun List<String>.parse() = this
-
-    private val games = input.map { game ->
+    override fun List<String>.parse() = map { game ->
         val s1 = game.split(": ")
         val id = s1[0].removePrefix("Game ").toInt()
         val s2 = s1[1].split("; ")
@@ -20,16 +18,16 @@ class Day02 : Day<List<String>>(2023, 2) {
         Game(id, rounds)
     }
 
-    override fun solve1(input: List<String>) = games.filter { it.isPossible(12, 13, 14) }.sumOf { it.id }
+    override fun solve1(input: List<Game>) = input.filter { it.isPossible(12, 13, 14) }.sumOf { it.id }
 
-    override fun solve2(input: List<String>) = games.sumOf { it.getLowestProduct() }
-    
-    private data class Game(val id: Int, val rounds: List<Gameround>) {
+    override fun solve2(input: List<Game>) = input.sumOf { it.getLowestProduct() }
+
+    data class Game(val id: Int, val rounds: List<Gameround>) {
 
         fun isPossible(r: Int, g: Int, b: Int) = rounds.none { it.r > r || it.g > g || it.b > b }
 
         fun getLowestProduct() = rounds.maxOf { it.r } * rounds.maxOf { it.g } * rounds.maxOf { it.b }
     }
-    
-    private data class Gameround(val r: Int, val g: Int, val b: Int)
+
+    data class Gameround(val r: Int, val g: Int, val b: Int)
 }

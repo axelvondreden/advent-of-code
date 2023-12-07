@@ -5,6 +5,7 @@ import Day
 class Day10 : Day<List<String>>(2022, 10) {
 
     override fun List<String>.parse() = this
+
     private val rows = 6
     private val columns = 40
 

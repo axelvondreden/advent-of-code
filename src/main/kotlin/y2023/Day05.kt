@@ -4,23 +4,23 @@ import Day
 
 class Day05 : Day<List<String>>(2023, 5) {
 
-    override fun List<String>.parse() = this.filter { it.isNotBlank() }
+    private lateinit var seeds: List<Long>
 
-    private val seeds = input[0].removePrefix("seeds: ").split(" ").map { it.toLong() }
+    private lateinit var maps: List<MappingGroup>
 
-    private val maps: List<MappingGroup>
+    override fun List<String>.parse() = filter { it.isNotBlank() }.also {  lines ->
+        seeds = lines[0].removePrefix("seeds: ").split(" ").map { it.toLong() }
 
-    init {
         val list = mutableListOf<MappingGroup>()
         var group: MappingGroup? = null
-        for (i in 1 until input.size) {
-            if (input[i].contains(":")) {
+        for (i in 1 until lines.size) {
+            if (lines[i].contains(":")) {
                 if (group != null) {
                     list += group
                 }
                 group = MappingGroup(emptyList())
             } else {
-                val split = input[i].split(" ")
+                val split = lines[i].split(" ")
                 group = group!!.copy(
                     mappings = group.mappings.plus(
                         Mapping(
@@ -56,7 +56,7 @@ class Day05 : Day<List<String>>(2023, 5) {
         return values.min()
     }
 
-    private data class MappingGroup(val mappings: List<Mapping>) {
+    data class MappingGroup(val mappings: List<Mapping>) {
 
         fun map(source: Long): Long {
             mappings.forEach { m ->
@@ -71,5 +71,5 @@ class Day05 : Day<List<String>>(2023, 5) {
         }
     }
 
-    private data class Mapping(val destRangeStart: Long, val sourceRangeStart: Long, val length: Long)
+    data class Mapping(val destRangeStart: Long, val sourceRangeStart: Long, val length: Long)
 }

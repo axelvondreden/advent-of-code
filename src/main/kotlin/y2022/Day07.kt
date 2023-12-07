@@ -4,11 +4,8 @@ import Day
 
 class Day07 : Day<List<String>>(2022, 7) {
 
-    override fun List<String>.parse() = this
-    private val rootDir: Directory = Directory("/", null)
-
-    init {
-        var cmds = input.drop(2)
+    override fun List<String>.parse() = this.also { lines ->
+        var cmds = lines.drop(2)
         val rootContents = cmds.takeWhile { !it.startsWith("$") }
         rootContents.forEach {
             val s = it.split(" ")
@@ -40,6 +37,8 @@ class Day07 : Day<List<String>>(2022, 7) {
             }
         }
     }
+
+    private val rootDir: Directory = Directory("/", null)
 
     override fun solve1(input: List<String>) = rootDir.getAll().filter { it.size <= 100000 }.sumOf { it.size }
 

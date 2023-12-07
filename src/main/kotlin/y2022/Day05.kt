@@ -6,19 +6,24 @@ import java.util.*
 class Day05 : Day<List<String>>(2022, 5) {
 
     override fun List<String>.parse() = this
-    private val stackLines = input.takeWhile { it.isNotEmpty() }
-    private val instructions = input.dropWhile { it.isNotEmpty() }.drop(1).map {
-        val s = it.split(" ")
-        Instruction(s[3].toInt(), s[5].toInt(), s[1].toInt())
-    }
 
     override fun solve1(input: List<String>): String {
+        val stackLines = input.takeWhile { it.isNotEmpty() }
+        val instructions = input.dropWhile { it.isNotEmpty() }.drop(1).map {
+            val s = it.split(" ")
+            Instruction(s[3].toInt(), s[5].toInt(), s[1].toInt())
+        }
         val stacks = Stacks(stackLines)
         instructions.forEach { stacks.move(it) }
         return stacks.getTopChars()
     }
 
     override fun solve2(input: List<String>): String {
+        val stackLines = input.takeWhile { it.isNotEmpty() }
+        val instructions = input.dropWhile { it.isNotEmpty() }.drop(1).map {
+            val s = it.split(" ")
+            Instruction(s[3].toInt(), s[5].toInt(), s[1].toInt())
+        }
         val stacks = Stacks(stackLines)
         instructions.forEach { stacks.move2(it) }
         return stacks.getTopChars()

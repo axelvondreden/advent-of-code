@@ -2,18 +2,19 @@ package y2023
 
 import Day
 import utils.findPoints
+import utils.toCharMatrix
 
-class Day03 : Day<List<String>>(2023, 3) {
+class Day03 : Day<Array<CharArray>>(2023, 3) {
 
     override fun List<String>.parse() = toCharMatrix()
 
-    override fun solve1(input: List<String>): Int {
-        val nrs = getPartNumbers()
+    override fun solve1(input: Array<CharArray>): Int {
+        val nrs = input.getPartNumbers()
         return nrs.filter { it.adjacent }.sumOf { it.nr }
     }
 
-    override fun solve2(input: List<String>): Int {
-        val nrs = getPartNumbers()
+    override fun solve2(input: Array<CharArray>): Int {
+        val nrs = input.getPartNumbers()
         val gears = input.findPoints('*')
         return gears.map { nrs.getAdjacentPartNumbers(it.x.toInt(), it.y.toInt()) }.filter { it.size == 2 }.sumOf { it[0].nr * it[1].nr  }
     }
@@ -29,17 +30,17 @@ class Day03 : Day<List<String>>(2023, 3) {
         }
     }
 
-    private fun getPartNumbers(): List<Partnumber> {
+    private fun Array<CharArray>.getPartNumbers(): List<Partnumber> {
         val list = mutableListOf<Partnumber>()
-        for (y in input[0].indices) {
+        for (y in this[0].indices) {
             var x = 0
-            while (x < input.size) {
+            while (x < size) {
                 var nr = ""
-                while (x < input.size && !input[x][y].isDigit()) {
+                while (x < size && !this[x][y].isDigit()) {
                     x++
                 }
-                while (x < input.size && input[x][y].isDigit()) {
-                    nr += input[x][y]
+                while (x < size && this[x][y].isDigit()) {
+                    nr += this[x][y]
                     x++
                 }
                 if (nr.isNotBlank()) {
@@ -50,11 +51,11 @@ class Day03 : Day<List<String>>(2023, 3) {
         return list
     }
 
-    private fun partHasAdjacentSymbol(x: Int, y: Int, length: Int): Boolean {
+    private fun Array<CharArray>.partHasAdjacentSymbol(x: Int, y: Int, length: Int): Boolean {
         for (xx in x - 1..x + length) {
             for (yy in y - 1..y + 1) {
-                if (xx >= 0 && yy >= 0 && xx < input.size && yy < input[0].size) {
-                    if (!input[xx][yy].isDigit() && input[xx][yy] != '.') {
+                if (xx >= 0 && yy >= 0 && xx < size && yy < this[0].size) {
+                    if (!this[xx][yy].isDigit() && this[xx][yy] != '.') {
                         return true
                     }
                 }

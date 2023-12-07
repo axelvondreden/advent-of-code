@@ -3,11 +3,9 @@ package y2023
 import Day
 import kotlin.math.pow
 
-class Day04 : Day<List<String>>(2023, 4) {
+class Day04 : Day<List<Day04.Game>>(2023, 4) {
 
-    override fun List<String>.parse() = this
-
-    private val games = input.map { line ->
+    override fun List<String>.parse() = map { line ->
         val split = line.removePrefix("Card ").split(":")
         val split2 = split[1].trim().split("|")
         Game(
@@ -17,11 +15,11 @@ class Day04 : Day<List<String>>(2023, 4) {
         )
     }
 
-    override fun solve1(input: List<String>) = games.sumOf { it.score }
+    override fun solve1(input: List<Game>) = input.sumOf { it.score }
 
-    override fun solve2(input: List<String>): Int {
-        val array = IntArray(games.size) { 1 }
-        games.forEachIndexed { index, game ->
+    override fun solve2(input: List<Game>): Int {
+        val array = IntArray(input.size) { 1 }
+        input.forEachIndexed { index, game ->
             for (i in index + 1..index + game.winnerCount) {
                 array[i] += array[index]
             }
@@ -29,7 +27,7 @@ class Day04 : Day<List<String>>(2023, 4) {
         return array.sum()
     }
 
-    private data class Game(val nr: Int, val winners: List<Int>, val numbers: List<Int>) {
+    data class Game(val nr: Int, val winners: List<Int>, val numbers: List<Int>) {
         val winnerCount get() = numbers.count { it in winners }
         val score get() = 2.0.pow(winnerCount.toDouble() - 1).toInt()
     }
