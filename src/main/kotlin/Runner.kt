@@ -1,7 +1,6 @@
 import utils.IO
 import java.nio.file.Files
 import java.nio.file.Paths
-import kotlin.streams.toList
 import kotlin.system.measureNanoTime
 
 const val firstYear = 2015
@@ -77,40 +76,53 @@ fun runLatest(year: Int) {
 }
 
 fun runDay(year: Int, day: Int, skipSlow: Boolean = false) {
-    var sumTime = 0.0
-    var d: Day<List<String>>?
-    val constTime = measureNanoTime {
-        d = Class.forName("y$year.Day${day.toString().padStart(2, '0')}")?.getDeclaredConstructor()
-            ?.newInstance() as Day<Any?>
-    } / 1000000000.0
-    sumTime += constTime
+    val d = Class.forName("y$year.Day${day.toString().padStart(2, '0')}")?.getDeclaredConstructor()
+            ?.newInstance() as Day<Any>
     println("Year $year Day $day:")
 
     val samples = IO.readSamples(year, day)
-    samples?.samples?.forEachIndexed { index, sample ->
-        print("\tPart 1 Sample ${index + 1}: ")
-        runPartSample(d!!, 1, sample)
+    println("Samples Part 1:")
+    samples?.part1?.forEachIndexed { index, sample ->
+        var sumTime = 0.0
+        print("\t(${index + 1} / ${samples.part1.size}) Init: ")
+        val init = measureInit(d, sample.input.lines())
+        sumTime += init.first
+        print("\t")
+        sumTime += runPart(d, 1, init.second, sample.solution)
+        val color = if (sumTime <= 1) ANSI_GREEN else ANSI_RED
+        println("Sum: [$color${"%.6f".format(sumTime)} s$ANSI_RESET]")
     }
 
+    println("Samples Part 2:")
+    samples?.part2?.forEachIndexed { index, sample ->
+        var sumTime = 0.0
+        print("\t(${index + 1} / ${samples.part2.size}) Init: ")
+        val init = measureInit(d, sample.input.lines())
+        sumTime += init.first
+        print("\t")
+        sumTime += runPart(d, 2, init.second, sample.solution)
+        val color = if (sumTime <= 1) ANSI_GREEN else ANSI_RED
+        println("Sum: [$color${"%.6f".format(sumTime)} s$ANSI_RESET]")
+    }
+
+    var sumTime = 0.0
+    val input = IO.readStrings(d.year, d.day)
+    print("\n\tInit: ")
+    val init = measureInit(d, input)
+    sumTime += init.first
     print("\tPart 1: ")
-    if (skipSlow && year to day to 1 in skips) println("${ANSI_RED}SKIPPED$ANSI_RESET") else sumTime += runPart(d!!, 1)
-
-    samples?.samples?.forEachIndexed { index, sample ->
-        print("\tPart 2 Sample ${index + 1}: ")
-        runPartSample(d!!, 2, sample)
-    }
+    if (skipSlow && year to day to 1 in skips) println("${ANSI_RED}SKIPPED$ANSI_RESET") else sumTime += runPart(d, 1, init.second, expected[Triple(d.year, d.day, 1)])
 
     print("\tPart 2: ")
-    if (skipSlow && year to day to 2 in skips) println("${ANSI_RED}SKIPPED$ANSI_RESET") else sumTime += runPart(d!!, 2)
+    if (skipSlow && year to day to 2 in skips) println("${ANSI_RED}SKIPPED$ANSI_RESET") else sumTime += runPart(d, 2, init.second, expected[Triple(d.year, d.day, 2)])
+
     val color = if (sumTime <= 1) ANSI_GREEN else ANSI_RED
     println("Sum: [$color${"%.6f".format(sumTime)} s$ANSI_RESET]")
     println("-".repeat(40))
 }
 
-fun runPart(day: Day<List<String>>, part: Int): Double {
+fun runPart(day: Day<Any>, part: Int, input: Any, expected: String?): Double {
     var result: String
-    val expected = expected[Triple(day.year, day.day, part)]
-    val input = day.parse(IO.readStrings(day.year, day.day))
     val time = measureNanoTime { result = (if (part == 1) day.solve1(input) else day.solve2(input)).toString() } / 1000000000.0
     val isCorrect = !expected.isNullOrEmpty() && expected == result
     if (isCorrect) correct++ else incorrect++
@@ -120,16 +132,12 @@ fun runPart(day: Day<List<String>>, part: Int): Double {
     return time
 }
 
-fun runPartSample(day: Day<List<String>>, part: Int, sample: Sample): Double {
-    var result: String
-    val expected = if (part == 1) sample.solution.part1 else sample.solution.part2
-    val input = day.parse(sample.input.split('\n'))
-    val time = measureNanoTime { result = (if (part == 1) day.solve1(input) else day.solve2(input)).toString() } / 1000000000.0
-    val isCorrect = expected.isNotEmpty() && expected == result
-    print((if (isCorrect) "$ANSI_GREEN✔$ANSI_RESET " else "$ANSI_RED⚠$ANSI_RESET ") + result)
+fun measureInit(day: Day<Any>, input: List<String>): Pair<Double, Any> {
+    var parsed: Any
+    val time = measureNanoTime { with(day) { parsed = input.parse() } } / 1000000000.0
     val color = if (time <= 1) ANSI_GREEN else ANSI_RED
     println(" [$color${"%.6f".format(time)} s$ANSI_RESET] ")
-    return time
+    return time to parsed
 }
 
 fun parseExpected() = getExpectedLines().associate { line ->

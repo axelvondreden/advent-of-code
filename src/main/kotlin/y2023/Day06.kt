@@ -2,18 +2,18 @@ package y2023
 
 import Day
 
-class Day06 : Day<List<String>>(2023, 6) {
+class Day06 : Day<List<List<Long>>>(2023, 6) {
+
+    private lateinit var times: List<Long>
+    private lateinit var highscores: List<Long>
 
     override fun List<String>.parse() = map { line ->
         line.split(":")[1].trim().split(Regex("\\s+")).map { it.toLong() }
     }
 
-    private val times = input[0]
-    private val highscores = input[1]
+    override fun solve1(input: List<List<Long>>) = times.indices.map { times[it].countWins(highscores[it]) }.reduce { acc, i -> acc * i }
 
-    override fun solve1(input: List<String>) = times.indices.map { times[it].countWins(highscores[it]) }.reduce { acc, i -> acc * i }
-
-    override fun solve2(input: List<String>): Int {
+    override fun solve2(input: List<List<Long>>): Int {
         val singleTime = times.joinToString("").toLong()
         val singleHighscore = highscores.joinToString("").toLong()
         return singleTime.countWins(singleHighscore)

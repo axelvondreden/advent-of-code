@@ -2,10 +2,10 @@ package utils
 
 import Samples
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths
-import kotlin.streams.toList
 
 object IO {
 
@@ -29,6 +29,10 @@ object IO {
 
     fun readSamples(year: Int, day: Int): Samples? {
         val text = readSamplesRaw(year, day)
-        return Gson().fromJson(text, Samples::class.java)
+        return try {
+            Gson().fromJson(text, Samples::class.java)
+        } catch (e: JsonSyntaxException) {
+            null
+        }
     }
 }

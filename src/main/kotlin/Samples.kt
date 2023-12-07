@@ -1,5 +1,3 @@
-data class Samples(val samples: List<Sample>)
+data class Samples(val part1: List<Sample>, val part2: List<Sample>)
 
-data class Sample(val input: String, val solution: Solution)
-
-data class Solution(val part1: String, val part2: String)
+data class Sample(val input: String, val solution: String)

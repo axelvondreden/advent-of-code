@@ -2,21 +2,19 @@ package y2023
 
 import Day
 
-class Day07 : Day<List<String>>(2023, 7) {
+class Day07 : Day<List<Day07.Game>>(2023, 7) {
 
-    override fun List<String>.parse() = this
-
-    private val games = input.map { line ->
+    override fun List<String>.parse() = map { line ->
         val s = line.split(" ")
         val cards = s[0].map { it.toCard() }
         Game(cards, s[1].toLong())
     }
 
-    override fun solve1(input: List<String>) = games.sorted().withIndex().sumOf { (it.index + 1) * it.value.bet }
+    override fun solve1(input: List<Game>) = input.sorted().withIndex().sumOf { (it.index + 1) * it.value.bet }
 
-    override fun solve2(input: List<String>) = 0
+    override fun solve2(input: List<Game>) = 0
 
-    private data class Game(val cards: List<Card>, val bet: Long) : Comparable<Game> {
+    data class Game(val cards: List<Card>, val bet: Long) : Comparable<Game> {
 
         private val cardCounts = cards.groupBy { it.value }.mapValues { it.value.size }
 
@@ -56,7 +54,7 @@ class Day07 : Day<List<String>>(2023, 7) {
         }
     }
 
-    private data class Card(val value: Int)
+    data class Card(val value: Int)
 
     private fun Char.toCard() = Card(
         when (this) {
