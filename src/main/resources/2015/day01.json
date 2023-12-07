@@ -1,52 +1,50 @@
 {
-  "samples": {
-    "part1": [
-      {
-        "input": "(())",
-        "solution": "0"
-      },
-      {
-        "input": "()()",
-        "solution": "0"
-      },
-      {
-        "input": "(((",
-        "solution": "3"
-      },
-      {
-        "input": "(()(()(",
-        "solution": "3"
-      },
-      {
-        "input": "))(((((",
-        "solution": "3"
-      },
-      {
-        "input": "())",
-        "solution": "-1"
-      },
-      {
-        "input": "))(",
-        "solution": "-1"
-      },
-      {
-        "input": ")))",
-        "solution": "-3"
-      },
-      {
-        "input": ")())())",
-        "solution": "-3"
-      }
-    ],
-    "part2": [
-      {
-        "input": ")",
-        "solution": "1"
-      },
-      {
-        "input": "()())",
-        "solution": "5"
-      }
-    ]
-  }
+  "part1": [
+    {
+      "input": "(())",
+      "solution": "0"
+    },
+    {
+      "input": "()()",
+      "solution": "0"
+    },
+    {
+      "input": "(((",
+      "solution": "3"
+    },
+    {
+      "input": "(()(()(",
+      "solution": "3"
+    },
+    {
+      "input": "))(((((",
+      "solution": "3"
+    },
+    {
+      "input": "())",
+      "solution": "-1"
+    },
+    {
+      "input": "))(",
+      "solution": "-1"
+    },
+    {
+      "input": ")))",
+      "solution": "-3"
+    },
+    {
+      "input": ")())())",
+      "solution": "-3"
+    }
+  ],
+  "part2": [
+    {
+      "input": ")",
+      "solution": "1"
+    },
+    {
+      "input": "()())",
+      "solution": "5"
+    }
+  ]
 }
