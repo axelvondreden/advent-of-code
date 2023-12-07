@@ -3,7 +3,7 @@ package y2022
 import Day
 import kotlin.math.max
 
-class Day08 : Day<Any?>(2022, 8) {
+class Day08 : Day<List<String>>(2022, 8) {
 
     override val input = readStrings().map { line -> line.map { it.digitToInt() }.toIntArray() }.toTypedArray()
 

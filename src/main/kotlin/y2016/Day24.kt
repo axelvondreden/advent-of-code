@@ -7,7 +7,7 @@ import utils.toPathfindingMap
 import kotlin.math.min
 
 
-class Day24 : Day<Any?>(2016, 24) {
+class Day24 : Day<List<String>>(2016, 24) {
 
     override val input = readCharMatrix()
 

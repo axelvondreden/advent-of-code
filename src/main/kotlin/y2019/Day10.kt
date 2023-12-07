@@ -6,7 +6,7 @@ import utils.gcd
 import kotlin.math.abs
 import kotlin.math.atan2
 
-class Day10 : Day<Any?>(2019, 10) {
+class Day10 : Day<List<String>>(2019, 10) {
 
     override val input = readCharMatrix()
 

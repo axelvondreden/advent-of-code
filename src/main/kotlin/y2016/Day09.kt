@@ -2,13 +2,13 @@ package y2016
 
 import Day
 
-class Day09 : Day<Any?>(2016, 9) {
+class Day09 : Day<String>(2016, 9) {
 
-    override val input = readString()
+    override fun List<String>.parse() = first()
 
-    override fun solve1(input: List<String>) = input.decodeCount()
+    override fun solve1(input: String) = input.decodeCount()
 
-    override fun solve2(input: List<String>) = input.decodeCountRec()
+    override fun solve2(input: String) = input.decodeCountRec()
 
     private fun String.decodeCount(): Long {
         var count = 0L

@@ -4,7 +4,7 @@ import Day
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class Day04 : Day<Any?>(2018, 4) {
+class Day04 : Day<List<String>>(2018, 4) {
 
     override val input = readStrings().sorted().parseGuards()
 

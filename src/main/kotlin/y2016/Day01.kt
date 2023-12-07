@@ -4,9 +4,9 @@ import Day
 import utils.Point
 import kotlin.math.abs
 
-class Day01 : Day<Any?>(2016, 1) {
+class Day01 : Day<List<String>>(2016, 1) {
 
-    override val input = readString().split(", ")
+    override fun List<String>.parse() = first().split(", ")
 
     override fun solve1(input: List<String>): Int {
         var x = 0

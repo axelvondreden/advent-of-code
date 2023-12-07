@@ -4,7 +4,7 @@ import Day
 import utils.Point
 import utils.sumByLong
 
-class Day17 : Day<Any?>(2019, 17) {
+class Day17 : Day<List<String>>(2019, 17) {
 
     override val input = readLongArray()
 

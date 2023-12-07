@@ -3,7 +3,7 @@ package y2017
 import Day
 import utils.Point
 
-class Day19 : Day<Any?>(2017, 19) {
+class Day19 : Day<List<String>>(2017, 19) {
 
     override val input = readCharMatrix()
 

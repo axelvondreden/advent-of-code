@@ -2,7 +2,7 @@ package y2023
 
 import Day
 
-class Day17 : Day<Any?>(2023, 17) {
+class Day17 : Day<List<String>>(2023, 17) {
 
     override val input = readStrings()
 

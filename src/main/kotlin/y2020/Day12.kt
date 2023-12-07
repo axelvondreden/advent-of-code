@@ -4,7 +4,7 @@ import Day
 import utils.Point
 import kotlin.math.abs
 
-class Day12 : Day<Any?>(2020, 12) {
+class Day12 : Day<List<String>>(2020, 12) {
 
     override val input = readStrings()
 

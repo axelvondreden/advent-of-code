@@ -4,7 +4,7 @@ import Day
 import utils.Point
 import kotlin.math.abs
 
-class Day09 : Day<Any?>(2022, 9) {
+class Day09 : Day<List<String>>(2022, 9) {
 
     override val input = readStrings().map { line -> line.split(" ").let { it[0] to it[1].toInt() } }
 

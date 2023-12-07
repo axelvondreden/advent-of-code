@@ -4,7 +4,7 @@ import Day
 import pathfinding.Pathfinder
 import utils.toPathfindingMap
 
-class Day20 : Day<Any?>(2019, 20) {
+class Day20 : Day<List<String>>(2019, 20) {
 
     override val input = readCharMatrix()
 

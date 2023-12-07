@@ -3,17 +3,17 @@ package y2015
 import Day
 import kotlin.math.max
 
-class Day22 : Day<Any?>(2015, 22) {
+class Day22 : Day<Pair<Int, Int>>(2015, 22) {
 
-    override val input = with(readStrings().map { it.split(": ")[1].toInt() }) { get(0) to get(1) }
+    override fun List<String>.parse() = with(map { it.split(": ")[1].toInt() }) { get(0) to get(1)}
 
-    override fun solve1(input: List<String>): Int {
+    override fun solve1(input: Pair<Int, Int>): Int {
         val v = intArrayOf(999999)
         getMinSpellCost(Wizard(), Boss(input.first, input.second), v, 0, false)
         return v[0] - 20
     }
 
-    override fun solve2(input: List<String>): Int {
+    override fun solve2(input: Pair<Int, Int>): Int {
         val v = intArrayOf(999999)
         getMinSpellCost(Wizard(), Boss(input.first, input.second), v, 0, true)
         return v[0]

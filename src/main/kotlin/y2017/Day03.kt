@@ -6,7 +6,7 @@ import utils.Point
 import utils.sqrt
 import kotlin.math.max
 
-class Day03 : Day<Any?>(2017, 3) {
+class Day03 : Day<List<String>>(2017, 3) {
 
     override val input = readString().toInt()
 

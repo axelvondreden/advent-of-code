@@ -4,7 +4,7 @@ import Day
 import utils.Point
 import utils.toMapString
 
-class Day13 : Day<Any?>(2021, 13) {
+class Day13 : Day<List<String>>(2021, 13) {
 
     override val input = readStrings()
     private val dots = input.takeWhile { it.isNotBlank() }.map { Point(it) }.toSet()

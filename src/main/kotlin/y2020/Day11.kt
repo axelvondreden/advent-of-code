@@ -3,7 +3,7 @@ package y2020
 import Day
 import utils.deepEquals
 
-class Day11 : Day<Any?>(2020, 11) {
+class Day11 : Day<List<String>>(2020, 11) {
 
     override val input = readCharMatrix()
 

@@ -3,7 +3,7 @@ package y2018
 import Day
 import utils.Point
 
-class Day03 : Day<Any?>(2018, 3) {
+class Day03 : Day<List<String>>(2018, 3) {
 
     override val input = readStrings().parseClaims()
 

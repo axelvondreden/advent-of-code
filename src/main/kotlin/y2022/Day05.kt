@@ -3,7 +3,7 @@ package y2022
 import Day
 import java.util.*
 
-class Day05 : Day<Any?>(2022, 5) {
+class Day05 : Day<List<String>>(2022, 5) {
 
     override val input = readStrings()
     private val stackLines = input.takeWhile { it.isNotEmpty() }

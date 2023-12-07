@@ -4,7 +4,7 @@ import Day
 import kotlin.math.abs
 
 
-class Day22 : Day<Any?>(2016, 22) {
+class Day22 : Day<List<String>>(2016, 22) {
 
     override val input = readStrings().drop(2).map {
         val split = it.split(Regex("\\s+"))

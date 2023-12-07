@@ -5,7 +5,7 @@ import utils.stepSum
 import kotlin.math.max
 import kotlin.math.min
 
-class Day07 : Day<Any?>(2021, 7) {
+class Day07 : Day<List<String>>(2021, 7) {
 
     override val input = readString().split(",").map { it.toInt() }
 

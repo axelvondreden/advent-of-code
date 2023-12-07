@@ -3,7 +3,7 @@ package y2017
 import Day
 import kotlin.math.absoluteValue
 
-class Day07 : Day<Any?>(2017, 7) {
+class Day07 : Day<List<String>>(2017, 7) {
 
     override val input = readStrings().toMainProgram()
 

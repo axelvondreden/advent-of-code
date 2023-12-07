@@ -2,25 +2,28 @@ package y2016
 
 import Day
 
-class Day10 : Day<Any?>(2016, 10) {
+class Day10 : Day<List<String>>(2016, 10) {
 
-    override val input = readStrings()
+    override fun List<String>.parse() = this
 
-    private val outputs = parseOutputs()
-
-    private val bots = parseBots()
-
-    init {
-        linkBots()
-        insertValues()
+    override fun solve1(input: List<String>): Int {
+        val outputs = parseOutputs(input)
+        val bots = parseBots(input)
+        linkBots(input, bots, outputs)
+        insertValues(input, bots)
+        return part1BotNr!!
     }
 
-    override fun solve1(input: List<String>) = part1BotNr!!
-
-    override fun solve2(input: List<String>) = outputs.first { it.nr == 0 }.values.first() *
+    override fun solve2(input: List<String>): Int {
+        val outputs = parseOutputs(input)
+        val bots = parseBots(input)
+        linkBots(input, bots, outputs)
+        insertValues(input, bots)
+        return outputs.first { it.nr == 0 }.values.first() *
             outputs.first { it.nr == 1 }.values.first() * outputs.first { it.nr == 2 }.values.first()
+    }
 
-    private fun parseOutputs(): Set<Output> {
+    private fun parseOutputs(input: List<String>): Set<Output> {
         val outputs = mutableSetOf<Output>()
         input.filter { it.contains("to output") }.forEach { line ->
             val split = line.split("output")
@@ -32,7 +35,7 @@ class Day10 : Day<Any?>(2016, 10) {
         return outputs
     }
 
-    private fun parseBots(): Set<Bot> {
+    private fun parseBots(input: List<String>): Set<Bot> {
         val bots = mutableSetOf<Bot>()
         input.filter { it.contains("bot") }.forEach { line ->
             val split = line.split("bot")
@@ -44,7 +47,7 @@ class Day10 : Day<Any?>(2016, 10) {
         return bots
     }
 
-    private fun linkBots() {
+    private fun linkBots(input: List<String>, bots: Set<Bot>, outputs: Set<Output>) {
         input.filter { it.startsWith("bot") }.forEach { line ->
             val split = line.split(" ")
             val sourceNr = split[1].toInt()
@@ -56,7 +59,7 @@ class Day10 : Day<Any?>(2016, 10) {
         }
     }
 
-    private fun insertValues() {
+    private fun insertValues(input: List<String>, bots: Set<Bot>) {
         input.filter { it.startsWith("value") }.forEach { line ->
             val split = line.split(" ")
             val value = split[1].toInt()

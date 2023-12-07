@@ -4,7 +4,7 @@ import Day
 import utils.copy
 import kotlin.math.pow
 
-class Day24 : Day<Any?>(2019, 24) {
+class Day24 : Day<List<String>>(2019, 24) {
 
     override val input = readCharMatrix()
 

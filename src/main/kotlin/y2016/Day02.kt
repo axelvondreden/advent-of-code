@@ -2,15 +2,15 @@ package y2016
 
 import Day
 
-class Day02 : Day<Any?>(2016, 2) {
+class Day02 : Day<List<String>>(2016, 2) {
 
-    override val input = readStrings()
+    override fun List<String>.parse() = this
 
     override fun solve1(input: List<String>): String {
         var code = ""
-        input.forEach { input ->
+        input.forEach { inp ->
             var nr = 5
-            input.forEach { c ->
+            inp.forEach { c ->
                 nr = when (c) {
                     'U' -> if (nr > 3) nr - 3 else nr
                     'D' -> if (nr < 7) nr + 3 else nr
@@ -26,9 +26,9 @@ class Day02 : Day<Any?>(2016, 2) {
 
     override fun solve2(input: List<String>): String {
         var code = ""
-        input.forEach { input ->
+        input.forEach { inp ->
             var nr = 5
-            input.forEach { c ->
+            inp.forEach { c ->
                 nr = when (c) {
                     'U' -> {
                         when (nr) {

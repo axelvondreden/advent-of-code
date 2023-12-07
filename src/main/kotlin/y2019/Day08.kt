@@ -2,7 +2,7 @@ package y2019
 
 import Day
 
-class Day08 : Day<Any?>(2019, 8) {
+class Day08 : Day<List<String>>(2019, 8) {
 
     override val input = readString().map { it.toString().toInt() }.chunked(25 * 6)
 

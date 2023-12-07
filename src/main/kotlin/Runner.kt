@@ -78,7 +78,7 @@ fun runLatest(year: Int) {
 
 fun runDay(year: Int, day: Int, skipSlow: Boolean = false) {
     var sumTime = 0.0
-    var d: Day<Any?>?
+    var d: Day<List<String>>?
     val constTime = measureNanoTime {
         d = Class.forName("y$year.Day${day.toString().padStart(2, '0')}")?.getDeclaredConstructor()
             ?.newInstance() as Day<Any?>
@@ -107,7 +107,7 @@ fun runDay(year: Int, day: Int, skipSlow: Boolean = false) {
     println("-".repeat(40))
 }
 
-fun runPart(day: Day<Any?>, part: Int): Double {
+fun runPart(day: Day<List<String>>, part: Int): Double {
     var result: String
     val expected = expected[Triple(day.year, day.day, part)]
     val input = day.parse(IO.readStrings(day.year, day.day))
@@ -120,7 +120,7 @@ fun runPart(day: Day<Any?>, part: Int): Double {
     return time
 }
 
-fun runPartSample(day: Day<Any?>, part: Int, sample: Sample): Double {
+fun runPartSample(day: Day<List<String>>, part: Int, sample: Sample): Double {
     var result: String
     val expected = if (part == 1) sample.solution.part1 else sample.solution.part2
     val input = day.parse(sample.input.split('\n'))

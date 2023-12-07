@@ -4,7 +4,7 @@ import Day
 import kotlin.math.absoluteValue
 
 
-class Day24 : Day<Any?>(2020, 24) {
+class Day24 : Day<List<String>>(2020, 24) {
 
     override val input = readStrings().toPaths()
 

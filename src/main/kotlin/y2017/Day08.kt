@@ -3,7 +3,7 @@ package y2017
 import Day
 import kotlin.math.max
 
-class Day08 : Day<Any?>(2017, 8) {
+class Day08 : Day<List<String>>(2017, 8) {
 
     override val input = readStrings().map {
         val split = it.split(" ")

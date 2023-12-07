@@ -3,7 +3,7 @@ package y2017
 import Day
 import java.math.BigInteger
 
-class Day14 : Day<Any?>(2017, 14) {
+class Day14 : Day<List<String>>(2017, 14) {
 
     override val input = readString().toBinaryStrings()
 

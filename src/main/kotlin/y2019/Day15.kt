@@ -5,7 +5,7 @@ import java.util.*
 import kotlin.Comparator
 import kotlin.math.abs
 
-class Day15 : Day<Any?>(2019, 15) {
+class Day15 : Day<List<String>>(2019, 15) {
 
     override val input = IntCodeComputer(readLongArray())
 

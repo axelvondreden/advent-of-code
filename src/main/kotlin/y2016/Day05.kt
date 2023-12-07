@@ -3,11 +3,11 @@ package y2016
 import Day
 import utils.md5
 
-class Day05 : Day<Any?>(2016, 5) {
+class Day05 : Day<String>(2016, 5) {
 
-    override val input = readString()
+    override fun List<String>.parse() = first()
 
-    override fun solve1(input: List<String>): String {
+    override fun solve1(input: String): String {
         var password = ""
         var i = 0
         while (password.length < 8) {
@@ -18,7 +18,7 @@ class Day05 : Day<Any?>(2016, 5) {
         return password
     }
 
-    override fun solve2(input: List<String>): String {
+    override fun solve2(input: String): String {
         val password = CharArray(8) { ' ' }
         var i = 0
         while (password.contains(' ')) {

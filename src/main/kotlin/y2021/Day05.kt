@@ -5,7 +5,7 @@ import utils.Line
 import utils.Point
 import kotlin.math.max
 
-class Day05 : Day<Any?>(2021, 5) {
+class Day05 : Day<List<String>>(2021, 5) {
 
     override val input = readStrings().map { with(it.split(" -> ")) { Line(Point(this[0]), Point(this[1])) } }
 

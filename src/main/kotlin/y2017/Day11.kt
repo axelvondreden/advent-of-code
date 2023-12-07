@@ -3,7 +3,7 @@ package y2017
 import Day
 import kotlin.math.absoluteValue
 
-class Day11 : Day<Any?>(2017, 11) {
+class Day11 : Day<List<String>>(2017, 11) {
 
     override val input = readString().split(",")
 

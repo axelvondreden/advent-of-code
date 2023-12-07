@@ -4,7 +4,7 @@ import Day
 import java.math.BigInteger
 import kotlin.math.abs
 
-class Day22 : Day<Any?>(2019, 22) {
+class Day22 : Day<List<String>>(2019, 22) {
 
     override val input = readStrings()
 

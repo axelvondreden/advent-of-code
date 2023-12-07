@@ -4,7 +4,7 @@ import Day
 import utils.print
 import kotlin.math.min
 
-class Day15 : Day<Any?>(2021, 15) {
+class Day15 : Day<List<String>>(2021, 15) {
 
     override val input = readCharMatrix().map { chars -> chars.map { it.digitToInt() }.toIntArray() }.toTypedArray()
 

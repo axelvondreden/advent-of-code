@@ -3,7 +3,7 @@ package y2016
 import Day
 import kotlin.math.abs
 
-class Day11 : Day<Any?>(2016, 11) {
+class Day11 : Day<List<String>>(2016, 11) {
 
     override val input = readStrings()
 

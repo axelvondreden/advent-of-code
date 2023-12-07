@@ -5,7 +5,7 @@ import utils.Dir
 import utils.Point
 import utils.Turn
 
-class Day13 : Day<Any?>(2018, 13) {
+class Day13 : Day<List<String>>(2018, 13) {
 
     override val input = readCharMatrix()
 

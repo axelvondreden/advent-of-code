@@ -3,7 +3,7 @@ package y2017
 import Day
 import utils.Point3D
 
-class Day20 : Day<Any?>(2017, 20) {
+class Day20 : Day<List<String>>(2017, 20) {
 
     override val input = readStrings().parseParticles()
 

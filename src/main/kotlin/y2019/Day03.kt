@@ -4,7 +4,7 @@ import Day
 import kotlin.math.max
 import kotlin.math.min
 
-class Day03 : Day<Any?>(2019, 3) {
+class Day03 : Day<List<String>>(2019, 3) {
 
     override val input = readStrings()
 

@@ -2,7 +2,7 @@ package y2022
 
 import Day
 
-class Day04 : Day<Any?>(2022, 4) {
+class Day04 : Day<List<String>>(2022, 4) {
 
     override val input = readStrings().map { line ->
         line.split(",").map { area -> area.split("-").let { it[0].toInt()..it[1].toInt() } }

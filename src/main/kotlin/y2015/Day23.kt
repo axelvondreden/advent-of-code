@@ -2,9 +2,9 @@ package y2015
 
 import Day
 
-class Day23 : Day<Any?>(2015, 23) {
+class Day23 : Day<List<String>>(2015, 23) {
 
-    override val input = readStrings().map { it.replace(",", "") }
+    override fun List<String>.parse() = map { it.replace(",", "") }
 
     var index = 0
 
@@ -12,7 +12,7 @@ class Day23 : Day<Any?>(2015, 23) {
         index = 0
         val register = mutableMapOf("a" to 0L, "b" to 0L)
         while (index in input.indices) {
-            register.run()
+            register.run(input)
         }
         return register["b"]!!
     }
@@ -21,12 +21,12 @@ class Day23 : Day<Any?>(2015, 23) {
         index = 0
         val register = mutableMapOf("a" to 1L, "b" to 0L)
         while (index in input.indices) {
-            register.run()
+            register.run(input)
         }
         return register["b"]!!
     }
 
-    private fun MutableMap<String, Long>.run() {
+    private fun MutableMap<String, Long>.run(input: List<String>) {
         val inst = input[index].split(" ")
         when (inst[0]) {
             "hlf" -> {

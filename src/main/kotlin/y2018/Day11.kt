@@ -4,7 +4,7 @@ import Day
 import utils.Point
 import utils.Point3D
 
-class Day11 : Day<Any?>(2018, 11) {
+class Day11 : Day<List<String>>(2018, 11) {
 
     override val input = readString().toInt()
     private val cache = mutableMapOf<String, Int>()

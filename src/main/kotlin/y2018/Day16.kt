@@ -2,7 +2,7 @@ package y2018
 
 import Day
 
-class Day16 : Day<Any?>(2018, 16) {
+class Day16 : Day<List<String>>(2018, 16) {
 
     override val input = readStrings().filter { it.isNotBlank() }
 

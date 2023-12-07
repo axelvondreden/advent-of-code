@@ -3,7 +3,7 @@ package y2023
 import Day
 import kotlin.math.pow
 
-class Day04 : Day<Any?>(2023, 4) {
+class Day04 : Day<List<String>>(2023, 4) {
 
     override val input = readStrings()
 

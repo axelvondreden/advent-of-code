@@ -3,7 +3,7 @@ package y2019
 import Day
 import kotlin.math.absoluteValue
 
-class Day12 : Day<Any?>(2019, 12) {
+class Day12 : Day<List<String>>(2019, 12) {
 
     override val input = readStrings().map { it.drop(1).dropLast(1).split(", ") }
 

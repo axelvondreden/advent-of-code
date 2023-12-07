@@ -5,7 +5,7 @@ import utils.Point
 import utils.md5
 
 
-class Day17 : Day<Any?>(2016, 17) {
+class Day17 : Day<List<String>>(2016, 17) {
 
     override val input = readString()
 

@@ -2,13 +2,13 @@ package y2015
 
 import Day
 
-class Day25 : Day<Any?>(2015, 25) {
+class Day25 : Day<Pair<Int, Int>>(2015, 25) {
 
-    override val input = with(readString().split("at row ")[1].split(" ")) {
+    override fun List<String>.parse() = with(this[0].split("at row ")[1].split(" ")) {
         get(0).dropLast(1).toInt() to get(2).dropLast(1).toInt()
     }
 
-    override fun solve1(input: List<String>): Long {
+    override fun solve1(input: Pair<Int, Int>): Long {
         var current = 20151125L
         (1..7000).forEach { i ->
             var y = i
@@ -23,5 +23,5 @@ class Day25 : Day<Any?>(2015, 25) {
         return 0
     }
 
-    override fun solve2(input: List<String>) = 0
+    override fun solve2(input: Pair<Int, Int>) = 0
 }

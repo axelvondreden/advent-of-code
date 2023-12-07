@@ -4,7 +4,7 @@ import Day
 import utils.Point
 import utils.product
 
-class Day09 : Day<Any?>(2021, 9) {
+class Day09 : Day<List<String>>(2021, 9) {
 
     override val input = readCharMatrix().map { row -> row.map { it.toString().toInt() } }
 

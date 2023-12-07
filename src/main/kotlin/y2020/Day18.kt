@@ -3,7 +3,7 @@ package y2020
 import Day
 
 
-class Day18 : Day<Any?>(2020, 18) {
+class Day18 : Day<List<String>>(2020, 18) {
 
     override val input = readStrings().map { it.replace(" ", "") }
 

@@ -2,7 +2,7 @@ package y2022
 
 import Day
 
-class Day07 : Day<Any?>(2022, 7) {
+class Day07 : Day<List<String>>(2022, 7) {
 
     override val input = readStrings()
     private val rootDir: Directory = Directory("/", null)

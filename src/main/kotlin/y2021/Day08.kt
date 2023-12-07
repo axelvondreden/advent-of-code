@@ -2,7 +2,7 @@ package y2021
 
 import Day
 
-class Day08 : Day<Any?>(2021, 8) {
+class Day08 : Day<List<String>>(2021, 8) {
 
     override val input = readStrings().map { line ->
         InputLine(line.split(" ").filterNot { it == "|" }.map { it.toSet() })

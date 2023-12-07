@@ -2,7 +2,7 @@ package y2018
 
 import Day
 
-class Day08 : Day<Any?>(2018, 8) {
+class Day08 : Day<List<String>>(2018, 8) {
 
     override val input = readString().split(" ").map { it.toInt() }.iterator().toNode()
 

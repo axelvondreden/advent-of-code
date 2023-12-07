@@ -5,7 +5,7 @@ import utils.Point
 import utils.sqrt
 
 
-class Day20 : Day<Any?>(2020, 20) {
+class Day20 : Day<List<String>>(2020, 20) {
 
     override val input = readStrings().joinToString("|").toTiles()
     private val img = createImage()

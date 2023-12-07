@@ -2,7 +2,7 @@ package y2023
 
 import Day
 
-class Day06 : Day<Any?>(2023, 6) {
+class Day06 : Day<List<String>>(2023, 6) {
 
     override val input = readStrings().map { line ->
         line.split(":")[1].trim().split(Regex("\\s+")).map { it.toLong() }

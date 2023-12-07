@@ -5,7 +5,7 @@ import pathfinding.Pathfinder
 import utils.toPathfindingMap
 import kotlin.math.abs
 
-class Day13 : Day<Any?>(2016, 13) {
+class Day13 : Day<List<String>>(2016, 13) {
 
     override val input = readString().toInt()
 
