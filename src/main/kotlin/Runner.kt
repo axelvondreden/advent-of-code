@@ -52,8 +52,8 @@ fun main(args: Array<String>) {
         "-i" -> runDay(year = args[1].drop(1).toInt(), day = args[2].drop(3).toInt(), skipSlow = false, runSamples = true)
         else -> return
     }
-    println("Correct: $correct $ANSI_GREEN✔$ANSI_RESET")
-    println("Incorrect: $incorrect $ANSI_RED⚠$ANSI_RESET")
+    println("Correct: $correct ${g("✔")}")
+    println("Incorrect: $incorrect ${r("⚠")}")
 }
 
 fun run(year: Int) {
@@ -73,7 +73,7 @@ fun runDay(year: Int, day: Int, skipSlow: Boolean = false, runSamples: Boolean) 
         val samples = IO.readSamples(year, day)
         print("Samples Part 1:")
         if (samples?.part1.isNullOrEmpty()) {
-            println(" [NO DATA]")
+            println(" [${r("NO DATA")}]")
         } else {
             println()
         }
@@ -87,7 +87,7 @@ fun runDay(year: Int, day: Int, skipSlow: Boolean = false, runSamples: Boolean) 
 
         print("Samples Part 2:")
         if (samples?.part2.isNullOrEmpty()) {
-            println(" [NO DATA]")
+            println(" [${r("NO DATA")}]")
         } else {
             println()
         }
@@ -102,7 +102,7 @@ fun runDay(year: Int, day: Int, skipSlow: Boolean = false, runSamples: Boolean) 
     var sumTime = 0.0
     val input = IO.readStrings(d.year, d.day)
     if (input.isEmpty()) {
-        println("Real Input: [NO DATA]")
+        println("Real Input: [${r("NO DATA")}]")
     } else {
         println("Real Input: ")
         print("\tInit[")
@@ -111,7 +111,7 @@ fun runDay(year: Int, day: Int, skipSlow: Boolean = false, runSamples: Boolean) 
         sumTime += init.first
         print("\tPart 1[")
         if (skipSlow && year to day to 1 in skips) {
-            println("${ANSI_RED}SKIPPED$ANSI_RESET]")
+            println("${r("SKIPPED")}]")
         } else {
             val result = runPart(d, 1, init.second, expected[Triple(d.year, d.day, 1)])
             println("${result.first.coloredTime()}]: ${result.second}")
@@ -120,7 +120,7 @@ fun runDay(year: Int, day: Int, skipSlow: Boolean = false, runSamples: Boolean) 
 
         print("\tPart 2[")
         if (skipSlow && year to day to 2 in skips) {
-            println("${ANSI_RED}SKIPPED$ANSI_RESET]")
+            println("${r("SKIPPED")}]")
         } else {
             val result = runPart(d, 2, init.second, expected[Triple(d.year, d.day, 2)])
             println("${result.first.coloredTime()}]: ${result.second}")
@@ -132,8 +132,6 @@ fun runDay(year: Int, day: Int, skipSlow: Boolean = false, runSamples: Boolean) 
     println("-".repeat(80))
 }
 
-private fun Double.color() = if (this <= 1) ANSI_GREEN else ANSI_RED
-
 fun runPart(day: Day<Any>, part: Int, input: Any, expected: String?): Pair<Double, String> {
     var result: String
     val time =
@@ -141,11 +139,9 @@ fun runPart(day: Day<Any>, part: Int, input: Any, expected: String?): Pair<Doubl
     val isCorrect = !expected.isNullOrEmpty() && expected == result
     if (isCorrect) correct++ else incorrect++
     val resultString =
-        result + (if (isCorrect) "\t${ANSI_GREEN}SUCCESS$ANSI_RESET" else "\t${ANSI_RED}FAILED$ANSI_RESET")
+        result + (if (isCorrect) "\t${g("SUCCESS")}" else "\t${r("FAILED")}")
     return time to resultString
 }
-
-private fun Double.coloredTime() = "${color()}${"%.6f".format(this)}s$ANSI_RESET"
 
 fun measureInit(day: Day<Any>, input: List<String>): Pair<Double, Any> {
     var parsed: Any
@@ -167,3 +163,8 @@ fun getExpectedLines(): List<String> {
 private fun getDayInstance(year: Int, day: Int) =
     Class.forName("y$year.Day${day.toString().padStart(2, '0')}")?.getDeclaredConstructor()
         ?.newInstance() as Day<Any>
+
+private fun g(text: String) = "$ANSI_GREEN$text$ANSI_RESET"
+private fun r(text: String) = "$ANSI_RED$text$ANSI_RESET"
+private fun Double.color() = if (this <= 1) ANSI_GREEN else ANSI_RED
+private fun Double.coloredTime() = "${color()}${"%.6f".format(this)}s$ANSI_RESET"

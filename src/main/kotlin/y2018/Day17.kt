@@ -2,6 +2,7 @@ package y2018
 
 import Day
 import utils.Point
+import utils.print
 
 class Day17 : Day<List<Day17.Vein>>(2018, 17) {
 
@@ -21,6 +22,7 @@ class Day17 : Day<List<Day17.Vein>>(2018, 17) {
 
     override fun solve1(input: List<Vein>): Any {
         val resultScanRange = input.minOf { it.y.first }..input.maxOf { it.y.last }
+        val map = input.toMap()
         return 0
     }
 
@@ -28,5 +30,19 @@ class Day17 : Day<List<Day17.Vein>>(2018, 17) {
         return 0
     }
 
-    data class Vein(val x: IntRange, val y: IntRange)
+    data class Vein(val x: IntRange, val y: IntRange) {
+        fun contains(x: Int, y: Int) = x in this.x && y in this.y
+    }
+
+    private fun List<Vein>.toMap(): Array<CharArray> {
+        val maxY = maxOf { it.y.last }
+        val maxX = maxOf { it.x.last }
+        return Array(maxX + 1) { x ->
+            CharArray(maxY + 1) { y ->
+                if (any { it.contains(x, y) }) {
+                    '#'
+                } else '.'
+            }
+        }
+    }
 }
