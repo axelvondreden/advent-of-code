@@ -1,27 +1,6 @@
 {
   "part1": [
-    {
-      "input": "turn on 0,0 through 999,999",
-      "solution": "1000000"
-    },
-    {
-      "input": "toggle 0,0 through 999,0",
-      "solution": "1000"
-    },
-    {
-      "input": "turn on 0,0 through 999,999\nturn off 499,499 through 500,500",
-      "solution": "999996"
-    }
-
   ],
   "part2": [
-    {
-      "input": "turn on 0,0 through 0,0",
-      "solution": "1"
-    },
-    {
-      "input": "toggle 0,0 through 999,999",
-      "solution": "2000000"
-    }
   ]
 }

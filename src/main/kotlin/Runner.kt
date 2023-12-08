@@ -71,7 +71,12 @@ fun runDay(year: Int, day: Int, skipSlow: Boolean = false, runSamples: Boolean) 
 
     if (runSamples) {
         val samples = IO.readSamples(year, day)
-        println("Samples Part 1:")
+        print("Samples Part 1:")
+        if (samples?.part1.isNullOrEmpty()) {
+            println(" [NO DATA]")
+        } else {
+            println()
+        }
         samples?.part1?.forEachIndexed { index, sample ->
             print("\t(${index + 1} / ${samples.part1.size}) Init[")
             val init = measureInit(d, sample.input.lines())
@@ -80,7 +85,12 @@ fun runDay(year: Int, day: Int, skipSlow: Boolean = false, runSamples: Boolean) 
             println("${result.first.coloredTime()}]: ${result.second}")
         }
 
-        println("Samples Part 2:")
+        print("Samples Part 2:")
+        if (samples?.part2.isNullOrEmpty()) {
+            println(" [NO DATA]")
+        } else {
+            println()
+        }
         samples?.part2?.forEachIndexed { index, sample ->
             print("\t(${index + 1} / ${samples.part2.size}) Init[")
             val init = measureInit(d, sample.input.lines())
@@ -91,30 +101,34 @@ fun runDay(year: Int, day: Int, skipSlow: Boolean = false, runSamples: Boolean) 
     }
     var sumTime = 0.0
     val input = IO.readStrings(d.year, d.day)
-    println("Real Input: ")
-    print("\tInit[")
-    val init = measureInit(d, input)
-    println("${init.first.coloredTime()}]")
-    sumTime += init.first
-    print("\tPart 1[")
-    if (skipSlow && year to day to 1 in skips) {
-        println("${ANSI_RED}SKIPPED$ANSI_RESET]")
+    if (input.isEmpty()) {
+        println("Real Input: [NO DATA]")
     } else {
-        val result = runPart(d, 1, init.second, expected[Triple(d.year, d.day, 1)])
-        println("${result.first.coloredTime()}]: ${result.second}")
-        sumTime += result.first
-    }
+        println("Real Input: ")
+        print("\tInit[")
+        val init = measureInit(d, input)
+        println("${init.first.coloredTime()}]")
+        sumTime += init.first
+        print("\tPart 1[")
+        if (skipSlow && year to day to 1 in skips) {
+            println("${ANSI_RED}SKIPPED$ANSI_RESET]")
+        } else {
+            val result = runPart(d, 1, init.second, expected[Triple(d.year, d.day, 1)])
+            println("${result.first.coloredTime()}]: ${result.second}")
+            sumTime += result.first
+        }
 
-    print("\tPart 2[")
-    if (skipSlow && year to day to 2 in skips) {
-        println("${ANSI_RED}SKIPPED$ANSI_RESET]")
-    } else {
-        val result = runPart(d, 2, init.second, expected[Triple(d.year, d.day, 2)])
-        println("${result.first.coloredTime()}]: ${result.second}")
-        sumTime += result.first
-    }
+        print("\tPart 2[")
+        if (skipSlow && year to day to 2 in skips) {
+            println("${ANSI_RED}SKIPPED$ANSI_RESET]")
+        } else {
+            val result = runPart(d, 2, init.second, expected[Triple(d.year, d.day, 2)])
+            println("${result.first.coloredTime()}]: ${result.second}")
+            sumTime += result.first
+        }
 
-    println("\tTotal [${sumTime.coloredTime()}]")
+        println("\tTotal [${sumTime.coloredTime()}]")
+    }
     println("-".repeat(80))
 }
 

@@ -1,8 +1,14 @@
 {
   "part1": [
-
+    {
+      "input": "     |          \n     |  +--+    \n     A  |  C    \n F---|----E|--+ \n     |  |  |  D \n     +B-+  +--+ ",
+      "solution": "ABCDEF"
+    }
   ],
   "part2": [
-
+    {
+      "input": "     |          \n     |  +--+    \n     A  |  C    \n F---|----E|--+ \n     |  |  |  D \n     +B-+  +--+ ",
+      "solution": "38"
+    }
   ]
 }
