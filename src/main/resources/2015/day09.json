@@ -1,22 +1,14 @@
 {
   "part1": [
     {
-      "input": "(())",
-      "solution": "0"
-    },
-    {
-      "input": "()()",
-      "solution": "0"
+      "input": "London to Dublin = 464\nLondon to Belfast = 518\nDublin to Belfast = 141",
+      "solution": "605"
     }
   ],
   "part2": [
     {
-      "input": ")",
-      "solution": "1"
-    },
-    {
-      "input": "()())",
-      "solution": "5"
+      "input": "London to Dublin = 464\nLondon to Belfast = 518\nDublin to Belfast = 141",
+      "solution": "982"
     }
   ]
 }

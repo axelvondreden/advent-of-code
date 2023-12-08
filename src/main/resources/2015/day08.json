@@ -1,22 +1,14 @@
 {
   "part1": [
     {
-      "input": "(())",
-      "solution": "0"
-    },
-    {
-      "input": "()()",
-      "solution": "0"
+      "input": "\"\"\n\"abc\"\n\"aaa\\\"aaa\"\n\"\\x27\"",
+      "solution": "12"
     }
   ],
   "part2": [
     {
-      "input": ")",
-      "solution": "1"
-    },
-    {
-      "input": "()())",
-      "solution": "5"
+      "input": "\"\"\n\"abc\"\n\"aaa\\\"aaa\"\n\"\\x27\"",
+      "solution": "19"
     }
   ]
 }
