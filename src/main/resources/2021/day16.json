@@ -1,0 +1,14 @@
+{
+  "part1": [
+    {
+      "input": "32T3K 765\nT55J5 684\nKK677 28\nKTJJT 220\nQQQJA 483",
+      "solution": "6440"
+    }
+  ],
+  "part2": [
+    {
+      "input": "32T3K 765\nT55J5 684\nKK677 28\nKTJJT 220\nQQQJA 483",
+      "solution": "5905"
+    }
+  ]
+}
