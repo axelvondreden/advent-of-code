@@ -1,0 +1,30 @@
+{
+  "part1": [
+    {
+      "input": "ihgpwlah",
+      "solution": "DDRRRD"
+    },
+    {
+      "input": "kglvqrro",
+      "solution": "DDUDRLRRUDRD"
+    },
+    {
+      "input": "ulqzkmiv",
+      "solution": "DRURDRUDDLLDLUURRDULRLDUUDDDRR"
+    }
+  ],
+  "part2": [
+    {
+      "input": "ihgpwlah",
+      "solution": "370"
+    },
+    {
+      "input": "kglvqrro",
+      "solution": "492"
+    },
+    {
+      "input": "ulqzkmiv",
+      "solution": "830"
+    }
+  ]
+}

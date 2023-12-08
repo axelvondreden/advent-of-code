@@ -1,0 +1,13 @@
+{
+  "part1": [
+    {
+      "input": "abcdef",
+      "solution": "609043"
+    },
+    {
+      "input": "pqrstuv",
+      "solution": "1048970"
+    }
+  ],
+  "part2": []
+}

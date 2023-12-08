@@ -1,0 +1,14 @@
+{
+  "part1": [
+    {
+      "input": "eedadn\ndrvtee\neandsr\nraavrd\natevrs\ntsrnev\nsdttsa\nrasrtv\nnssdts\nntnada\nsvetve\ntesnvt\nvntsnd\nvrdear\ndvrsen\nenarar",
+      "solution": "easter"
+    }
+  ],
+  "part2": [
+    {
+      "input": "eedadn\ndrvtee\neandsr\nraavrd\natevrs\ntsrnev\nsdttsa\nrasrtv\nnssdts\nntnada\nsvetve\ntesnvt\nvntsnd\nvrdear\ndvrsen\nenarar",
+      "solution": "advent"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "part1": [
+    {
+      "input": "2x3x4",
+      "solution": "58"
+    },
+    {
+      "input": "1x1x10",
+      "solution": "43"
+    }
+  ],
+  "part2": [
+    {
+      "input": "2x3x4",
+      "solution": "34"
+    },
+    {
+      "input": "1x1x10",
+      "solution": "14"
+    }
+  ]
+}

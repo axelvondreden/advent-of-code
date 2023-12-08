@@ -1,0 +1,22 @@
+{
+  "part1": [
+    {
+      "input": "R2, L3",
+      "solution": "5"
+    },
+    {
+      "input": "R2, R2, R2",
+      "solution": "2"
+    },
+    {
+      "input": "R5, L5, R5, R3",
+      "solution": "12"
+    }
+  ],
+  "part2": [
+    {
+      "input": "R8, R4, R4, R8",
+      "solution": "4"
+    }
+  ]
+}

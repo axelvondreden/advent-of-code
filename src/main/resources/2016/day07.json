@@ -1,0 +1,38 @@
+{
+  "part1": [
+    {
+      "input": "abba[mnop]qrst",
+      "solution": "1"
+    },
+    {
+      "input": "abcd[bddb]xyyx",
+      "solution": "0"
+    },
+    {
+      "input": "aaaa[qwer]tyui",
+      "solution": "0"
+    },
+    {
+      "input": "ioxxoj[asdfgh]zxcvbn",
+      "solution": "1"
+    }
+  ],
+  "part2": [
+    {
+      "input": "aba[bab]xyz",
+      "solution": "1"
+    },
+    {
+      "input": "xyx[xyx]xyx",
+      "solution": "0"
+    },
+    {
+      "input": "aaa[kek]eke",
+      "solution": "1"
+    },
+    {
+      "input": "zazbz[bzb]cdb",
+      "solution": "1"
+    }
+  ]
+}
