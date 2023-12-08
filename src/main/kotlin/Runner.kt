@@ -1,3 +1,4 @@
+import com.github.ajalt.mordant.terminal.Terminal
 import utils.IO
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -36,24 +37,63 @@ var correct = 0
 var incorrect = 0
 
 /**
- * default: run all
+ * [no args]: ask for input in terminal
  * -y $year: run all for year
  * -d $year $day: run single day
  * -i $FilePackage$ $FileNameWithoutAllExtensions$: IntelliJ program args for running current File
  */
 fun main(args: Array<String>) {
+    val terminal = Terminal()
     if (args.isEmpty()) {
-        years.forEach { run(it) }
-        return
+        val choice = terminal.prompt(
+            prompt = "What to run",
+            default = "Everything",
+            choices = listOf("Everything").plus(years.map { it.toString() })
+        )
+        if (choice == "Everything") {
+            years.forEach {
+                run(it)
+            }
+        } else if (choice?.toIntOrNull() in years) {
+            val year = choice!!.toInt()
+            val dayChoice = terminal.prompt(
+                prompt = "Year $year",
+                default = "Everything",
+                choices = listOf("Everything").plus((1..25).map { it.toString() })
+            )
+            if (dayChoice == "Everything") {
+                run(year)
+            } else if (dayChoice?.toIntOrNull() in 1..25) {
+                val day = dayChoice!!.toInt()
+                val sampleChoice = terminal.prompt(
+                    prompt = "Include Samples",
+                    default = "Yes",
+                    choices = listOf("Yes", "No")
+                )
+                runDay(
+                    year = year,
+                    day = day,
+                    skipSlow = false,
+                    runSamples = sampleChoice == "Yes"
+                )
+            }
+        }
+    } else {
+        when (args[0]) {
+            "-y" -> args.getOrNull(1)?.toIntOrNull()?.takeIf { it in years }?.let { run(it) }
+            "-d" -> runDay(year = args[1].toInt(), day = args[2].toInt(), skipSlow = false, runSamples = true)
+            "-i" -> runDay(
+                year = args[1].drop(1).toInt(),
+                day = args[2].drop(3).toInt(),
+                skipSlow = false,
+                runSamples = true
+            )
+
+            else -> return
+        }
+        println("Correct: $correct ${g("✔")}")
+        println("Incorrect: $incorrect ${r("⚠")}")
     }
-    when (args[0]) {
-        "-y" -> args.getOrNull(1)?.toIntOrNull()?.takeIf { it in years }?.let { run(it) }
-        "-d" -> runDay(year = args[1].toInt(), day = args[2].toInt(), skipSlow = false, runSamples = true)
-        "-i" -> runDay(year = args[1].drop(1).toInt(), day = args[2].drop(3).toInt(), skipSlow = false, runSamples = true)
-        else -> return
-    }
-    println("Correct: $correct ${g("✔")}")
-    println("Incorrect: $incorrect ${r("⚠")}")
 }
 
 fun run(year: Int) {
