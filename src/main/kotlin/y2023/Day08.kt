@@ -1,6 +1,9 @@
 package y2023
 
 import Day
+import java.math.BigInteger
+
+
 
 class Day08 : Day<Day08.RLMap>(2023, 8) {
 
@@ -16,7 +19,7 @@ class Day08 : Day<Day08.RLMap>(2023, 8) {
 
     override fun solve1(input: RLMap) = input.countSteps()
 
-    override fun solve2(input: RLMap) = input.countGhostSteps()
+    override fun solve2(input: RLMap): BigInteger = input.countGhostSteps()
 
     data class RLMap(val path: String, val nodes: Map<String, Pair<String, String>>) {
 
@@ -35,21 +38,18 @@ class Day08 : Day<Day08.RLMap>(2023, 8) {
             return count
         }
 
-        fun countGhostSteps(): Int {
-            val current = nodes.keys.filter { it.endsWith('A') }.toTypedArray()
-            var count = 0
-            while (!current.all { it.endsWith('Z') }) {
-                val nextDir = path[count % path.length]
-                current.indices.forEach {
-                    current[it] = if (nextDir == 'R') {
-                        nodes[current[it]]!!.second
-                    } else {
-                        nodes[current[it]]!!.first
-                    }
+        fun countGhostSteps(): BigInteger = nodes.keys.filter { it.endsWith('A') }.stream()
+            .map { node ->
+                var current = node
+                var steps = 0
+                while (!current.endsWith('Z')) {
+                    current = if ((path[steps++ % path.length] == 'L')) nodes[current]!!.first else nodes[current]!!.second
                 }
-                count++
+                BigInteger.valueOf(steps.toLong())
+            }.reduce(BigInteger.ONE) { a, b ->
+                val gcd = a.gcd(b)
+                val absProduct = a.multiply(b).abs()
+                absProduct.divide(gcd)
             }
-            return count
-        }
     }
 }
