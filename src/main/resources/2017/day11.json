@@ -1,15 +1,22 @@
 {
   "part1": [
     {
-      "input": "abcdefgh",
-      "solution": "abcdffaa"
+      "input": "ne,ne,ne",
+      "solution": "3"
     },
     {
-      "input": "ghijklmn",
-      "solution": "ghjaabcc"
+      "input": "ne,ne,sw,sw",
+      "solution": "0"
+    },
+    {
+      "input": "ne,ne,s,s",
+      "solution": "2"
+    },
+    {
+      "input": "se,sw,se,sw,sw",
+      "solution": "3"
     }
   ],
   "part2": [
-
   ]
 }

@@ -1,14 +1,8 @@
 {
   "part1": [
-    {
-      "input": "\"\"\n\"abc\"\n\"aaa\\\"aaa\"\n\"\\x27\"",
-      "solution": "12"
-    }
+
   ],
   "part2": [
-    {
-      "input": "\"\"\n\"abc\"\n\"aaa\\\"aaa\"\n\"\\x27\"",
-      "solution": "19"
-    }
+
   ]
 }

@@ -1,8 +1,14 @@
 {
   "part1": [
-
+    {
+      "input": "flqrgnkx",
+      "solution": "8108"
+    }
   ],
   "part2": [
-
+    {
+      "input": "flqrgnkx",
+      "solution": "1242"
+    }
   ]
 }

@@ -1,14 +1,10 @@
 {
   "part1": [
     {
-      "input": "London to Dublin = 464\nLondon to Belfast = 518\nDublin to Belfast = 141",
-      "solution": "605"
+      "input": "{},{{{}}},{{},{}},{{{},{},{{}}}},{<a>,<a>,<a>,<a>},{{<ab>},{<ab>},{<ab>},{<ab>}},{{<!!>},{<!!>},{<!!>},{<!!>}},{{<a!>},{<a!>},{<a!>},{<ab>}}",
+      "solution": "50"
     }
   ],
   "part2": [
-    {
-      "input": "London to Dublin = 464\nLondon to Belfast = 518\nDublin to Belfast = 141",
-      "solution": "982"
-    }
   ]
 }

@@ -1,42 +1,14 @@
 {
   "part1": [
     {
-      "input": "ugknbfddgicrmopn",
-      "solution": "1"
-    },
-    {
-      "input": "aaa",
-      "solution": "1"
-    },
-    {
-      "input": "jchzalrnumimnmhp",
-      "solution": "0"
-    },
-    {
-      "input": "haegwjzuvuyypxyu",
-      "solution": "0"
-    },
-    {
-      "input": "dvszwmarrgswjxmb",
-      "solution": "0"
+      "input": "0\n3\n0\n1\n-3",
+      "solution": "5"
     }
   ],
   "part2": [
     {
-      "input": "qjhvhtzxzqqjkmpb",
-      "solution": "1"
-    },
-    {
-      "input": "xxyxx",
-      "solution": "1"
-    },
-    {
-      "input": "uurcxstgmygtbstg",
-      "solution": "0"
-    },
-    {
-      "input": "ieodomkazucvgmuy",
-      "solution": "0"
+      "input": "0\n3\n0\n1\n-3",
+      "solution": "10"
     }
   ]
 }

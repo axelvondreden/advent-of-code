@@ -1,6 +1,7 @@
 import utils.IO
 import java.nio.file.Files
 import java.nio.file.Paths
+import kotlin.streams.toList
 import kotlin.system.measureNanoTime
 
 val years = 2015..2023
