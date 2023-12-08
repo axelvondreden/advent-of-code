@@ -4,8 +4,7 @@ import java.nio.file.Paths
 import kotlin.streams.toList
 import kotlin.system.measureNanoTime
 
-const val firstYear = 2015
-const val lastYear = 2023
+val years = 2015..2023
 
 val skips = setOf(
     2015 to 22 to 1,
@@ -38,19 +37,19 @@ var incorrect = 0
 
 /**
  * default: run all
- * -y $year: run for year
- * -d $year $day: run for day
+ * -y $year: run all for year
+ * -d $year $day: run single day
  * -i $FilePackage$ $FileNameWithoutAllExtensions$: IntelliJ program args for running current File
  */
 fun main(args: Array<String>) {
     if (args.isEmpty()) {
-        (firstYear..lastYear).forEach { run(it) }
+        years.forEach { run(it) }
         return
     }
     when (args[0]) {
-        "-y" -> args.getOrNull(1)?.toIntOrNull()?.takeIf { it in firstYear..lastYear }?.let { run(it) }
-        "-d" -> runDay(args[1].toInt(), args[2].toInt())
-        "-i" -> runDay(args[1].drop(1).toInt(), args[2].drop(3).toInt())
+        "-y" -> args.getOrNull(1)?.toIntOrNull()?.takeIf { it in years }?.let { run(it) }
+        "-d" -> runDay(year = args[1].toInt(), day = args[2].toInt(), skipSlow = false, runSamples = true)
+        "-i" -> runDay(year = args[1].drop(1).toInt(), day = args[2].drop(3).toInt(), skipSlow = false, runSamples = true)
         else -> return
     }
     println("Correct: $correct $ANSI_GREEN✔$ANSI_RESET")
@@ -60,47 +59,36 @@ fun main(args: Array<String>) {
 fun run(year: Int) {
     (1..25).forEach {
         try {
-            runDay(year, it, skipLongRunning)
+            runDay(year, it, skipLongRunning, false)
         } catch (_: ClassNotFoundException) {
         }
     }
 }
 
-fun runLatest(year: Int) {
-    (25 downTo 1).forEach {
-        try {
-            runDay(year, it, skipLongRunning)
-            return
-        } catch (_: ClassNotFoundException) {
-        }
-    }
-}
-
-@Suppress("UNCHECKED_CAST")
-fun runDay(year: Int, day: Int, skipSlow: Boolean = false) {
-    val d = Class.forName("y$year.Day${day.toString().padStart(2, '0')}")?.getDeclaredConstructor()
-            ?.newInstance() as Day<Any>
+fun runDay(year: Int, day: Int, skipSlow: Boolean = false, runSamples: Boolean) {
+    val d = getDayInstance(year, day)
     println("Year $year Day $day:")
 
-    val samples = IO.readSamples(year, day)
-    println("Samples Part 1:")
-    samples?.part1?.forEachIndexed { index, sample ->
-        print("\t(${index + 1} / ${samples.part1.size}) Init[")
-        val init = measureInit(d, sample.input.lines())
-        print("${init.first.coloredTime()}] - Solve[")
-        val result = runPart(d, 1, init.second, sample.solution)
-        println("${result.first.coloredTime()}]: ${result.second}")
-    }
+    if (runSamples) {
+        val samples = IO.readSamples(year, day)
+        println("Samples Part 1:")
+        samples?.part1?.forEachIndexed { index, sample ->
+            print("\t(${index + 1} / ${samples.part1.size}) Init[")
+            val init = measureInit(d, sample.input.lines())
+            print("${init.first.coloredTime()}] - Solve[")
+            val result = runPart(d, 1, init.second, sample.solution)
+            println("${result.first.coloredTime()}]: ${result.second}")
+        }
 
-    println("Samples Part 2:")
-    samples?.part2?.forEachIndexed { index, sample ->
-        print("\t(${index + 1} / ${samples.part2.size}) Init[")
-        val init = measureInit(d, sample.input.lines())
-        print("${init.first.coloredTime()}] - Solve[")
-        val result = runPart(d, 2, init.second, sample.solution)
-        println("${result.first.coloredTime()}]: ${result.second}")
+        println("Samples Part 2:")
+        samples?.part2?.forEachIndexed { index, sample ->
+            print("\t(${index + 1} / ${samples.part2.size}) Init[")
+            val init = measureInit(d, sample.input.lines())
+            print("${init.first.coloredTime()}] - Solve[")
+            val result = runPart(d, 2, init.second, sample.solution)
+            println("${result.first.coloredTime()}]: ${result.second}")
+        }
     }
-
     var sumTime = 0.0
     val input = IO.readStrings(d.year, d.day)
     println("Real Input: ")
@@ -134,10 +122,12 @@ private fun Double.color() = if (this <= 1) ANSI_GREEN else ANSI_RED
 
 fun runPart(day: Day<Any>, part: Int, input: Any, expected: String?): Pair<Double, String> {
     var result: String
-    val time = measureNanoTime { result = (if (part == 1) day.solve1(input) else day.solve2(input)).toString() } / 1000000000.0
+    val time =
+        measureNanoTime { result = (if (part == 1) day.solve1(input) else day.solve2(input)).toString() } / 1000000000.0
     val isCorrect = !expected.isNullOrEmpty() && expected == result
     if (isCorrect) correct++ else incorrect++
-    val resultString = result + (if (isCorrect) "\t${ANSI_GREEN}SUCCESS$ANSI_RESET" else "\t${ANSI_RED}FAILED$ANSI_RESET")
+    val resultString =
+        result + (if (isCorrect) "\t${ANSI_GREEN}SUCCESS$ANSI_RESET" else "\t${ANSI_RED}FAILED$ANSI_RESET")
     return time to resultString
 }
 
@@ -158,3 +148,8 @@ fun parseExpected() = getExpectedLines().associate { line ->
 fun getExpectedLines(): List<String> {
     Files.lines(Paths.get("src/main/resources/solutions.txt")).use { lines -> return lines.toList() }
 }
+
+@Suppress("UNCHECKED_CAST")
+private fun getDayInstance(year: Int, day: Int) =
+    Class.forName("y$year.Day${day.toString().padStart(2, '0')}")?.getDeclaredConstructor()
+        ?.newInstance() as Day<Any>
