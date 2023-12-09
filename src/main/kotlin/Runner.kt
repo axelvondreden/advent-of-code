@@ -1,8 +1,15 @@
+import com.github.ajalt.mordant.rendering.BorderType.Companion.SQUARE_DOUBLE_SECTION_SEPARATOR
+import com.github.ajalt.mordant.rendering.TextAlign
+import com.github.ajalt.mordant.rendering.TextColors.*
+import com.github.ajalt.mordant.rendering.TextColors.Companion.rgb
+import com.github.ajalt.mordant.rendering.TextStyle
+import com.github.ajalt.mordant.rendering.TextStyles
+import com.github.ajalt.mordant.table.Borders
+import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal
 import utils.IO
 import java.nio.file.Files
 import java.nio.file.Paths
-import kotlin.streams.toList
 import kotlin.system.measureNanoTime
 
 val years = 2015..2023
@@ -43,9 +50,64 @@ var incorrect = 0
  * -i $FilePackage$ $FileNameWithoutAllExtensions$: IntelliJ program args for running current File
  */
 fun main(args: Array<String>) {
-    val terminal = Terminal()
+    val t = Terminal()
+    val width = t.info.width
+    t.println("${brightBlue("Width")}: $width")
+    t.println(
+        table {
+            borderType = SQUARE_DOUBLE_SECTION_SEPARATOR
+            borderStyle = rgb("#4b25b9")
+            align = TextAlign.RIGHT
+            tableBorders = Borders.NONE
+            header {
+                style = brightRed + TextStyles.bold
+                row {
+                    cellBorders = Borders.NONE
+                    cells("", "", "", "")
+                    cell("Percent Change") {
+                        columnSpan = 2
+                        align = TextAlign.CENTER
+                    }
+                }
+                row("", "2020", "2021", "2022", "2020-21", "2021-21") { cellBorders = Borders.BOTTOM }
+            }
+            body {
+                style = green
+                column(0) {
+                    align = TextAlign.LEFT
+                    cellBorders = Borders.ALL
+                    style = brightBlue
+                }
+                column(4) {
+                    cellBorders = Borders.LEFT_BOTTOM
+                    style = brightBlue
+                }
+                column(5) {
+                    style = brightBlue
+                }
+                rowStyles(TextStyle(), TextStyles.dim.style)
+                cellBorders = Borders.TOP_BOTTOM
+                row("Average income before taxes", "$84,352", "$87,432", "$94,003", "3.7", "7.5")
+                row("Average annual expenditures", "$61,332", "$66,928", "$72,967", "9.1", "9.0")
+                row("  Food", "7,310", "8,289", "9,343", "13.4", "12.7")
+                row("  Housing", "21,417", "22,624", "24,298", "5.6", "7.4")
+                row("  Apparel and services", "1,434", "1,754", "1,945", "22.3", "10.9")
+                row("  Transportation", "9,826", "10,961", "12,295", "11.6", "12.2")
+                row("  Healthcare", "5,177", "5,452", "5,850", "5.3", "7.3")
+                row("  Entertainment", "2,909", "3,568", "3,458", "22.7", "-3.1")
+                row("  Education", "1,271", "1,226", "1,335", "-3.5", "8.9")
+            }
+            footer {
+                style(italic = true)
+                row {
+                    cells("Remaining income", "$23,020", "$20,504", "$21,036")
+                }
+            }
+            captionBottom(TextStyles.dim("via U.S. Bureau of Labor Statistics"))
+        }
+    )
     if (args.isEmpty()) {
-        val choice = terminal.prompt(
+        val choice = t.prompt(
             prompt = "What to run",
             default = "Everything",
             choices = listOf("Everything").plus(years.map { it.toString() })
@@ -56,7 +118,7 @@ fun main(args: Array<String>) {
             }
         } else if (choice?.toIntOrNull() in years) {
             val year = choice!!.toInt()
-            val dayChoice = terminal.prompt(
+            val dayChoice = t.prompt(
                 prompt = "Year $year",
                 default = "Everything",
                 choices = listOf("Everything").plus((1..25).map { it.toString() })
@@ -65,7 +127,7 @@ fun main(args: Array<String>) {
                 run(year)
             } else if (dayChoice?.toIntOrNull() in 1..25) {
                 val day = dayChoice!!.toInt()
-                val sampleChoice = terminal.prompt(
+                val sampleChoice = t.prompt(
                     prompt = "Include Samples",
                     default = "Yes",
                     choices = listOf("Yes", "No")
@@ -119,7 +181,7 @@ fun runDay(year: Int, day: Int, skipSlow: Boolean = false, runSamples: Boolean) 
         }
         samples?.part1?.forEachIndexed { index, sample ->
             print("\t(${index + 1} / ${samples.part1.size}) Init[")
-            val init = measureInit(d, sample.input.lines())
+            val init = runInit(d, sample.input.lines())
             print("${init.first.coloredTime()}] - Solve[")
             val result = runPart(d, 1, init.second, sample.solution)
             println("${result.first.coloredTime()}]: ${result.second}")
@@ -133,7 +195,7 @@ fun runDay(year: Int, day: Int, skipSlow: Boolean = false, runSamples: Boolean) 
         }
         samples?.part2?.forEachIndexed { index, sample ->
             print("\t(${index + 1} / ${samples.part2.size}) Init[")
-            val init = measureInit(d, sample.input.lines())
+            val init = runInit(d, sample.input.lines())
             print("${init.first.coloredTime()}] - Solve[")
             val result = runPart(d, 2, init.second, sample.solution)
             println("${result.first.coloredTime()}]: ${result.second}")
@@ -146,7 +208,7 @@ fun runDay(year: Int, day: Int, skipSlow: Boolean = false, runSamples: Boolean) 
     } else {
         println("Real Input: ")
         print("\tInit[")
-        val init = measureInit(d, input)
+        val init = runInit(d, input)
         println("${init.first.coloredTime()}]")
         sumTime += init.first
         print("\tPart 1[")
@@ -183,11 +245,27 @@ fun runPart(day: Day<Any>, part: Int, input: Any, expected: String?): Pair<Doubl
     return time to resultString
 }
 
-fun measureInit(day: Day<Any>, input: List<String>): Pair<Double, Any> {
+fun runInit(day: Day<Any>, input: List<String>): Pair<Double, Any> {
     var parsed: Any
     val time = measureNanoTime { with(day) { parsed = input.parse() } } / 1000000000.0
     return time to parsed
 }
+
+private data class YearResult(val days: List<DayResult>) {
+    val totalTime get() = days.sumOf { it.totalTime }
+}
+
+private data class DayResult(
+    val sampleInitTime: Double,
+    val samples: List<PartResult>,
+    val part1: PartResult,
+    val part2: PartResult,
+    val initTime: Double
+) {
+    val totalTime get() = initTime + part1.time + part2.time
+}
+
+private data class PartResult(val success: Boolean, val result: String, val time: Double)
 
 fun parseExpected() = getExpectedLines().associate { line ->
     val split = line.split(":")
