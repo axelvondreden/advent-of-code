@@ -338,7 +338,7 @@ fun parseExpected() = getExpectedLines().associate { line ->
 }
 
 fun getExpectedLines(): List<String> {
-    return IO::class.java.classLoader.getResource("solutions.txt")!!.readText().split("\r\n")
+    return IO::class.java.classLoader.getResource("solutions.txt")!!.readText().split("\r\n", "\n")
 }
 
 @Suppress("UNCHECKED_CAST")

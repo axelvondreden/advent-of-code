@@ -8,7 +8,7 @@ object IO {
 
     fun readStrings(year: Int, day: Int): List<String> {
         return try {
-            IO::class.java.classLoader.getResource("$year/day${day.toString().padStart(2, '0')}.txt")!!.readText().split("\r\n")
+            IO::class.java.classLoader.getResource("$year/day${day.toString().padStart(2, '0')}.txt")!!.readText().split("\r\n", "\n")
         } catch (e: IOException) {
             e.printStackTrace()
             emptyList()
