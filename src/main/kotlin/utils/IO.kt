@@ -2,29 +2,23 @@ package utils
 
 import Samples
 import com.google.gson.Gson
-import com.google.gson.JsonSyntaxException
 import java.io.IOException
-import java.nio.file.Files
-import java.nio.file.Paths
-import kotlin.streams.toList
 
 object IO {
 
     fun readStrings(year: Int, day: Int): List<String> {
-        try {
-            Files.lines(Paths.get("src/main/resources/$year/day${day.toString().padStart(2, '0')}.txt")).use { lines -> return lines.toList() }
+        return try {
+            IO::class.java.classLoader.getResource("$year/day${day.toString().padStart(2, '0')}.txt")!!.readText().split("\r\n")
         } catch (e: IOException) {
             e.printStackTrace()
-            return emptyList()
+            emptyList()
         }
     }
 
-    private fun readSamplesRaw(year: Int, day: Int): String {
-        try {
-            Files.lines(Paths.get("src/main/resources/$year/day${day.toString().padStart(2, '0')}.json")).use { lines -> return lines.toList().joinToString("") }
-        } catch (e: IOException) {
-            return ""
-        }
+    private fun readSamplesRaw(year: Int, day: Int) = try {
+        IO::class.java.classLoader.getResource("$year/day${day.toString().padStart(2, '0')}.json")!!.readText()
+    } catch (e: IOException) {
+        ""
     }
 
     fun readSamples(year: Int, day: Int): Samples? {

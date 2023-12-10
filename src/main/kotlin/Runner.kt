@@ -1,17 +1,19 @@
-import com.github.ajalt.mordant.rendering.BorderType.Companion.SQUARE_DOUBLE_SECTION_SEPARATOR
-import com.github.ajalt.mordant.rendering.TextAlign
+import com.github.ajalt.mordant.animation.animation
+import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.TextColors.*
-import com.github.ajalt.mordant.rendering.TextColors.Companion.rgb
-import com.github.ajalt.mordant.rendering.TextStyle
-import com.github.ajalt.mordant.rendering.TextStyles
+import com.github.ajalt.mordant.rendering.TextStyles.*
 import com.github.ajalt.mordant.table.Borders
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import utils.IO
 import java.nio.file.Files
 import java.nio.file.Paths
+import kotlin.math.max
 import kotlin.streams.toList
-import kotlin.system.measureNanoTime
 
 val years = 2015..2023
 
@@ -33,16 +35,11 @@ val skips = setOf(
     2019 to 25 to 1
 )
 
-const val ANSI_RED = "\u001B[31m"
-const val ANSI_GREEN = "\u001B[32m"
-const val ANSI_RESET = "\u001B[0m"
-
 const val skipLongRunning = true
 
 val expected = parseExpected()
 
-var correct = 0
-var incorrect = 0
+val t = Terminal(ansiLevel = AnsiLevel.TRUECOLOR)
 
 /**
  * [no args]: ask for input in terminal
@@ -51,62 +48,6 @@ var incorrect = 0
  * -i $FilePackage$ $FileNameWithoutAllExtensions$: IntelliJ program args for running current File
  */
 fun main(args: Array<String>) {
-    val t = Terminal()
-    val width = t.info.width
-    t.println("${brightBlue("Width")}: $width")
-    t.println(
-        table {
-            borderType = SQUARE_DOUBLE_SECTION_SEPARATOR
-            borderStyle = rgb("#4b25b9")
-            align = TextAlign.RIGHT
-            tableBorders = Borders.NONE
-            header {
-                style = brightRed + TextStyles.bold
-                row {
-                    cellBorders = Borders.NONE
-                    cells("", "", "", "")
-                    cell("Percent Change") {
-                        columnSpan = 2
-                        align = TextAlign.CENTER
-                    }
-                }
-                row("", "2020", "2021", "2022", "2020-21", "2021-21") { cellBorders = Borders.BOTTOM }
-            }
-            body {
-                style = green
-                column(0) {
-                    align = TextAlign.LEFT
-                    cellBorders = Borders.ALL
-                    style = brightBlue
-                }
-                column(4) {
-                    cellBorders = Borders.LEFT_BOTTOM
-                    style = brightBlue
-                }
-                column(5) {
-                    style = brightBlue
-                }
-                rowStyles(TextStyle(), TextStyles.dim.style)
-                cellBorders = Borders.TOP_BOTTOM
-                row("Average income before taxes", "$84,352", "$87,432", "$94,003", "3.7", "7.5")
-                row("Average annual expenditures", "$61,332", "$66,928", "$72,967", "9.1", "9.0")
-                row("  Food", "7,310", "8,289", "9,343", "13.4", "12.7")
-                row("  Housing", "21,417", "22,624", "24,298", "5.6", "7.4")
-                row("  Apparel and services", "1,434", "1,754", "1,945", "22.3", "10.9")
-                row("  Transportation", "9,826", "10,961", "12,295", "11.6", "12.2")
-                row("  Healthcare", "5,177", "5,452", "5,850", "5.3", "7.3")
-                row("  Entertainment", "2,909", "3,568", "3,458", "22.7", "-3.1")
-                row("  Education", "1,271", "1,226", "1,335", "-3.5", "8.9")
-            }
-            footer {
-                style(italic = true)
-                row {
-                    cells("Remaining income", "$23,020", "$20,504", "$21,036")
-                }
-            }
-            captionBottom(TextStyles.dim("via U.S. Bureau of Labor Statistics"))
-        }
-    )
     if (args.isEmpty()) {
         val choice = t.prompt(
             prompt = "What to run",
@@ -133,10 +74,9 @@ fun main(args: Array<String>) {
                     default = "Yes",
                     choices = listOf("Yes", "No")
                 )
-                runDay(
+                runDaySingle(
                     year = year,
                     day = day,
-                    skipSlow = false,
                     runSamples = sampleChoice == "Yes"
                 )
             }
@@ -144,39 +84,108 @@ fun main(args: Array<String>) {
     } else {
         when (args[0]) {
             "-y" -> args.getOrNull(1)?.toIntOrNull()?.takeIf { it in years }?.let { run(it) }
-            "-d" -> runDay(year = args[1].toInt(), day = args[2].toInt(), skipSlow = false, runSamples = true)
-            "-i" -> runDay(
+            "-d" -> runDaySingle(year = args[1].toInt(), day = args[2].toInt(), runSamples = true)
+            "-i" -> runDaySingle(
                 year = args[1].drop(1).toInt(),
                 day = args[2].drop(3).toInt(),
-                skipSlow = false,
                 runSamples = true
             )
 
             else -> return
         }
-        println("Correct: $correct ${g("✔")}")
-        println("Incorrect: $incorrect ${r("⚠")}")
     }
 }
 
 fun run(year: Int) {
     (1..25).forEach {
         try {
-            runDay(year, it, skipLongRunning, false)
+            runDaySingle(year, it, false)
         } catch (_: ClassNotFoundException) {
         }
     }
 }
 
-fun runDay(year: Int, day: Int, skipSlow: Boolean = false, runSamples: Boolean) {
-    val d = getDayInstance(year, day)
-    println("Year $year Day $day:")
+fun runDaySingle(year: Int, day: Int, runSamples: Boolean) {
+    t.print("Year: ${(black on white)(year.toString())}")
+    t.println("\tDay: ${(black on white)(day.toString())}")
 
-    if (runSamples) {
-        val samples = IO.readSamples(year, day)
+    val d = getDayInstance(year, day)
+    val samples = IO.readSamples(year, day)
+
+    val maxSampleNr = max(samples?.part1?.size ?: 0, samples?.part2?.size ?: 0)
+
+    val a = t.animation<DayState> { state ->
+        table {
+            borderType = BorderType.SQUARE_DOUBLE_SECTION_SEPARATOR
+            borderStyle = blue
+            tableBorders = Borders.ALL
+            header {
+                style = brightBlue + bold
+                row {
+                    cellBorders = Borders.ALL
+                    cell("")
+                    cell("Actual Input") {
+                        columnSpan = 3
+                        align = TextAlign.CENTER
+                    }
+                }
+                row {
+                    cell("")
+                    cells("Init Time", "Time", "Result")
+                }
+            }
+            body {
+                style = blue
+                row {
+                    cell("Part 1")
+                    cell(state.initTime) {
+                        if (state.runningInit) {
+                            style = TextStyle(italic = true, dim = true)
+                        }
+                    }
+                    cell(state.part1Time) {
+                        if (state.runningPart1) {
+                            style = TextStyle(italic = true, dim = true)
+                        }
+                    }
+                    cell(state.part1Result?.result) {
+                        if (state.part1Result?.correct == true) {
+                            style = TextStyle(bgColor = green)
+                        } else if (state.part1Result?.correct == false) {
+                            style = TextStyle(bgColor = red)
+                        }
+                    }
+                }
+                row {
+                    cell("Part 2")
+                    cell("")
+                    cell(state.part2Time) {
+                        if (state.runningPart2) {
+                            style = TextStyle(italic = true, dim = true)
+                        }
+                    }
+                    cell(state.part2Result?.result) {
+                        if (state.part2Result?.correct == true) {
+                            style = TextStyle(bgColor = green)
+                        } else if (state.part2Result?.correct == false) {
+                            style = TextStyle(bgColor = red)
+                        }
+                    }
+                }
+            }
+            /*footer {
+                row {
+                    cells("Remaining income", "$23,020", "$20,504", "$21,036")
+                }
+            }*/
+        }
+    }
+
+
+    /*if (runSamples) {
         print("Samples Part 1:")
         if (samples?.part1.isNullOrEmpty()) {
-            println(" [${r("NO DATA")}]")
+            println(" [${red("NO DATA")}]")
         } else {
             println()
         }
@@ -190,7 +199,7 @@ fun runDay(year: Int, day: Int, skipSlow: Boolean = false, runSamples: Boolean) 
 
         print("Samples Part 2:")
         if (samples?.part2.isNullOrEmpty()) {
-            println(" [${r("NO DATA")}]")
+            println(" [${red("NO DATA")}]")
         } else {
             println()
         }
@@ -201,56 +210,91 @@ fun runDay(year: Int, day: Int, skipSlow: Boolean = false, runSamples: Boolean) 
             val result = runPart(d, 2, init.second, sample.solution)
             println("${result.first.coloredTime()}]: ${result.second}")
         }
-    }
-    var sumTime = 0.0
-    val input = IO.readStrings(d.year, d.day)
-    if (input.isEmpty()) {
-        println("Real Input: [${r("NO DATA")}]")
+    }*/
+
+    val rawInput = IO.readStrings(d.year, d.day)
+    val state = DayState()
+    t.cursor.move { clearScreen() }
+    a.update(state)
+    if (rawInput.isEmpty()) {
+
     } else {
-        println("Real Input: ")
-        print("\tInit[")
-        val init = runInit(d, input)
-        println("${init.first.coloredTime()}]")
-        sumTime += init.first
-        print("\tPart 1[")
-        if (skipSlow && year to day to 1 in skips) {
-            println("${r("SKIPPED")}]")
-        } else {
-            val result = runPart(d, 1, init.second, expected[Triple(d.year, d.day, 1)])
-            println("${result.first.coloredTime()}]: ${result.second}")
-            sumTime += result.first
-        }
+        runBlocking {
+            val initStartTime = System.nanoTime()
+            state.runningInit = true
+            t.cursor.move { clearScreen() }
+            a.update(state)
+            val init = async {
+                runInit(d, rawInput)
+            }
+            launch {
+                while (init.isActive) {
+                    state.initTime = (System.nanoTime() - initStartTime) / 1000000000.0
+                    t.cursor.move { clearScreen() }
+                    a.update(state)
+                    delay(100)
+                }
+            }
+            val input = init.await()
+            state.initTime = (System.nanoTime() - initStartTime) / 1000000000.0
+            state.runningInit = false
+            t.cursor.move { clearScreen() }
+            a.update(state)
+            delay(500)
 
-        print("\tPart 2[")
-        if (skipSlow && year to day to 2 in skips) {
-            println("${r("SKIPPED")}]")
-        } else {
-            val result = runPart(d, 2, init.second, expected[Triple(d.year, d.day, 2)])
-            println("${result.first.coloredTime()}]: ${result.second}")
-            sumTime += result.first
-        }
+            val part1StartTime = System.nanoTime()
+            state.runningPart1 = true
+            t.cursor.move { clearScreen() }
+            a.update(state)
+            val part1 = async {
+                runPart(d, 1, input, expected[Triple(d.year, d.day, 1)])
+            }
+            launch {
+                while (part1.isActive) {
+                    state.part1Time = (System.nanoTime() - part1StartTime) / 1000000000.0
+                    t.cursor.move { clearScreen() }
+                    a.update(state)
+                    delay(100)
+                }
+            }
+            state.part1Result = part1.await()
+            state.part1Time = (System.nanoTime() - part1StartTime) / 1000000000.0
+            state.runningPart1 = false
+            t.cursor.move { clearScreen() }
+            a.update(state)
+            delay(500)
 
-        println("\tTotal [${sumTime.coloredTime()}]")
+            val part2StartTime = System.nanoTime()
+            state.runningPart2 = true
+            t.cursor.move { clearScreen() }
+            a.update(state)
+            val part2 = async {
+                runPart(d, 2, input, expected[Triple(d.year, d.day, 2)])
+            }
+            launch {
+                while (part2.isActive) {
+                    state.part2Time = (System.nanoTime() - part2StartTime) / 1000000000.0
+                    t.cursor.move { clearScreen() }
+                    a.update(state)
+                    delay(100)
+                }
+            }
+            state.part2Result = part2.await()
+            state.part2Time = (System.nanoTime() - part2StartTime) / 1000000000.0
+            state.runningPart2 = false
+            t.cursor.move { clearScreen() }
+            a.update(state)
+        }
     }
-    println("-".repeat(80))
 }
 
-fun runPart(day: Day<Any>, part: Int, input: Any, expected: String?): Pair<Double, String> {
-    var result: String
-    val time =
-        measureNanoTime { result = (if (part == 1) day.solve1(input) else day.solve2(input)).toString() } / 1000000000.0
+private fun runPart(day: Day<Any>, part: Int, input: Any, expected: String?): ResultState {
+    val result = (if (part == 1) day.solve1(input) else day.solve2(input)).toString()
     val isCorrect = !expected.isNullOrEmpty() && expected == result
-    if (isCorrect) correct++ else incorrect++
-    val resultString =
-        result + (if (isCorrect) "\t${g("SUCCESS")}" else "\t${r("FAILED")}")
-    return time to resultString
+    return ResultState(result, isCorrect)
 }
 
-fun runInit(day: Day<Any>, input: List<String>): Pair<Double, Any> {
-    var parsed: Any
-    val time = measureNanoTime { with(day) { parsed = input.parse() } } / 1000000000.0
-    return time to parsed
-}
+fun runInit(day: Day<Any>, input: List<String>) = with(day) { return@with input.parse() }
 
 private data class YearResult(val days: List<DayResult>) {
     val totalTime get() = days.sumOf { it.totalTime }
@@ -268,6 +312,25 @@ private data class DayResult(
 
 private data class PartResult(val success: Boolean, val result: String, val time: Double)
 
+private data class DayState(
+    var runningInit: Boolean = false,
+    var runningPart1: Boolean = false,
+    var runningPart2: Boolean = false,
+    var runningPart1Sample: Int? = null,
+    var runningPart2Sample: Int? = null,
+    var initTime: Double? = null,
+    var part1Time: Double? = null,
+    var part2Time: Double? = null,
+    val part1SampleTimes: MutableMap<Int, Double> = mutableMapOf(),
+    val part2SampleTimes: MutableMap<Int, Double> = mutableMapOf(),
+    var part1Result: ResultState? = null,
+    var part2Result: ResultState? = null,
+    val part1SampleResults: MutableMap<Int, ResultState> = mutableMapOf(),
+    val part2SampleResults: MutableMap<Int, ResultState> = mutableMapOf()
+)
+
+private data class ResultState(val result: String, val correct: Boolean)
+
 fun parseExpected() = getExpectedLines().associate { line ->
     val split = line.split(":")
     val part = split[0].split(",").map { it.toInt() }
@@ -275,7 +338,7 @@ fun parseExpected() = getExpectedLines().associate { line ->
 }
 
 fun getExpectedLines(): List<String> {
-    Files.lines(Paths.get("src/main/resources/solutions.txt")).use { lines -> return lines.toList() }
+    return IO::class.java.classLoader.getResource("solutions.txt")!!.readText().split("\r\n")
 }
 
 @Suppress("UNCHECKED_CAST")
@@ -283,7 +346,4 @@ private fun getDayInstance(year: Int, day: Int) =
     Class.forName("y$year.Day${day.toString().padStart(2, '0')}")?.getDeclaredConstructor()
         ?.newInstance() as Day<Any>
 
-private fun g(text: String) = "$ANSI_GREEN$text$ANSI_RESET"
-private fun r(text: String) = "$ANSI_RED$text$ANSI_RESET"
-private fun Double.color() = if (this <= 1) ANSI_GREEN else ANSI_RED
-private fun Double.coloredTime() = "${color()}${"%.6f".format(this)}s$ANSI_RESET"
+private fun Double.coloredTime() = if (this < 1) green("${"%.6f".format(this)}s") else red("${"%.6f".format(this)}s")
