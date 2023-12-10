@@ -2,29 +2,22 @@ import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.darkColors
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.SystemTheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import com.github.ajalt.mordant.animation.animation
-import com.github.ajalt.mordant.rendering.AnsiLevel
-import com.github.ajalt.mordant.rendering.BorderType
-import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.TextColors.*
-import com.github.ajalt.mordant.rendering.TextStyle
-import com.github.ajalt.mordant.rendering.TextStyles.bold
-import com.github.ajalt.mordant.table.Borders
-import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import utils.IO
-import kotlin.math.max
 
 val years = 2015..2023
 
@@ -106,174 +99,106 @@ fun run(year: Int) {
 }
 
 fun runDaySingle(year: Int, day: Int, runSamples: Boolean) {
-    t.print("Year: ${(black on white)(year.toString())}")
-    t.println("\tDay: ${(black on white)(day.toString())}")
+    t.println("Year ${(black on white)(year.toString())} Day ${(black on white)(day.toString())}")
 
     val d = getDayInstance(year, day)
     val samples = IO.readSamples(year, day)
 
-    val maxSampleNr = max(samples?.part1?.size ?: 0, samples?.part2?.size ?: 0)
-
-    val a = t.animation<DayState> { state ->
-        table {
-            borderType = BorderType.SQUARE_DOUBLE_SECTION_SEPARATOR
-            borderStyle = blue
-            tableBorders = Borders.ALL
-            header {
-                style = brightBlue + bold
-                row {
-                    cellBorders = Borders.ALL
-                    cell("")
-                    cell("Actual Input") {
-                        columnSpan = 3
-                        align = TextAlign.CENTER
-                    }
-                }
-                row {
-                    cell("")
-                    cells("Init Time", "Time", "Result")
-                }
-            }
-            body {
-                style = blue
-                row {
-                    cell("Part 1")
-                    cell(state.initTime) {
-                        if (state.runningInit) {
-                            style = TextStyle(italic = true, dim = true)
-                        }
-                    }
-                    cell(state.part1Time) {
-                        if (state.runningPart1) {
-                            style = TextStyle(italic = true, dim = true)
-                        }
-                    }
-                    cell(state.part1Result?.result) {
-                        if (state.part1Result?.correct == true) {
-                            style = TextStyle(bgColor = green)
-                        } else if (state.part1Result?.correct == false) {
-                            style = TextStyle(bgColor = red)
-                        }
-                    }
-                }
-                row {
-                    cell("Part 2")
-                    cell("")
-                    cell(state.part2Time) {
-                        if (state.runningPart2) {
-                            style = TextStyle(italic = true, dim = true)
-                        }
-                    }
-                    cell(state.part2Result?.result) {
-                        if (state.part2Result?.correct == true) {
-                            style = TextStyle(bgColor = green)
-                        } else if (state.part2Result?.correct == false) {
-                            style = TextStyle(bgColor = red)
-                        }
-                    }
-                }
-            }
-            /*footer {
-                row {
-                    cells("Remaining income", "$23,020", "$20,504", "$21,036")
-                }
-            }*/
-        }
-    }
-
-
-    /*if (runSamples) {
-        print("Samples Part 1:")
+    if (runSamples) {
+        t.print("Samples Part 1:")
         if (samples?.part1.isNullOrEmpty()) {
-            println(" [${red("NO DATA")}]")
+            t.println(" ${(white on brightRed)("NO DATA")}")
         } else {
-            println()
+            t.println()
         }
         samples?.part1?.forEachIndexed { index, sample ->
-            print("\t(${index + 1} / ${samples.part1.size}) Init[")
+            t.print("\t${index + 1}/${samples.part1.size}:\t")
+            val startTime = System.nanoTime()
             val init = runInit(d, sample.input.lines())
-            print("${init.first.coloredTime()}] - Solve[")
-            val result = runPart(d, 1, init.second, sample.solution)
-            println("${result.first.coloredTime()}]: ${result.second}")
+            val result = runPart(d, 1, init, sample.solution)
+            val time = (System.nanoTime() - startTime) / 1000000000.0
+            t.println("${time.coloredTime()}\tResult: ${
+                if (result.correct) (black on brightGreen)("CORRECT") else (white on brightRed)("FAILED")
+            } ${(black on white)(result.result)}")
         }
+        t.println()
 
-        print("Samples Part 2:")
+        t.print("Samples Part 2:")
         if (samples?.part2.isNullOrEmpty()) {
-            println(" [${red("NO DATA")}]")
+            t.println(" ${(white on brightRed)("NO DATA")}")
         } else {
-            println()
+            t.println()
         }
         samples?.part2?.forEachIndexed { index, sample ->
-            print("\t(${index + 1} / ${samples.part2.size}) Init[")
+            t.print("\t${index + 1}/${samples.part1.size}:\t")
+            val startTime = System.nanoTime()
             val init = runInit(d, sample.input.lines())
-            print("${init.first.coloredTime()}] - Solve[")
-            val result = runPart(d, 2, init.second, sample.solution)
-            println("${result.first.coloredTime()}]: ${result.second}")
+            val result = runPart(d, 2, init, sample.solution)
+            val time = (System.nanoTime() - startTime) / 1000000000.0
+            t.println("${time.coloredTime()}\tResult: ${
+                if (result.correct) (black on brightGreen)("CORRECT") else (white on brightRed)("FAILED")
+            } ${(black on white)(result.result)}")
         }
-    }*/
+        t.println()
+    }
 
     val rawInput = IO.readStrings(d.year, d.day)
-    val state = DayState()
-    a.update(state)
-    if (rawInput.isEmpty()) {
-
-    } else {
+    if (rawInput.isNotEmpty()) {
         runBlocking {
+            t.println("Actual Input:")
             val initStartTime = System.nanoTime()
-            state.runningInit = true
-            a.update(state)
             val init = async {
                 runInit(d, rawInput)
             }
             launch {
                 while (init.isActive) {
-                    state.initTime = (System.nanoTime() - initStartTime) / 1000000000.0
+                    /*state.initTime = (System.nanoTime() - initStartTime) / 1000000000.0
                     a.update(state)
-                    delay(100)
+                    delay(100)*/
                 }
             }
             val input = init.await()
-            state.initTime = (System.nanoTime() - initStartTime) / 1000000000.0
-            state.runningInit = false
-            a.update(state)
-            delay(500)
+            val initTime = (System.nanoTime() - initStartTime) / 1000000000.0
+            t.println("\tInit:\t${initTime.coloredTime()}")
 
             val part1StartTime = System.nanoTime()
-            state.runningPart1 = true
-            a.update(state)
             val part1 = async {
                 runPart(d, 1, input, expected[Triple(d.year, d.day, 1)])
             }
             launch {
                 while (part1.isActive) {
-                    state.part1Time = (System.nanoTime() - part1StartTime) / 1000000000.0
+                    /*state.part1Time = (System.nanoTime() - part1StartTime) / 1000000000.0
                     a.update(state)
-                    delay(100)
+                    delay(100)*/
                 }
             }
-            state.part1Result = part1.await()
-            state.part1Time = (System.nanoTime() - part1StartTime) / 1000000000.0
-            state.runningPart1 = false
-            a.update(state)
-            delay(500)
+            val part1Result = part1.await()
+            val part1Time = (System.nanoTime() - part1StartTime) / 1000000000.0
+            t.println(
+                "\tPart 1:\t${part1Time.coloredTime()}\tResult: ${
+                    if (part1Result.correct) (black on brightGreen)("CORRECT") else (white on brightRed)("FAILED")
+                } ${(black on white)(part1Result.result)}"
+            )
 
             val part2StartTime = System.nanoTime()
-            state.runningPart2 = true
-            a.update(state)
             val part2 = async {
                 runPart(d, 2, input, expected[Triple(d.year, d.day, 2)])
             }
             launch {
                 while (part2.isActive) {
-                    state.part2Time = (System.nanoTime() - part2StartTime) / 1000000000.0
+                    /*state.part2Time = (System.nanoTime() - part2StartTime) / 1000000000.0
                     a.update(state)
-                    delay(100)
+                    delay(100)*/
                 }
             }
-            state.part2Result = part2.await()
-            state.part2Time = (System.nanoTime() - part2StartTime) / 1000000000.0
-            state.runningPart2 = false
-            a.update(state)
+            val part2Result = part2.await()
+            val part2Time = (System.nanoTime() - part2StartTime) / 1000000000.0
+            t.println(
+                "\tPart 2:\t${part2Time.coloredTime()}\tResult: ${
+                    if (part2Result.correct) (black on brightGreen)("CORRECT") else (white on brightRed)("FAILED")
+                } ${(black on white)(part2Result.result)}"
+            )
+            t.println("\tTotal:\t${(initTime + part1Time + part2Time).coloredTime()}")
         }
     }
 }

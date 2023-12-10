@@ -1,11 +1,10 @@
 package y2023
 
 import Day
-import kotlin.math.abs
 
 class Day09 : Day<List<List<Long>>>(2023, 9) {
 
-    override fun List<String>.parse() = map { it.split(" ").map { it.toLong() } }
+    override fun List<String>.parse() = map { line -> line.split(" ").map { it.toLong() } }
 
     override fun solve1(input: List<List<Long>>) = input.sumOf { it.extrapolateNextValue() }
 
