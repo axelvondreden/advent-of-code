@@ -1,7 +1,21 @@
+import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.SystemTheme
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.application
 import com.github.ajalt.mordant.animation.animation
-import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.rendering.AnsiLevel
+import com.github.ajalt.mordant.rendering.BorderType
+import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.TextColors.*
-import com.github.ajalt.mordant.rendering.TextStyles.*
+import com.github.ajalt.mordant.rendering.TextStyle
+import com.github.ajalt.mordant.rendering.TextStyles.bold
 import com.github.ajalt.mordant.table.Borders
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal
@@ -10,10 +24,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import utils.IO
-import java.nio.file.Files
-import java.nio.file.Paths
 import kotlin.math.max
-import kotlin.streams.toList
 
 val years = 2015..2023
 
@@ -39,46 +50,35 @@ const val skipLongRunning = true
 
 val expected = parseExpected()
 
-val t = Terminal(ansiLevel = AnsiLevel.TRUECOLOR)
+val t = Terminal()
+
+@Composable
+@Preview
+fun App() {
+    MaterialTheme(colors = darkColors()) {
+        Column(modifier = Modifier.background(Color(0xFF121212)).fillMaxSize()) {
+            var text by remember { mutableStateOf("Hello, World!") }
+            Button(onClick = {
+                text = "Hello, Desktop!"
+            }) {
+                Text(text)
+            }
+        }
+    }
+}
+
 
 /**
- * [no args]: ask for input in terminal
+ * [no args]: run compose app
  * -y $year: run all for year
  * -d $year $day: run single day
  * -i $FilePackage$ $FileNameWithoutAllExtensions$: IntelliJ program args for running current File
  */
 fun main(args: Array<String>) {
     if (args.isEmpty()) {
-        val choice = t.prompt(
-            prompt = "What to run",
-            default = "Everything",
-            choices = listOf("Everything").plus(years.map { it.toString() })
-        )
-        if (choice == "Everything") {
-            years.forEach {
-                run(it)
-            }
-        } else if (choice?.toIntOrNull() in years) {
-            val year = choice!!.toInt()
-            val dayChoice = t.prompt(
-                prompt = "Year $year",
-                default = "Everything",
-                choices = listOf("Everything").plus((1..25).map { it.toString() })
-            )
-            if (dayChoice == "Everything") {
-                run(year)
-            } else if (dayChoice?.toIntOrNull() in 1..25) {
-                val day = dayChoice!!.toInt()
-                val sampleChoice = t.prompt(
-                    prompt = "Include Samples",
-                    default = "Yes",
-                    choices = listOf("Yes", "No")
-                )
-                runDaySingle(
-                    year = year,
-                    day = day,
-                    runSamples = sampleChoice == "Yes"
-                )
+        application {
+            Window(onCloseRequest = ::exitApplication) {
+                App()
             }
         }
     } else {
@@ -214,7 +214,6 @@ fun runDaySingle(year: Int, day: Int, runSamples: Boolean) {
 
     val rawInput = IO.readStrings(d.year, d.day)
     val state = DayState()
-    t.cursor.move { clearScreen() }
     a.update(state)
     if (rawInput.isEmpty()) {
 
@@ -222,7 +221,6 @@ fun runDaySingle(year: Int, day: Int, runSamples: Boolean) {
         runBlocking {
             val initStartTime = System.nanoTime()
             state.runningInit = true
-            t.cursor.move { clearScreen() }
             a.update(state)
             val init = async {
                 runInit(d, rawInput)
@@ -230,7 +228,6 @@ fun runDaySingle(year: Int, day: Int, runSamples: Boolean) {
             launch {
                 while (init.isActive) {
                     state.initTime = (System.nanoTime() - initStartTime) / 1000000000.0
-                    t.cursor.move { clearScreen() }
                     a.update(state)
                     delay(100)
                 }
@@ -238,13 +235,11 @@ fun runDaySingle(year: Int, day: Int, runSamples: Boolean) {
             val input = init.await()
             state.initTime = (System.nanoTime() - initStartTime) / 1000000000.0
             state.runningInit = false
-            t.cursor.move { clearScreen() }
             a.update(state)
             delay(500)
 
             val part1StartTime = System.nanoTime()
             state.runningPart1 = true
-            t.cursor.move { clearScreen() }
             a.update(state)
             val part1 = async {
                 runPart(d, 1, input, expected[Triple(d.year, d.day, 1)])
@@ -252,7 +247,6 @@ fun runDaySingle(year: Int, day: Int, runSamples: Boolean) {
             launch {
                 while (part1.isActive) {
                     state.part1Time = (System.nanoTime() - part1StartTime) / 1000000000.0
-                    t.cursor.move { clearScreen() }
                     a.update(state)
                     delay(100)
                 }
@@ -260,13 +254,11 @@ fun runDaySingle(year: Int, day: Int, runSamples: Boolean) {
             state.part1Result = part1.await()
             state.part1Time = (System.nanoTime() - part1StartTime) / 1000000000.0
             state.runningPart1 = false
-            t.cursor.move { clearScreen() }
             a.update(state)
             delay(500)
 
             val part2StartTime = System.nanoTime()
             state.runningPart2 = true
-            t.cursor.move { clearScreen() }
             a.update(state)
             val part2 = async {
                 runPart(d, 2, input, expected[Triple(d.year, d.day, 2)])
@@ -274,7 +266,6 @@ fun runDaySingle(year: Int, day: Int, runSamples: Boolean) {
             launch {
                 while (part2.isActive) {
                     state.part2Time = (System.nanoTime() - part2StartTime) / 1000000000.0
-                    t.cursor.move { clearScreen() }
                     a.update(state)
                     delay(100)
                 }
@@ -282,7 +273,6 @@ fun runDaySingle(year: Int, day: Int, runSamples: Boolean) {
             state.part2Result = part2.await()
             state.part2Time = (System.nanoTime() - part2StartTime) / 1000000000.0
             state.runningPart2 = false
-            t.cursor.move { clearScreen() }
             a.update(state)
         }
     }
