@@ -40,20 +40,20 @@ fun Array<CharArray>.find(c: Char): Pathfinder.Node? {
     return null
 }
 
-fun Array<CharArray>.findPoints(c: Char): List<Point> {
+fun Array<CharArray>.findPoints(vararg c: Char): List<Point> {
     val list = mutableListOf<Point>()
     for (y in get(0).indices) {
         for (x in indices) {
-            if (get(x)[y] == c) list += Point(x, y)
+            if (get(x)[y] in c) list += Point(x, y)
         }
     }
     return list
 }
 
-fun Array<CharArray>.print() {
+fun Array<CharArray>.print(xRange: IntRange = this.indices, yRange: IntRange = this[0].indices) {
     println()
-    for (y in get(0).indices) {
-        for (x in indices) {
+    for (y in yRange) {
+        for (x in xRange) {
             print(get(x)[y])
         }
         println()
@@ -94,4 +94,10 @@ fun Array<BooleanArray>.toMapString(): String {
 fun Array<CharArray>.deepEquals(other: Array<CharArray>): Boolean {
     indices.forEach { y -> get(0).indices.forEach { x -> if (get(y)[x] != other[y][x]) return false } }
     return true
+}
+
+operator fun Array<CharArray>.get(point: Point) = this[point.x.toInt()][point.y.toInt()]
+
+operator fun Array<CharArray>.set(point: Point, value: Char) {
+    this[point.x.toInt()][point.y.toInt()] = value
 }

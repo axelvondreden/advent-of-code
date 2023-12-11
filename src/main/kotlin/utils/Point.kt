@@ -14,6 +14,15 @@ data class Point(val x: Long, val y: Long) {
     fun distance(step: Point) = (max(x, step.x) - min(x, step.x)) + (max(y, step.y) - min(y, step.y))
 
     operator fun plus(p: Point) = Point(this.x + p.x, this.y + p.y)
+
+    operator fun plus(pair: Pair<Int, Int>) = Point(x + pair.first, y + pair.second)
+
+    operator fun minus(pair: Pair<Int, Int>) = Point(x - pair.first, y - pair.second)
+
+    infix fun left(steps: Int) = Point(x - steps, y)
+    infix fun right(steps: Int) = Point(x + steps, y)
+    infix fun up(steps: Int) = Point(x, y - steps)
+    infix fun down(steps: Int) = Point(x, y + steps)
 }
 
 data class Line(val p1: Point, val p2: Point) {

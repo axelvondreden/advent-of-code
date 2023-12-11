@@ -175,7 +175,7 @@ fun runDaySingle(year: Int, day: Int, runSamples: Boolean) {
             val part1Time = (System.nanoTime() - part1StartTime) / 1000000000.0
             t.println(
                 "\tPart 1:\t${part1Time.coloredTime()}\tResult: ${
-                    if (part1Result.correct) (black on brightGreen)("CORRECT") else (black on brightRed)("FAILED")
+                    if (part1Result.correct) (black on brightGreen)("CORRECT") else (black on brightRed)("FAILED ")
                 } ${(black on white)(part1Result.result)}"
             )
 
