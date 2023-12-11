@@ -1,7 +1,7 @@
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -9,6 +9,8 @@ import androidx.compose.material.darkColors
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import com.github.ajalt.mordant.rendering.TextColors.*
@@ -49,11 +51,28 @@ val t = Terminal()
 fun App() {
     MaterialTheme(colors = darkColors()) {
         Column(modifier = Modifier.background(Color(0xFF121212)).fillMaxSize()) {
-            var text by remember { mutableStateOf("Hello, World!") }
-            Button(onClick = {
-                text = "Hello, Desktop!"
-            }) {
-                Text(text)
+            var selectedYear by remember { mutableStateOf<Int?>(null) }
+            var selectedDay by remember { mutableStateOf<Int?>(null) }
+            Row(modifier = Modifier.fillMaxWidth().border(1.dp, Color.White), horizontalArrangement = Arrangement.SpaceEvenly) {
+                if (selectedYear == null) {
+                    Button(onClick = {}) {
+                        Text("All")
+                    }
+                    years.forEach { year ->
+                        Button(onClick = { selectedYear = year }) {
+                            Text(year.toString())
+                        }
+                    }
+                } else {
+                    Button(onClick = { selectedYear = null }) {
+                        Text("Back")
+                    }
+                    (1..25).forEach { day ->
+                        Button(onClick = { selectedDay = day }) {
+                            Text(day.toString())
+                        }
+                    }
+                }
             }
         }
     }
@@ -76,8 +95,8 @@ fun main(args: Array<String>) {
     } else {
         when (args[0]) {
             "-y" -> args.getOrNull(1)?.toIntOrNull()?.takeIf { it in years }?.let { run(it) }
-            "-d" -> runDaySingle(year = args[1].toInt(), day = args[2].toInt(), runSamples = true)
-            "-i" -> runDaySingle(
+            "-d" -> runDayCmdSingle(year = args[1].toInt(), day = args[2].toInt(), runSamples = true)
+            "-i" -> runDayCmdSingle(
                 year = args[1].drop(1).toInt(),
                 day = args[2].drop(3).toInt(),
                 runSamples = true
@@ -91,13 +110,13 @@ fun main(args: Array<String>) {
 fun run(year: Int) {
     (1..25).forEach {
         try {
-            runDaySingle(year, it, false)
+            runDayCmdSingle(year, it, false)
         } catch (_: ClassNotFoundException) {
         }
     }
 }
 
-fun runDaySingle(year: Int, day: Int, runSamples: Boolean) {
+fun runDayCmdSingle(year: Int, day: Int, runSamples: Boolean) {
     t.println("Year ${(black on white)(year.toString())} Day ${(black on white)(day.toString())}")
 
     val d = getDayInstance(year, day)
