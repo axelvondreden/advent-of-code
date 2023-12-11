@@ -1,5 +1,6 @@
 package utils
 
+import pathfinding.Pathfinder
 import kotlin.math.abs
 import kotlin.math.absoluteValue
 import kotlin.math.max
@@ -12,6 +13,8 @@ data class Point(val x: Long, val y: Long) {
     constructor(x: Int, y: Int) : this(x.toLong(), y.toLong())
 
     fun distance(step: Point) = (max(x, step.x) - min(x, step.x)) + (max(y, step.y) - min(y, step.y))
+
+    fun asNode() = Pathfinder.Node(x.toInt(), y.toInt())
 
     operator fun plus(p: Point) = Point(this.x + p.x, this.y + p.y)
 

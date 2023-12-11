@@ -111,12 +111,14 @@ class Pathfinder(
     private fun manhattan(node0: INode, node1: INode) =
         max(node0.x, node1.x) - min(node0.x, node1.x) + (max(node0.y, node1.y) - min(node0.y, node1.y)).toDouble()
 
-    fun printMap(path: List<INode>) {
+    fun printMap(path: List<INode>, start: INode? = null, end: INode? = null) {
         println()
         (0 until height).forEach { y ->
             (0 until width).forEach { x ->
+                if (x == start?.x && y == start.y) print("\u001B[32mS\u001B[0m")
+                if (x == end?.x && y == end.y) print("\u001B[32mX\u001B[0m")
                 if (path.contains(Node(x, y))) print("\u001B[32m*\u001B[0m")
-                else print(if (map[y * width + x]) '#' else ' ')
+                else print(if (map[y * width + x]) '#' else '.')
             }
             println()
         }

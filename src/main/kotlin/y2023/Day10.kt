@@ -1,10 +1,8 @@
 package y2023
 
 import Day
-import utils.Point
-import utils.findPoints
-import utils.toCharMatrix
-import utils.get
+import pathfinding.Pathfinder
+import utils.*
 
 class Day10 : Day<Array<CharArray>>(2023, 10) {
 
@@ -24,7 +22,38 @@ class Day10 : Day<Array<CharArray>>(2023, 10) {
         return steps / 2
     }
 
-    override fun solve2(input: Array<CharArray>): Int = 0
+    override fun solve2(input: Array<CharArray>): Int {
+        val padded = input.pad('.', 1)
+        val start = padded.findPoints('S').first()
+        val pipeLocations = mutableSetOf(start)
+        var lastPos = start
+        var currentPos = padded.findNextFromStart(start)
+        while (currentPos != start) {
+            pipeLocations += currentPos
+            val tempLast = lastPos
+            lastPos = currentPos
+            currentPos = padded.findNextFromLast(currentPos, tempLast)
+        }
+        val map = Array(padded.size) { x ->
+            CharArray(padded[0].size) { y -> if (Point(x, y) in pipeLocations) '#' else '.' }
+        }.toPathfindingMap()
+        val pf = Pathfinder(map, padded.size, padded[0].size)
+        return padded.indices.sumOf { x ->
+            padded[x].indices.count { y ->
+                val p = Point(x, y)
+                if (p in pipeLocations) {
+                    false
+                } else {
+                    val path = pf.searchBFS(p.asNode(), Pathfinder.Node(0, 0))
+                    if (p !in pipeLocations && p.distance(Point(0, 0)) > 1 && path.isEmpty()) {
+                        true
+                    } else {
+                        false
+                    }
+                }
+            }
+        }
+    }
 
     private fun Array<CharArray>.findNextFromStart(start: Point) = when {
         start.x > 0 && this[start left 1] in listOf('-', 'L', 'F') -> start left 1
@@ -41,6 +70,6 @@ class Day10 : Day<Array<CharArray>>(2023, 10) {
         'L' -> if (last == current right 1) current up 1 else current right 1
         '7' -> if (last == current left 1) current down 1 else current left 1
         'F' -> if (last == current right 1) current down 1 else current right 1
-        else -> error("Big Fail")
+        else -> error("Big Fail: ${this[current]}")
     }
 }

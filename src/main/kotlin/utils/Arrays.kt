@@ -96,6 +96,19 @@ fun Array<CharArray>.deepEquals(other: Array<CharArray>): Boolean {
     return true
 }
 
+fun Array<CharArray>.pad(char: Char, all: Int) = pad(char, all, all, all, all)
+
+fun Array<CharArray>.pad(char: Char, left: Int = 0, right: Int = 0, top: Int = 0, bottom: Int = 0) =
+    Array(size + left + right) { x ->
+        CharArray(this[0].size + top + bottom) { y ->
+            if (x < left) char
+            else if (x > lastIndex) char
+            else if (y < top) char
+            else if (y > this[0].lastIndex) char
+            else this[x - left][y - top]
+        }
+    }
+
 operator fun Array<CharArray>.get(point: Point) = this[point.x.toInt()][point.y.toInt()]
 
 operator fun Array<CharArray>.set(point: Point, value: Char) {
