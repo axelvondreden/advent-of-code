@@ -14,7 +14,6 @@ import androidx.compose.ui.window.application
 import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.terminal.Terminal
 import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import utils.IO
@@ -107,7 +106,7 @@ fun runDaySingle(year: Int, day: Int, runSamples: Boolean) {
     if (runSamples) {
         t.print("Samples Part 1:")
         if (samples?.part1.isNullOrEmpty()) {
-            t.println(" ${(white on brightRed)("NO DATA")}")
+            t.println(" ${(black on brightRed)("NO DATA")}")
         } else {
             t.println()
         }
@@ -118,14 +117,14 @@ fun runDaySingle(year: Int, day: Int, runSamples: Boolean) {
             val result = runPart(d, 1, init, sample.solution)
             val time = (System.nanoTime() - startTime) / 1000000000.0
             t.println("${time.coloredTime()}\tResult: ${
-                if (result.correct) (black on brightGreen)("CORRECT") else (white on brightRed)("FAILED")
+                if (result.correct) (black on brightGreen)("CORRECT") else (black on brightRed)("FAILED")
             } ${(black on white)(result.result)}")
         }
         t.println()
 
         t.print("Samples Part 2:")
         if (samples?.part2.isNullOrEmpty()) {
-            t.println(" ${(white on brightRed)("NO DATA")}")
+            t.println(" ${(black on brightRed)("NO DATA")}")
         } else {
             t.println()
         }
@@ -136,14 +135,14 @@ fun runDaySingle(year: Int, day: Int, runSamples: Boolean) {
             val result = runPart(d, 2, init, sample.solution)
             val time = (System.nanoTime() - startTime) / 1000000000.0
             t.println("${time.coloredTime()}\tResult: ${
-                if (result.correct) (black on brightGreen)("CORRECT") else (white on brightRed)("FAILED")
+                if (result.correct) (black on brightGreen)("CORRECT") else (black on brightRed)("FAILED")
             } ${(black on white)(result.result)}")
         }
         t.println()
     }
 
     val rawInput = IO.readStrings(d.year, d.day)
-    if (rawInput.isNotEmpty()) {
+    if (rawInput.any { it.isNotBlank() }) {
         runBlocking {
             t.println("Actual Input:")
             val initStartTime = System.nanoTime()
@@ -176,7 +175,7 @@ fun runDaySingle(year: Int, day: Int, runSamples: Boolean) {
             val part1Time = (System.nanoTime() - part1StartTime) / 1000000000.0
             t.println(
                 "\tPart 1:\t${part1Time.coloredTime()}\tResult: ${
-                    if (part1Result.correct) (black on brightGreen)("CORRECT") else (white on brightRed)("FAILED")
+                    if (part1Result.correct) (black on brightGreen)("CORRECT") else (black on brightRed)("FAILED")
                 } ${(black on white)(part1Result.result)}"
             )
 
@@ -195,7 +194,7 @@ fun runDaySingle(year: Int, day: Int, runSamples: Boolean) {
             val part2Time = (System.nanoTime() - part2StartTime) / 1000000000.0
             t.println(
                 "\tPart 2:\t${part2Time.coloredTime()}\tResult: ${
-                    if (part2Result.correct) (black on brightGreen)("CORRECT") else (white on brightRed)("FAILED")
+                    if (part2Result.correct) (black on brightGreen)("CORRECT") else (black on brightRed)("FAILED")
                 } ${(black on white)(part2Result.result)}"
             )
             t.println("\tTotal:\t${(initTime + part1Time + part2Time).coloredTime()}")
