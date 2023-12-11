@@ -1,12 +1,8 @@
 {
   "part1": [
     {
-      "input": "abcdefgh",
-      "solution": "abcdffaa"
-    },
-    {
-      "input": "ghijklmn",
-      "solution": "ghjaabcc"
+      "input": "...#......\n.......#..\n#.........\n..........\n......#...\n.#........\n.........#\n..........\n.......#..\n#...#.....",
+      "solution": "374"
     }
   ],
   "part2": [
