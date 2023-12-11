@@ -6,6 +6,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -13,10 +14,7 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.terminal.Terminal
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import utils.IO
 
 val years = 2015..2023
@@ -85,25 +83,33 @@ fun App() {
 
 @Composable
 private fun DayLayout(year: Int, day: Int) = Column(modifier = Modifier.fillMaxSize()) {
-    val state = mutableStateOf(DayState())
+    val state = remember { mutableStateOf(DayState()) }
+    val cScope = rememberCoroutineScope()
     Row(modifier = Modifier.fillMaxWidth()) {
-        Text("Year: $year  Day: $day", color = MaterialTheme.colors.onBackground)
-        Button(onClick = { runDayComposeSingle(year, day, true, state) }) {
+        TextBlock("Year: $year  Day: $day")
+        Button(onClick = {
+            runDayComposeSingle(year, day, true, state, cScope)
+        }) {
             Icon(Icons.Default.PlayArrow, "")
             Text("Run")
         }
     }
     state.value.part1SampleResults.forEach { (nr, result) ->
         val time = state.value.part1SampleTimes[nr]!!
-        Text("Sample 1 ($nr): [${time.formattedTime()}] [${result.correct}] [${result.result}]")
+        TextBlock("Sample 1 ($nr): [${time.formattedTime()}] [${result.correct}] [${result.result}]")
     }
     state.value.part2SampleResults.forEach { (nr, result) ->
         val time = state.value.part2SampleTimes[nr]!!
-        Text("Sample 2 ($nr): [${time.formattedTime()}] [${result.correct}] [${result.result}]")
+        TextBlock("Sample 2 ($nr): [${time.formattedTime()}] [${result.correct}] [${result.result}]")
     }
-    Text("Init: [${state.value.initTime?.formattedTime()}]")
-    Text("Part 1: [${state.value.part1Time?.formattedTime()}] [${state.value.part1Result?.correct}] [${state.value.part1Result?.result}]")
-    Text("Part 2: [${state.value.part2Time?.formattedTime()}] [${state.value.part2Result?.correct}] [${state.value.part2Result?.result}]")
+    TextBlock("Init: [${state.value.initTime?.formattedTime()}]")
+    TextBlock("Part 1: [${state.value.part1Time?.formattedTime()}] [${state.value.part1Result?.correct}] [${state.value.part1Result?.result}]")
+    TextBlock("Part 2: [${state.value.part2Time?.formattedTime()}] [${state.value.part2Result?.correct}] [${state.value.part2Result?.result}]")
+}
+
+@Composable
+private fun TextBlock(text: String) = Box(modifier = Modifier.background(Color.DarkGray), contentAlignment = Alignment.Center) {
+    Text(text)
 }
 
 
@@ -253,86 +259,85 @@ fun runDayCmdSingle(year: Int, day: Int, runSamples: Boolean) {
     }
 }
 
-private fun runDayComposeSingle(year: Int, day: Int, runSamples: Boolean, state: MutableState<DayState>) {
-    val d = getDayInstance(year, day)
-    val samples = IO.readSamples(year, day)
+private fun runDayComposeSingle(year: Int, day: Int, runSamples: Boolean, state: MutableState<DayState>, cScope: CoroutineScope) {
+    cScope.launch {
+        val d = getDayInstance(year, day)
+        val samples = IO.readSamples(year, day)
 
-    if (runSamples) {
-        samples?.part1?.forEachIndexed { index, sample ->
-            state.value.runningPart1Sample = index + 1
-            val startTime = System.nanoTime()
-            val init = runInit(d, sample.input.lines())
-            val result = runPart(d, 1, init, sample.solution)
-            val time = (System.nanoTime() - startTime) / 1000000000.0
-            state.value.part1SampleTimes[index + 1] = time
-            state.value.part1SampleResults[index + 1] = result
+        if (runSamples) {
+            samples?.part1?.forEachIndexed { index, sample ->
+                state.value = state.value.copy(runningPart1Sample = index + 1)
+                val startTime = System.nanoTime()
+                val init = runInit(d, sample.input.lines())
+                val result = runPart(d, 1, init, sample.solution)
+                val time = (System.nanoTime() - startTime) / 1000000000.0
+                state.value = state.value.apply {
+                    part1SampleTimes[index + 1] = time
+                    part1SampleResults[index + 1] = result
+                }
+            }
+            state.value = state.value.copy(runningPart1Sample = null)
+
+            samples?.part2?.forEachIndexed { index, sample ->
+                state.value = state.value.copy(runningPart2Sample = index + 1)
+                val startTime = System.nanoTime()
+                val init = runInit(d, sample.input.lines())
+                val result = runPart(d, 2, init, sample.solution)
+                val time = (System.nanoTime() - startTime) / 1000000000.0
+                state.value = state.value.apply {
+                    part2SampleTimes[index + 1] = time
+                    part2SampleResults[index + 1] = result
+                }
+            }
+            state.value = state.value.copy(runningPart2Sample = null)
         }
-        state.value.runningPart1Sample = null
 
-        samples?.part2?.forEachIndexed { index, sample ->
-            state.value.runningPart2Sample = index + 1
-            val startTime = System.nanoTime()
-            val init = runInit(d, sample.input.lines())
-            val result = runPart(d, 2, init, sample.solution)
-            val time = (System.nanoTime() - startTime) / 1000000000.0
-            state.value.part2SampleTimes[index + 1] = time
-            state.value.part2SampleResults[index + 1] = result
-        }
-        state.value.runningPart2Sample = null
-    }
-
-    val rawInput = IO.readStrings(d.year, d.day)
-    if (rawInput.any { it.isNotBlank() }) {
-        runBlocking {
-            state.value.runningInit = true
+        val rawInput = IO.readStrings(d.year, d.day)
+        if (rawInput.any { it.isNotBlank() }) {
+            state.value = state.value.copy(runningInit = true)
             val initStartTime = System.nanoTime()
-            val init = async {
+            val init = cScope.async {
                 runInit(d, rawInput)
             }
-            launch {
+            cScope.launch {
                 while (init.isActive) {
-                    state.value.initTime = (System.nanoTime() - initStartTime) / 1000000000.0
+                    state.value = state.value.copy(initTime = (System.nanoTime() - initStartTime) / 1000000000.0)
                     delay(100)
                 }
             }
             val input = init.await()
             val initTime = (System.nanoTime() - initStartTime) / 1000000000.0
-            state.value.runningInit = false
-            state.value.initTime = initTime
 
-            state.value.runningPart1 = true
+            state.value = state.value.copy(runningInit = false, initTime = initTime, runningPart1 = true)
+
             val part1StartTime = System.nanoTime()
-            val part1 = async {
+            val part1 = cScope.async {
                 runPart(d, 1, input, expected[Triple(d.year, d.day, 1)])
             }
-            launch {
+            cScope.launch {
                 while (part1.isActive) {
-                    state.value.part1Time = (System.nanoTime() - part1StartTime) / 1000000000.0
+                    state.value = state.value.copy(part1Time = (System.nanoTime() - part1StartTime) / 1000000000.0)
                     delay(100)
                 }
             }
             val part1Result = part1.await()
             val part1Time = (System.nanoTime() - part1StartTime) / 1000000000.0
-            state.value.runningPart1 = false
-            state.value.part1Time = part1Time
-            state.value.part1Result = part1Result
 
-            state.value.runningPart2 = true
+            state.value = state.value.copy(runningPart1 = false, part1Time = part1Time, part1Result = part1Result, runningPart2 = true)
+
             val part2StartTime = System.nanoTime()
-            val part2 = async {
+            val part2 = cScope.async {
                 runPart(d, 2, input, expected[Triple(d.year, d.day, 2)])
             }
-            launch {
+            cScope.launch {
                 while (part2.isActive) {
-                    state.value.part2Time = (System.nanoTime() - part2StartTime) / 1000000000.0
+                    state.value = state.value.copy(part2Time = (System.nanoTime() - part2StartTime) / 1000000000.0)
                     delay(100)
                 }
             }
             val part2Result = part2.await()
             val part2Time = (System.nanoTime() - part2StartTime) / 1000000000.0
-            state.value.runningPart2 = false
-            state.value.part2Time = part2Time
-            state.value.part2Result = part2Result
+            state.value = state.value.copy(runningPart2 = false, part2Time = part2Time, part2Result = part2Result)
         }
     }
 }
