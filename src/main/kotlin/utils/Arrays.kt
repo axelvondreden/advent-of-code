@@ -1,7 +1,5 @@
 package utils
 
-import pathfinding.Pathfinder
-
 fun Array<BooleanArray>.on(p1: Point, p2: Point) =
     (p1.x..p2.x).forEach { x -> (p1.y..p2.y).forEach { y -> get(x.toInt())[y.toInt()] = true } }
 
@@ -31,10 +29,10 @@ fun Array<CharArray>.toPathfindingMap(walls: Set<Char> = setOf('#')): BooleanArr
     return arr
 }
 
-fun Array<CharArray>.find(c: Char): Pathfinder.Node? {
+fun Array<CharArray>.find(c: Char): Point? {
     for (y in get(0).indices) {
         for (x in indices) {
-            if (get(x)[y] == c) return Pathfinder.Node(x, y)
+            if (get(x)[y] == c) return Point(x, y)
         }
     }
     return null
@@ -102,9 +100,9 @@ fun Array<CharArray>.pad(char: Char, left: Int = 0, right: Int = 0, top: Int = 0
     Array(size + left + right) { x ->
         CharArray(this[0].size + top + bottom) { y ->
             if (x < left) char
-            else if (x > lastIndex) char
+            else if (x > lastIndex + left) char
             else if (y < top) char
-            else if (y > this[0].lastIndex) char
+            else if (y > this[0].lastIndex + top) char
             else this[x - left][y - top]
         }
     }

@@ -1,10 +1,7 @@
 package y2019
 
 import Day
-import pathfinding.Pathfinder
-import utils.find
-import utils.toCharMatrix
-import utils.toPathfindingMap
+import utils.*
 
 class Day18: Day<Array<CharArray>>(2019, 18) {
 
@@ -119,7 +116,7 @@ class Day18: Day<Array<CharArray>>(2019, 18) {
         }
     }
 
-    private data class Door(val c: Char, val node: Pathfinder.Node)
+    private data class Door(val c: Char, val node: Point)
 
-    private data class Key(val c: Char, val node: Pathfinder.Node)
+    private data class Key(val c: Char, val node: Point)
 }

@@ -1,9 +1,7 @@
 package y2019
 
 import Day
-import pathfinding.Pathfinder
-import utils.toCharMatrix
-import utils.toPathfindingMap
+import utils.*
 
 class Day20 : Day<Array<CharArray>>(2019, 20) {
 
@@ -36,8 +34,8 @@ class Day20 : Day<Array<CharArray>>(2019, 20) {
                             } else {
                                 tempPortals.add(Portal(key, node, storedNode))
                             }
-                            matrix[storedNode.x][storedNode.y] = key
-                            matrix[node.x][node.y] = key
+                            matrix[storedNode] = key
+                            matrix[node] = key
                             key++
                         } else {
                             storage[str] = node
@@ -50,24 +48,24 @@ class Day20 : Day<Array<CharArray>>(2019, 20) {
         portals = tempPortals
         start = storage["AA"]!!
         end = storage["ZZ"]!!
-        matrix[start.x][start.y] = '1'
-        matrix[end.x][end.y] = '2'
+        matrix[start] = '1'
+        matrix[end] = '2'
     }
 
-    private fun neighborsWithPortal(current: Pathfinder.INode): Set<Pathfinder.INode> {
-        current as Pathfinder.Node
-        val set = mutableSetOf<Pathfinder.INode>(
-            Pathfinder.Node(current.x - 1, current.y),
-            Pathfinder.Node(current.x + 1, current.y),
-            Pathfinder.Node(current.x, current.y - 1),
-            Pathfinder.Node(current.x, current.y + 1)
+    private fun neighborsWithPortal(current: PFNode): Set<PFNode> {
+        current as Point
+        val set = mutableSetOf<PFNode>(
+            Point(current.x - 1, current.y),
+            Point(current.x + 1, current.y),
+            Point(current.x, current.y - 1),
+            Point(current.x, current.y + 1)
         )
-        set.addAll(portals.filter { Pathfinder.Node(it.outsideNode.x, it.outsideNode.y) == current }.map { Pathfinder.Node(it.insideNode.x, it.insideNode.y) })
-        set.addAll(portals.filter { Pathfinder.Node(it.insideNode.x, it.insideNode.y) == current }.map { Pathfinder.Node(it.outsideNode.x, it.outsideNode.y) })
+        set.addAll(portals.filter { Point(it.outsideNode.x, it.outsideNode.y) == current }.map { Point(it.insideNode.x, it.insideNode.y) })
+        set.addAll(portals.filter { Point(it.insideNode.x, it.insideNode.y) == current }.map { Point(it.outsideNode.x, it.outsideNode.y) })
         return set
     }
 
-    private fun neighborsWithLvlPortal(current: Pathfinder.INode): Set<Pathfinder.INode> {
+    private fun neighborsWithLvlPortal(current: PFNode): Set<PFNode> {
         current as LvlNode
         val set = mutableSetOf(
             LvlNode(current.x - 1, current.y, current.lvl),
@@ -82,7 +80,7 @@ class Day20 : Day<Array<CharArray>>(2019, 20) {
 
     override fun solve1(input: Array<CharArray>): Int {
         val walls = ('A'..'Z').toMutableSet().apply { addAll(listOf('#', ' ')) }
-        return Pathfinder(input.toPathfindingMap(walls), input.size, input[0].size, ::neighborsWithPortal).searchBFS(Pathfinder.Node(start.x, start.y), Pathfinder.Node(end.x, end.y)).size + 1
+        return Pathfinder(input.toPathfindingMap(walls), input.size, input[0].size, ::neighborsWithPortal).searchBFS(Point(start.x, start.y), Point(end.x, end.y)).size + 1
     }
 
     override fun solve2(input: Array<CharArray>): Int {
@@ -92,7 +90,9 @@ class Day20 : Day<Array<CharArray>>(2019, 20) {
 
     private data class Portal(val c: Char, val outsideNode: LvlNode, val insideNode: LvlNode)
 
-    private class LvlNode(x: Int, y: Int, val lvl: Int): Pathfinder.INode(x, y) {
+    private class LvlNode(x: Long, y: Long, val lvl: Int): PFNode(x, y) {
+        constructor(x: Int, y: Int, lvl: Int) : this(x.toLong(), y.toLong(), lvl)
+
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (javaClass != other?.javaClass) return false
@@ -107,5 +107,11 @@ class Day20 : Day<Array<CharArray>>(2019, 20) {
             result = 31 * result + lvl
             return result
         }
+    }
+
+    private operator fun Array<CharArray>.get(point: LvlNode) = this[point.x.toInt()][point.y.toInt()]
+
+    private operator fun Array<CharArray>.set(point: LvlNode, value: Char) {
+        this[point.x.toInt()][point.y.toInt()] = value
     }
 }

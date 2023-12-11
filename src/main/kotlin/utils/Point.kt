@@ -1,20 +1,17 @@
 package utils
 
-import pathfinding.Pathfinder
 import kotlin.math.abs
 import kotlin.math.absoluteValue
 import kotlin.math.max
 import kotlin.math.min
 
-data class Point(val x: Long, val y: Long) {
+class Point(x: Long, y: Long): PFNode(x, y) {
 
     constructor(raw: String, delim: String = ",") : this(raw.split(delim)[0].toLong(), raw.split(delim)[1].toLong())
 
     constructor(x: Int, y: Int) : this(x.toLong(), y.toLong())
 
     fun distance(step: Point) = (max(x, step.x) - min(x, step.x)) + (max(y, step.y) - min(y, step.y))
-
-    fun asNode() = Pathfinder.Node(x.toInt(), y.toInt())
 
     operator fun plus(p: Point) = Point(this.x + p.x, this.y + p.y)
 
@@ -26,6 +23,12 @@ data class Point(val x: Long, val y: Long) {
     infix fun right(steps: Int) = Point(x + steps, y)
     infix fun up(steps: Int) = Point(x, y - steps)
     infix fun down(steps: Int) = Point(x, y + steps)
+
+    fun copy(x: Long = this.x, y: Long = this.y) = Point(x, y)
+
+    override fun toString(): String {
+        return "Point($x, $y)"
+    }
 }
 
 data class Line(val p1: Point, val p2: Point) {

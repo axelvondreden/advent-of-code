@@ -1,7 +1,8 @@
 package y2016
 
 import Day
-import pathfinding.Pathfinder
+import utils.Pathfinder
+import utils.Point
 import utils.toPathfindingMap
 import kotlin.math.abs
 
@@ -30,8 +31,8 @@ class Day13 : Day<Int>(2016, 13) {
         val pf = Pathfinder(map.toPathfindingMap(), mapSize, mapSize)
         (startNode.x - 50 until startNode.x + 51).forEach { x ->
             (startNode.y - 50 until startNode.y + 51).forEach { y ->
-                if (x >= 0 && y >= 0 && map[x][y] == '.') {
-                    val endNode = Pathfinder.Node(x, y)
+                if (x >= 0 && y >= 0 && map[x.toInt()][y.toInt()] == '.') {
+                    val endNode = Point(x, y)
                     val path = pf.searchBFS(startNode, endNode)
                     if (path.isEmpty() && abs(x - startNode.x) + abs(y - startNode.y) <= 1) {
                         coords.add(endNode)
@@ -47,7 +48,7 @@ class Day13 : Day<Int>(2016, 13) {
 
     private companion object {
         private const val mapSize = 100
-        private val startNode = Pathfinder.Node(1, 1)
-        private val endNode = Pathfinder.Node(31, 39)
+        private val startNode = Point(1, 1)
+        private val endNode = Point(31, 39)
     }
 }

@@ -1,7 +1,7 @@
 package y2023
 
 import Day
-import pathfinding.Pathfinder
+import utils.Pathfinder
 import utils.*
 
 class Day10 : Day<Array<CharArray>>(2023, 10) {
@@ -24,7 +24,7 @@ class Day10 : Day<Array<CharArray>>(2023, 10) {
 
     override fun solve2(input: Array<CharArray>): Int {
         val padded = input.pad('.', 1)
-        val start = padded.findPoints('S').first()
+        val start = padded.find('S')!!
         val pipeLocations = mutableSetOf(start)
         var lastPos = start
         var currentPos = padded.findNextFromStart(start)
@@ -44,8 +44,9 @@ class Day10 : Day<Array<CharArray>>(2023, 10) {
                 if (p in pipeLocations) {
                     false
                 } else {
-                    val path = pf.searchBFS(p.asNode(), Pathfinder.Node(0, 0))
+                    val path = pf.searchBFS(p, Point(0, 0))
                     if (p !in pipeLocations && p.distance(Point(0, 0)) > 1 && path.isEmpty()) {
+                        println(p)
                         true
                     } else {
                         false

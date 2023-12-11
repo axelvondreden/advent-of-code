@@ -1,18 +1,18 @@
-package pathfinding
+package utils
 
-import pathfinding.Pathfinder.*
 import java.util.*
+import java.util.ArrayDeque
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sign
 
-typealias Neighbors = (INode) -> Set<INode>
+typealias Neighbors = (PFNode) -> Set<PFNode>
 
-private fun neighbors(current: INode) = setOf(
-    Node(current.x - 1, current.y),
-    Node(current.x + 1, current.y),
-    Node(current.x, current.y - 1),
-    Node(current.x, current.y + 1)
+private fun neighbors(current: PFNode) = setOf(
+    Point(current.x - 1, current.y),
+    Point(current.x + 1, current.y),
+    Point(current.x, current.y - 1),
+    Point(current.x, current.y + 1)
 )
 
 class Pathfinder(
@@ -21,13 +21,13 @@ class Pathfinder(
     private val height: Int,
     private val neighborFunction: Neighbors = ::neighbors
 ) {
-    private val fringe = PriorityQueue<INode> { o1, o2 -> sign(f(o1) - f(o2)).toInt() }
-    private val closed = hashSetOf<INode>()
+    private val fringe = PriorityQueue<PFNode> { o1, o2 -> sign(f(o1) - f(o2)).toInt() }
+    private val closed = hashSetOf<PFNode>()
 
     private val gCosts = Array(map.size) { 0.0 }
     private val fCosts = Array(map.size) { 0.0 }
 
-    fun searchAStar(start: INode, end: INode): List<INode> {
+    fun searchAStar(start: PFNode, end: PFNode): List<PFNode> {
         fringe.clear()
         closed.clear()
         gCosts.fill(0.0)
@@ -55,11 +55,11 @@ class Pathfinder(
         return emptyList()
     }
 
-    fun searchBFS(start: INode, end: INode): List<INode> {
-        val previous = hashMapOf<INode, INode>()
+    fun searchBFS(start: PFNode, end: PFNode): List<PFNode> {
+        val previous = hashMapOf<PFNode, PFNode>()
 
-        val queue = ArrayDeque<INode>()
-        val visited = hashSetOf<INode>()
+        val queue = ArrayDeque<PFNode>()
+        val visited = hashSetOf<PFNode>()
 
         queue.offer(start)
         visited.add(start)
@@ -80,25 +80,25 @@ class Pathfinder(
             .ifEmpty { return emptyList() }.reversed()
     }
 
-    private fun index(x: Int, y: Int) = y * width + x
+    private fun index(x: Long, y: Long) = (y * width + x).toInt()
 
-    private fun f(node: INode) = fCosts[index(node.x, node.y)]
+    private fun f(node: PFNode) = fCosts[index(node.x, node.y)]
 
-    private fun f(node: INode, value: Double) {
+    private fun f(node: PFNode, value: Double) {
         fCosts[index(node.x, node.y)] = value
     }
 
-    private fun g(node: INode) = gCosts[index(node.x, node.y)]
+    private fun g(node: PFNode) = gCosts[index(node.x, node.y)]
 
-    private fun g(node: INode, value: Double) {
+    private fun g(node: PFNode, value: Double) {
         gCosts[index(node.x, node.y)] = value
     }
 
-    private fun bound(node: INode) = node.x >= 0 && node.y >= 0 && node.x < width && node.y < height
+    private fun bound(node: PFNode) = node.x >= 0 && node.y >= 0 && node.x < width && node.y < height
 
-    private fun blocked(node: INode) = map[index(node.x, node.y)]
+    private fun blocked(node: PFNode) = map[index(node.x, node.y)]
 
-    private fun reconstructFrom(current: INode): List<INode> {
+    private fun reconstructFrom(current: PFNode): List<PFNode> {
         val list = arrayListOf(current)
         var p = current.parent
         while (p != null) {
@@ -108,37 +108,39 @@ class Pathfinder(
         return list
     }
 
-    private fun manhattan(node0: INode, node1: INode) =
+    private fun manhattan(node0: PFNode, node1: PFNode) =
         max(node0.x, node1.x) - min(node0.x, node1.x) + (max(node0.y, node1.y) - min(node0.y, node1.y)).toDouble()
 
-    fun printMap(path: List<INode>, start: INode? = null, end: INode? = null) {
+    fun printMap(path: List<PFNode>, start: PFNode? = null, end: PFNode? = null) {
         println()
         (0 until height).forEach { y ->
             (0 until width).forEach { x ->
-                if (x == start?.x && y == start.y) print("\u001B[32mS\u001B[0m")
-                if (x == end?.x && y == end.y) print("\u001B[32mX\u001B[0m")
-                if (path.contains(Node(x, y))) print("\u001B[32m*\u001B[0m")
+                if (x == start?.x?.toInt() && y == start.y.toInt()) print("\u001B[32mS\u001B[0m")
+                if (x == end?.x?.toInt() && y == end.y.toInt()) print("\u001B[32mX\u001B[0m")
+                if (path.contains(Point(x, y))) print("\u001B[32m*\u001B[0m")
                 else print(if (map[y * width + x]) '#' else '.')
             }
             println()
         }
     }
+}
 
-    class Node(x: Int, y: Int) : INode(x, y)
+abstract class PFNode(val x: Long, val y: Long) {
+    var parent: PFNode? = null
 
-    abstract class INode(val x: Int, val y: Int) {
-        var parent: INode? = null
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
 
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (javaClass != other?.javaClass) return false
+        other as PFNode
+        if (x != other.x) return false
+        if (y != other.y) return false
+        return true
+    }
 
-            other as INode
-            if (x != other.x) return false
-            if (y != other.y) return false
-            return true
-        }
-
-        override fun hashCode() = 31 * x + y
+    override fun hashCode(): Int {
+        var result = x.hashCode()
+        result = 31 * result + y.hashCode()
+        return result * 31
     }
 }
