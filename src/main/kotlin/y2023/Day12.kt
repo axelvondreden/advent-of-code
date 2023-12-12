@@ -1,100 +1,30 @@
 package y2023
 
 import Day
-import utils.permute
 
 class Day12 : Day<List<Day12.Row>>(2023, 12) {
 
     override fun List<String>.parse() = map { line ->
         val s = line.split(" ")
-        Row(s[0].toCharArray(), s[1].split(",").map { it.toInt() })
+        Row(s[0].toList(), s[1].split(",").map { it.toInt() })
     }
 
-    override fun solve1(input: List<Row>): Int {
-        return sumOfValidConstellations(input)
+    override fun solve1(input: List<Row>) = input.sumOf { row ->
+        val replacements = getPermutations(row.springs.count { it == '?' }, row.groups.sum() - row.springs.count { it == '#' })
+        replacements.count {
+            val replaced = row.springs.replaceUnknown(it)
+            replaced.matches(row.groups)
+        }
     }
 
     override fun solve2(input: List<Row>): Any = 0
 
-    private fun sumOfValidConstellations(rows: List<Row>): Int {
-        val cache = mutableMapOf<Int, Set<String>>()
-        var index = 1
-        return rows.sumOf { row ->
-            println("$index / ${rows.size}")
-            index++
-            val unknownGroups = row.springs.getUnknownGroups()
-            countValidConstellations(row, unknownGroups)
-        }
-    }
+    private fun getPermutations(length: Int, brokeCount: Int) =
+        List(length) { if (it < brokeCount) '#' else '.' }.permute()
 
-    fun countValidConstellations(row: Row, indicesToReplace: List<IntRange>): Int {
-        return replacementHelper(row, indicesToReplace, 0)
-    }
+    data class Row(val springs: List<Char>, val groups: List<Int>)
 
-    fun replacementHelper(row: Row, indicesToReplace: List<IntRange>, currentIndex: Int): Int {
-        // Base case - if currentIndex is the size of indicesToReplace, validate the configuration
-        if (currentIndex == indicesToReplace.size) {
-            return if (row.springs.matches(row.groups)) 1 else 0
-        }
-
-        var validCombinations = 0
-
-        val replacements = listOf('#', '.')
-        val replacementRange = indicesToReplace[currentIndex] // Assume that this IntRange includes the end index.
-
-        // Traverse each replacement character
-        replacements.forEach { replacement ->
-            // Ensure all '?' within the current range are replaced with the current replacement character
-            for (index in replacementRange) {
-                row.springs[index] = replacement
-            }
-
-            // Move to the next '?'
-            validCombinations += replacementHelper(row, indicesToReplace, currentIndex + 1)
-
-            // Replace the springs back to '?'
-            for (index in replacementRange) {
-                row.springs[index] = '?'
-            }
-        }
-
-        return validCombinations
-    }
-
-    private fun getPermutations(length: Int): Set<String> {
-        val list = mutableSetOf<String>()
-        var broken = 0
-        while (broken <= length) {
-            val initial = List(length) { if (it < broken) '#' else '.' }
-            val perms = initial.permute()
-            list.addAll(perms.map { it.joinToString("") })
-            broken++
-        }
-        return list
-    }
-
-    private fun CharArray.getUnknownGroups(): List<IntRange> {
-        val ranges = mutableListOf<IntRange>()
-        var start: Int? = null
-
-        for (i in indices) {
-            if (this[i] == '?') {
-                if (start == null) {
-                    start = i
-                }
-            } else if (start != null) {
-                ranges.add(start..<i)
-                start = null
-            }
-        }
-
-        start?.let { ranges.add(it..lastIndex) }
-        return ranges
-    }
-
-    data class Row(val springs: CharArray, val groups: List<Int>)
-
-    private fun CharArray.matches(groups: List<Int>): Boolean {
+    private fun List<Char>.matches(groups: List<Int>): Boolean {
         val sizes = mutableListOf<Int>()
         var currentSize = 0
         for (c in this) {
@@ -109,5 +39,30 @@ class Day12 : Day<List<Day12.Row>>(2023, 12) {
             sizes += currentSize
         }
         return sizes.size == groups.size && sizes.withIndex().all { it.value == groups[it.index] }
+    }
+
+    private fun List<Char>.replaceUnknown(replacement: List<Char>): List<Char> {
+        var index = 0
+        val result = toMutableList()
+        for (i in indices) {
+            if (this[i] == '?') {
+                result[i] = replacement[index]
+                index++
+            }
+        }
+        return result
+    }
+
+    private fun List<Char>.permute(): Set<List<Char>> {
+        if (size == 1) return setOf(this)
+        val perms = mutableSetOf<List<Char>>()
+        val sub = get(0)
+        for (perm in drop(1).permute())
+            for (i in 0..perm.size) {
+                val newPerm = perm.toMutableList()
+                newPerm.add(i, sub)
+                perms.add(newPerm)
+            }
+        return perms
     }
 }
