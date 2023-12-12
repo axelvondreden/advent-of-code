@@ -35,7 +35,7 @@ import years
 @Composable
 @Preview
 fun App() {
-    MaterialTheme(colors = darkColors(primary = Color.Blue)) {
+    MaterialTheme(colors = darkColors(primary = Color.Cyan)) {
         val scope = rememberCoroutineScope()
         Column(modifier = Modifier.background(Color(0xFF121212)).fillMaxSize()) {
             var selectedYear by remember { mutableStateOf<Int?>(null) }
