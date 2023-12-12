@@ -39,23 +39,21 @@ class Day12 : Day<List<Day12.Row>>(2023, 12) {
 
         var validCombinations = 0
 
-        // Assuming the ? in the string only needs to be replaced with either '#' or '.', we could extend this to more characters if needed
-        val replacements = listOf("#", ".")
+        val replacements = listOf('#', '.')
+        val replacementRange = indicesToReplace[currentIndex] // Assume that this IntRange includes the end index.
 
-        val replacementRange = indicesToReplace[currentIndex] // assuming this IntRange includes the end index.
-
-        // Traversing over each character in the replacements list
+        // Traverse each replacement character
         replacements.forEach { replacement ->
-            // replacing each '?' with a character in the current replacement
-            for(index in replacementRange) {
-                row.springs[index] = replacement[0] // replacement string is of size 1
+            // Ensure all '?' within the current range are replaced with the current replacement character
+            for (index in replacementRange) {
+                row.springs[index] = replacement
             }
 
-            // Move to the next set of replacements
+            // Move to the next '?'
             validCombinations += replacementHelper(row, indicesToReplace, currentIndex + 1)
 
-            // Reverting the springs back to '?' to try the next replacement character
-            for(index in replacementRange) {
+            // Replace the springs back to '?'
+            for (index in replacementRange) {
                 row.springs[index] = '?'
             }
         }
