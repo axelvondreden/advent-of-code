@@ -10,32 +10,24 @@ class Day12 : Day<List<Day12.Row>>(2023, 12) {
     }
 
     override fun solve1(input: List<Row>) = input.sumOf { row ->
-        val replacements =
-            getPermutations(row.springs.count { it == '?' }, row.groups.sum() - row.springs.count { it == '#' })
-        replacements.count {
-            val replaced = row.springs.replaceUnknown(it)
-            replaced.matches(row.groups)
-        }
+        row.springs.countMatches('#', row.groups) + row.springs.countMatches('.', row.groups)
     }
 
     override fun solve2(input: List<Row>): Int {
         val unfolded = input.map { row ->
             Row(
-                springs = row.springs.asSequence()
+                springs = row.springs
                     .plus('?').plus(row.springs)
                     .plus('?').plus(row.springs)
                     .plus('?').plus(row.springs)
-                    .plus('?').plus(row.springs).toList(),
+                    .plus('?').plus(row.springs),
                 groups = row.groups.plus(row.groups).plus(row.groups).plus(row.groups).plus(row.groups)
             )
         }
-        return input.sumOf { row ->
-            val replacements =
-                getPermutations(row.springs.count { it == '?' }, row.groups.sum() - row.springs.count { it == '#' })
-            replacements.count {
-                val replaced = row.springs.replaceUnknown(it)
-                replaced.matches(row.groups)
-            }
+        var index = 1
+        return unfolded.sumOf { row ->
+            println(index++)
+            row.springs.countMatches('#', row.groups) + row.springs.countMatches('.', row.groups)
         }
     }
 
