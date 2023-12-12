@@ -40,8 +40,38 @@ class Day12 : Day<List<Day12.Row>>(2023, 12) {
         return sum
     }
 
-    private fun countValidContellations(row: Row, replacements: List<Set<String>>, indicesToReplace: List<IntRange>): Int {
+    private fun countValidConstellations(row: Row, replacements: List<Set<String>>, indicesToReplace: List<IntRange>): Int {
+        return helper(row, replacements, indicesToReplace, 0)
+    }
 
+    fun helper(row: Row, replacements: List<Set<String>>, indicesToReplace: List<IntRange>, currentIndex: Int): Int {
+        // base case - if currentIndex is the size of replacements, validate the configuration
+        if (currentIndex == replacements.size) {
+            return if (row.springs.matches(row.groups)) 1 else 0
+        }
+
+        var validCombinations = 0
+
+        val replacementSet = replacements[currentIndex]
+        val replacementRange = indicesToReplace[currentIndex] // assuming this IntRange includes the end index.
+
+        // traversing over each word in the replacementSet
+        replacementSet.forEach { replacement ->
+            // replacing each '?' with an item in the replacement at the correlated index
+            for(index in replacementRange) {
+                row.springs[index] = replacement[index - replacementRange.first]
+            }
+
+            // move to the next set of replacements
+            validCombinations += helper(row, replacements, indicesToReplace, currentIndex + 1)
+
+            // replacing the springs back to '?' to try the next replacement word
+            for(index in replacementRange) {
+                row.springs[index] = '?'
+            }
+        }
+
+        return validCombinations
     }
 
     private fun getPermutations(length: Int): Set<String> {
