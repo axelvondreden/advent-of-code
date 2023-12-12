@@ -25,8 +25,8 @@ class Day12 : Day<List<Day12.Row>>(2023, 12) {
         var sum = 0
         rows.forEachIndexed { index1, row ->
             println("${index1 + 1} / ${rows.size}")
-            val unknownIndices = row.springs.withIndex().filter { it.value == '?' }.map { it.index }
-            val replacements = cache.getOrPut(unknownIndices.size) { getPermutations(unknownIndices.size) }
+            val unknownGroups = row.springs.getUnknownGroups()
+            val replacements = unknownGroups.map { cache.getOrPut(it.count()) { getPermutations(it.count()) } }
             val replaced = replacements.count { replacement ->
                 val replaced = row.springs.apply {
                     unknownIndices.forEachIndexed { index, springIndex ->
@@ -38,6 +38,10 @@ class Day12 : Day<List<Day12.Row>>(2023, 12) {
             sum += replaced
         }
         return sum
+    }
+
+    private fun countValidContellations(row: Row, replacements: List<Set<String>>, indicesToReplace: List<IntRange>): Int {
+
     }
 
     private fun getPermutations(length: Int): Set<String> {
@@ -62,13 +66,12 @@ class Day12 : Day<List<Day12.Row>>(2023, 12) {
                     start = i
                 }
             } else if (start != null) {
-                ranges.add(start..i - 1)
+                ranges.add(start..<i)
                 start = null
             }
         }
 
         start?.let { ranges.add(it..lastIndex) }
-
         return ranges
     }
 
