@@ -23,41 +23,43 @@ class Day12 : Day<List<Day12.Row>>(2023, 12) {
             println("$index / ${rows.size}")
             index++
             val unknownGroups = row.springs.getUnknownGroups()
-            val replacements = unknownGroups.map { cache.getOrPut(it.count()) { getPermutations(it.count()) } }
-            countValidConstellations(row, replacements, unknownGroups)
+            countValidConstellations(row, unknownGroups)
         }
     }
 
-    private fun countValidConstellations(row: Row, replacements: List<Set<String>>, indicesToReplace: List<IntRange>): Int {
-        return helper(row, replacements, indicesToReplace, 0)
+    fun countValidConstellations(row: Row, indicesToReplace: List<IntRange>): Int {
+        return replacementHelper(row, indicesToReplace, 0)
     }
 
-    private fun helper(row: Row, replacements: List<Set<String>>, indicesToReplace: List<IntRange>, currentIndex: Int): Int {
-        // base case - if currentIndex is the size of replacements, validate the configuration
-        if (currentIndex == replacements.size) {
+    fun replacementHelper(row: Row, indicesToReplace: List<IntRange>, currentIndex: Int): Int {
+        // Base case - if currentIndex is the size of indicesToReplace, validate the configuration
+        if (currentIndex == indicesToReplace.size) {
             return if (row.springs.matches(row.groups)) 1 else 0
         }
 
         var validCombinations = 0
 
-        val replacementSet = replacements[currentIndex]
+        // Assuming the ? in the string only needs to be replaced with either '#' or '.', we could extend this to more characters if needed
+        val replacements = listOf("#", ".")
+
         val replacementRange = indicesToReplace[currentIndex] // assuming this IntRange includes the end index.
 
-        // traversing over each word in the replacementSet
-        replacementSet.forEach { replacement ->
-            // replacing each '?' with an item in the replacement at the correlated index
+        // Traversing over each character in the replacements list
+        replacements.forEach { replacement ->
+            // replacing each '?' with a character in the current replacement
             for(index in replacementRange) {
-                row.springs[index] = replacement[index - replacementRange.first]
+                row.springs[index] = replacement[0] // replacement string is of size 1
             }
 
-            // move to the next set of replacements
-            validCombinations += helper(row, replacements, indicesToReplace, currentIndex + 1)
+            // Move to the next set of replacements
+            validCombinations += replacementHelper(row, indicesToReplace, currentIndex + 1)
 
-            // replacing the springs back to '?' to try the next replacement word
+            // Reverting the springs back to '?' to try the next replacement character
             for(index in replacementRange) {
                 row.springs[index] = '?'
             }
         }
+
         return validCombinations
     }
 
