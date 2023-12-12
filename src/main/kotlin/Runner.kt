@@ -1,20 +1,10 @@
-import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.terminal.Terminal
-import kotlinx.coroutines.*
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import utils.IO
 
 val years = 2015..2023
@@ -42,75 +32,6 @@ const val skipLongRunning = true
 val expected = parseExpected()
 
 val t = Terminal()
-
-@Composable
-@Preview
-fun App() {
-    MaterialTheme(colors = darkColors()) {
-        Column(modifier = Modifier.background(Color(0xFF121212)).fillMaxSize()) {
-            var selectedYear by remember { mutableStateOf<Int?>(null) }
-            var selectedDay by remember { mutableStateOf<Day<Any>?>(null) }
-            val state = remember { mutableStateOf(DayState()) }
-            Row(
-                modifier = Modifier.fillMaxWidth().border(1.dp, Color.White),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                if (selectedYear == null) {
-                    Button(onClick = {}) {
-                        Text("All")
-                    }
-                    years.forEach { year ->
-                        Button(onClick = { selectedYear = year }) {
-                            Text(year.toString())
-                        }
-                    }
-                } else {
-                    Button(onClick = { selectedYear = null; selectedDay = null }) {
-                        Text("Back")
-                    }
-                    (1..25).forEach { day ->
-                        Button(onClick = { state.value = DayState(); selectedDay = getDayInstance(selectedYear!!, day) }) {
-                            Text(day.toString())
-                        }
-                    }
-                }
-            }
-            if (selectedDay != null) {
-                val samples = IO.readSamples(selectedDay!!.year, selectedDay!!.day)
-                DayLayout(selectedDay!!, samples, state)
-            }
-        }
-    }
-}
-
-@Composable
-private fun DayLayout(day: Day<Any>, samples: Samples?, state: MutableState<DayState>) = Column(modifier = Modifier.fillMaxSize()) {
-    val cScope = rememberCoroutineScope()
-    Button(onClick = { runDayComposeSingle(day, samples, true, state, cScope) }) {
-        Icon(Icons.Default.PlayArrow, "")
-        Text("Run")
-    }
-    TextBlock("Year: ${day.year}  Day: ${day.day}")
-    samples?.part1?.indices?.forEach { index ->
-        val time = state.value.part1SampleTimes[index]
-        val result = state.value.part1SampleResults[index]
-        TextBlock("Sample 1 ($index): [${time?.formattedTime()}] [${result?.correct}] [${result?.result}]")
-    }
-    samples?.part2?.indices?.forEach { index ->
-        val time = state.value.part2SampleTimes[index]
-        val result = state.value.part2SampleResults[index]
-        TextBlock("Sample 2 ($index): [${time?.formattedTime()}] [${result?.correct}] [${result?.result}]")
-    }
-    TextBlock("Init: [${state.value.initTime?.formattedTime()}]")
-    TextBlock("Part 1: [${state.value.part1Time?.formattedTime()}] [${state.value.part1Result?.correct}] [${state.value.part1Result?.result}]")
-    TextBlock("Part 2: [${state.value.part2Time?.formattedTime()}] [${state.value.part2Result?.correct}] [${state.value.part2Result?.result}]")
-}
-
-@Composable
-private fun TextBlock(text: String) = Box(modifier = Modifier.background(Color.DarkGray), contentAlignment = Alignment.Center) {
-    Text(text)
-}
-
 
 /**
  * [no args]: run compose app
@@ -258,128 +179,13 @@ fun runDayCmdSingle(year: Int, day: Int, runSamples: Boolean) {
     }
 }
 
-private fun runDayComposeSingle(day: Day<Any>, samples: Samples?, runSamples: Boolean, state: MutableState<DayState>, cScope: CoroutineScope) {
-    cScope.launch {
-        if (runSamples) {
-            samples?.part1?.forEachIndexed { index, sample ->
-                state.value = state.value.copy(runningPart1Sample = index + 1)
-                val startTime = System.nanoTime()
-                val init = runInit(day, sample.input.lines())
-                val result = runPart(day, 1, init, sample.solution)
-                val time = (System.nanoTime() - startTime) / 1000000000.0
-                state.value = state.value.apply {
-                    part1SampleTimes[index + 1] = time
-                    part1SampleResults[index + 1] = result
-                }
-            }
-            state.value = state.value.copy(runningPart1Sample = null)
-
-            samples?.part2?.forEachIndexed { index, sample ->
-                state.value = state.value.copy(runningPart2Sample = index + 1)
-                val startTime = System.nanoTime()
-                val init = runInit(day, sample.input.lines())
-                val result = runPart(day, 2, init, sample.solution)
-                val time = (System.nanoTime() - startTime) / 1000000000.0
-                state.value = state.value.apply {
-                    part2SampleTimes[index + 1] = time
-                    part2SampleResults[index + 1] = result
-                }
-            }
-            state.value = state.value.copy(runningPart2Sample = null)
-        }
-
-        val rawInput = IO.readStrings(day.year, day.day)
-        if (rawInput.any { it.isNotBlank() }) {
-            state.value = state.value.copy(runningInit = true)
-            val initStartTime = System.nanoTime()
-            val init = cScope.async {
-                runInit(day, rawInput)
-            }
-            cScope.launch {
-                while (init.isActive) {
-                    state.value = state.value.copy(initTime = (System.nanoTime() - initStartTime) / 1000000000.0)
-                    delay(100)
-                }
-            }
-            val input = init.await()
-            val initTime = (System.nanoTime() - initStartTime) / 1000000000.0
-
-            state.value = state.value.copy(runningInit = false, initTime = initTime, runningPart1 = true)
-
-            val part1StartTime = System.nanoTime()
-            val part1 = cScope.async {
-                runPart(day, 1, input, expected[Triple(day.year, day.day, 1)])
-            }
-            cScope.launch {
-                while (part1.isActive) {
-                    state.value = state.value.copy(part1Time = (System.nanoTime() - part1StartTime) / 1000000000.0)
-                    delay(100)
-                }
-            }
-            val part1Result = part1.await()
-            val part1Time = (System.nanoTime() - part1StartTime) / 1000000000.0
-
-            state.value = state.value.copy(runningPart1 = false, part1Time = part1Time, part1Result = part1Result, runningPart2 = true)
-
-            val part2StartTime = System.nanoTime()
-            val part2 = cScope.async {
-                runPart(day, 2, input, expected[Triple(day.year, day.day, 2)])
-            }
-            cScope.launch {
-                while (part2.isActive) {
-                    state.value = state.value.copy(part2Time = (System.nanoTime() - part2StartTime) / 1000000000.0)
-                    delay(100)
-                }
-            }
-            val part2Result = part2.await()
-            val part2Time = (System.nanoTime() - part2StartTime) / 1000000000.0
-            state.value = state.value.copy(runningPart2 = false, part2Time = part2Time, part2Result = part2Result)
-        }
-    }
-}
-
-private fun runPart(day: Day<Any>, part: Int, input: Any, expected: String?): ResultState {
+fun runPart(day: Day<Any>, part: Int, input: Any, expected: String?): ResultState {
     val result = (if (part == 1) day.solve1(input) else day.solve2(input)).toString()
     val isCorrect = !expected.isNullOrEmpty() && expected == result
     return ResultState(result, isCorrect)
 }
 
 fun runInit(day: Day<Any>, input: List<String>) = with(day) { return@with input.parse() }
-
-private data class YearResult(val days: List<DayResult>) {
-    val totalTime get() = days.sumOf { it.totalTime }
-}
-
-private data class DayResult(
-    val sampleInitTime: Double,
-    val samples: List<PartResult>,
-    val part1: PartResult,
-    val part2: PartResult,
-    val initTime: Double
-) {
-    val totalTime get() = initTime + part1.time + part2.time
-}
-
-private data class PartResult(val success: Boolean, val result: String, val time: Double)
-
-private data class DayState(
-    var runningInit: Boolean = false,
-    var runningPart1: Boolean = false,
-    var runningPart2: Boolean = false,
-    var runningPart1Sample: Int? = null,
-    var runningPart2Sample: Int? = null,
-    var initTime: Double? = null,
-    var part1Time: Double? = null,
-    var part2Time: Double? = null,
-    val part1SampleTimes: MutableMap<Int, Double> = mutableMapOf(),
-    val part2SampleTimes: MutableMap<Int, Double> = mutableMapOf(),
-    var part1Result: ResultState? = null,
-    var part2Result: ResultState? = null,
-    val part1SampleResults: MutableMap<Int, ResultState> = mutableMapOf(),
-    val part2SampleResults: MutableMap<Int, ResultState> = mutableMapOf()
-)
-
-private data class ResultState(val result: String, val correct: Boolean)
 
 fun parseExpected() = getExpectedLines().associate { line ->
     val split = line.split(":")
@@ -392,10 +198,10 @@ fun getExpectedLines(): List<String> {
 }
 
 @Suppress("UNCHECKED_CAST")
-private fun getDayInstance(year: Int, day: Int) =
+fun getDayInstance(year: Int, day: Int) =
     Class.forName("y$year.Day${day.toString().padStart(2, '0')}")?.getDeclaredConstructor()
         ?.newInstance() as Day<Any>
 
-private fun Double.coloredTime() = if (this < 1) green(formattedTime()) else red(formattedTime())
+fun Double.coloredTime() = if (this < 1) green(formattedTime()) else red(formattedTime())
 
-private fun Double.formattedTime() = "${"%.6f".format(this)}s"
+fun Double.formattedTime() = "${"%.6f".format(this)}s"
