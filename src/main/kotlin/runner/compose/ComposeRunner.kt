@@ -1,3 +1,6 @@
+package runner.compose
+
+import Day
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -13,61 +16,119 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import expected
+import formattedTime
+import getDayInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import runInit
+import runPart
+import runner.DayState
+import runner.ResultState
+import runner.Sample
+import runner.Samples
 import utils.IO
+import years
 
 @Composable
 @Preview
 fun App() {
-    MaterialTheme(colors = darkColors()) {
+    MaterialTheme(colors = darkColors(primary = Color.Blue)) {
+        val scope = rememberCoroutineScope()
         Column(modifier = Modifier.background(Color(0xFF121212)).fillMaxSize()) {
             var selectedYear by remember { mutableStateOf<Int?>(null) }
             var selectedDay by remember { mutableStateOf<Day<Any>?>(null) }
+            val availableDays = remember { mutableStateListOf<Day<Any>>() }
             val state = remember { mutableStateOf(DayState()) }
-            Row(
-                modifier = Modifier.fillMaxWidth().border(1.dp, Color.White),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                if (selectedYear == null) {
-                    Button(onClick = {}) {
-                        Text("All")
-                    }
-                    years.forEach { year ->
-                        Button(onClick = { selectedYear = year }) {
-                            Text(year.toString())
-                        }
-                    }
-                } else {
-                    Button(onClick = { selectedYear = null; selectedDay = null }) {
-                        Text("Back")
-                    }
-                    (1..25).forEach { day ->
-                        Button(onClick = {
-                            state.value = DayState(); selectedDay = getDayInstance(selectedYear!!, day)
-                        }) {
-                            Text(day.toString())
+
+            YearSelect(
+                onAllClick = {},
+                selectedYear = selectedYear,
+                onYearSelect = { year ->
+                    selectedDay = null
+                    selectedYear = year
+                    availableDays.clear()
+                    scope.launch {
+                        (1..25).forEach { day ->
+                            getDayInstance(year, day)?.let { availableDays.add(it) }
                         }
                     }
                 }
+            )
+            if (selectedYear != null) {
+                DaySelect(onAllClick = {}, availableDays, selectedDay?.day, onDaySelect = {
+                    state.value = DayState()
+                    selectedDay = it
+                })
+
+                val day = selectedDay
+                if (day != null) {
+                    val samples = IO.readSamples(day.year, day.day)
+                    DayLayout(day, samples, state, scope)
+                }
             }
-            if (selectedDay != null) {
-                val samples = IO.readSamples(selectedDay!!.year, selectedDay!!.day)
-                DayLayout(selectedDay!!, samples, state)
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun YearSelect(onAllClick: () -> Unit, selectedYear: Int?, onYearSelect: (Int) -> Unit) {
+    FlowRow(
+        modifier = Modifier.fillMaxWidth().border(1.dp, Color.White),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        Button(onClick = { onAllClick() }) {
+            Text("All")
+        }
+        years.forEach { year ->
+            Button(
+                onClick = { if (year != selectedYear) onYearSelect(year) },
+                colors = if (year == selectedYear) ButtonDefaults.buttonColors(backgroundColor = Color.Green) else ButtonDefaults.buttonColors()
+            ) {
+                Text(year.toString())
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun DaySelect(
+    onAllClick: () -> Unit,
+    days: List<Day<Any>>,
+    selectedDay: Int?,
+    onDaySelect: (Day<Any>) -> Unit
+) {
+    FlowRow(modifier = Modifier.fillMaxWidth().border(1.dp, Color.White)) {
+        Button(onClick = { onAllClick() }) {
+            Text("All")
+        }
+        days.forEach { day ->
+            Button(
+                onClick = { if (day.day != selectedDay) onDaySelect(day) },
+                colors = if (day.day == selectedDay) ButtonDefaults.buttonColors(backgroundColor = Color.Green) else ButtonDefaults.buttonColors()
+            ) {
+                Text(day.day.toString())
             }
         }
     }
 }
 
 @Composable
-private fun DayLayout(day: Day<Any>, samples: Samples?, state: MutableState<DayState>) =
+private fun DayLayout(day: Day<Any>, samples: Samples?, state: MutableState<DayState>, scope: CoroutineScope) =
     Column(modifier = Modifier.fillMaxSize()) {
-        val cScope = rememberCoroutineScope()
-        Button(onClick = { runDayComposeSingle(day, samples, true, state, cScope) }) {
-            Icon(Icons.Default.PlayArrow, "")
-            Text("Run")
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Button(onClick = { runDayComposeSingle(day, samples, true, state, scope) }) {
+                Icon(Icons.Default.PlayArrow, "")
+                Text("Run with samples")
+            }
+            Button(onClick = { runDayComposeSingle(day, samples, false, state, scope) }) {
+                Icon(Icons.Default.PlayArrow, "")
+                Text("Run without samples")
+            }
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
             Label("Year: ")
@@ -111,10 +172,10 @@ private fun TimeValue(time: Double) = TextValue(time.formattedTime(), color = if
 @Composable
 private fun SamplePartLayout(part: Int, sample: List<Sample>, times: Map<Int, Double>, results: Map<Int, ResultState>) {
     sample.indices.forEach { index ->
-        val time = times[index]
-        val result = results[index]
+        val time = times[index + 1]
+        val result = results[index + 1]
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Label("Sample $part.$index: ")
+            Label("Sample $part.${index + 1}: ")
             TimeValue(time ?: 0.0)
             ResultIcon(result)
             Spacer(Modifier.width(2.dp))
@@ -124,10 +185,7 @@ private fun SamplePartLayout(part: Int, sample: List<Sample>, times: Map<Int, Do
 }
 
 @Composable
-private fun InitLayout(time: Double?) = Row(
-    modifier = Modifier.border(1.dp, Color.LightGray),
-    verticalAlignment = Alignment.CenterVertically
-) {
+private fun InitLayout(time: Double?) = Row(verticalAlignment = Alignment.CenterVertically) {
     Label("Init: ")
     TimeValue(time ?: 0.0)
 }

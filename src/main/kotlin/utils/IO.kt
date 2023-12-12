@@ -1,6 +1,6 @@
 package utils
 
-import Samples
+import runner.Samples
 import com.google.gson.Gson
 import java.io.IOException
 

@@ -1,3 +1,5 @@
+package runner
+
 data class DayState(
     var runningInit: Boolean = false,
     var runningPart1: Boolean = false,

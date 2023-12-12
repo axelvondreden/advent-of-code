@@ -5,6 +5,8 @@ import com.github.ajalt.mordant.terminal.Terminal
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import runner.ResultState
+import runner.compose.App
 import utils.IO
 
 val years = 2015..2023
@@ -73,7 +75,7 @@ fun run(year: Int) {
 fun runDayCmdSingle(year: Int, day: Int, runSamples: Boolean) {
     t.println("Year ${(black on white)(year.toString())} Day ${(black on white)(day.toString())}")
 
-    val d = getDayInstance(year, day)
+    val d = getDayInstance(year, day)!!
     val samples = IO.readSamples(year, day)
 
     if (runSamples) {
@@ -198,9 +200,12 @@ fun getExpectedLines(): List<String> {
 }
 
 @Suppress("UNCHECKED_CAST")
-fun getDayInstance(year: Int, day: Int) =
+fun getDayInstance(year: Int, day: Int) = try {
     Class.forName("y$year.Day${day.toString().padStart(2, '0')}")?.getDeclaredConstructor()
-        ?.newInstance() as Day<Any>
+        ?.newInstance() as Day<Any>?
+} catch (e: Exception) {
+    null
+}
 
 fun Double.coloredTime() = if (this < 1) green(formattedTime()) else red(formattedTime())
 
