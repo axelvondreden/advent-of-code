@@ -107,19 +107,19 @@ fun Array<CharArray>.pad(char: Char, left: Int = 0, right: Int = 0, top: Int = 0
         }
     }
 
-fun Array<CharArray>.insertRow(row: Int, char: Char) = Array(size) { x ->
-    CharArray(this[0].size + 1) { y ->
-        if (y == row) char
+fun Array<CharArray>.insertRow(row: Int, char: Char, amount: Int = 1) = Array(size) { x ->
+    CharArray(this[0].size + amount) { y ->
+        if (y in (row until row + amount)) char
         else if (y < row) this[x][y]
-        else this[x][y - 1]
+        else this[x][y - amount]
     }
 }
 
-fun Array<CharArray>.insertColumn(col: Int, char: Char) = Array(size + 1) { x ->
+fun Array<CharArray>.insertColumn(col: Int, char: Char, amount: Int = 1) = Array(size + amount) { x ->
     CharArray(this[0].size) { y ->
-        if (x == col) char
+        if (x in (col until col + amount)) char
         else if (x < col) this[x][y]
-        else this[x - 1][y]
+        else this[x - amount][y]
     }
 }
 
