@@ -53,3 +53,13 @@ fun List<String>.toCharMatrix(): Array<CharArray> {
 fun String.toIntArray(delim: String = ",") = split(delim.toRegex()).map(String::toInt).toIntArray()
 
 fun String.toLongArray(delim: String = ",") = split(delim.toRegex()).map(String::toLong).toLongArray()
+
+fun <T> List<T>.getAllPairs(): List<Pair<T, T>> {
+    val list = mutableListOf<Pair<T, T>>()
+    for (i in indices) {
+        for (j in (i + 1..lastIndex)) {
+            list += this[i] to this[j]
+        }
+    }
+    return list
+}

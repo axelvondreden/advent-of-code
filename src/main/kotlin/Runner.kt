@@ -46,10 +46,11 @@ val t = Terminal()
 @Composable
 @Preview
 fun App() {
-    MaterialTheme(colors = darkColors(), typography = Typography()) {
+    MaterialTheme(colors = darkColors()) {
         Column(modifier = Modifier.background(Color(0xFF121212)).fillMaxSize()) {
             var selectedYear by remember { mutableStateOf<Int?>(null) }
-            var selectedDay by remember { mutableStateOf<Int?>(null) }
+            var selectedDay by remember { mutableStateOf<Day<Any>?>(null) }
+            val state = remember { mutableStateOf(DayState()) }
             Row(
                 modifier = Modifier.fillMaxWidth().border(1.dp, Color.White),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -64,43 +65,41 @@ fun App() {
                         }
                     }
                 } else {
-                    Button(onClick = { selectedYear = null }) {
+                    Button(onClick = { selectedYear = null; selectedDay = null }) {
                         Text("Back")
                     }
                     (1..25).forEach { day ->
-                        Button(onClick = { selectedDay = day }) {
+                        Button(onClick = { state.value = DayState(); selectedDay = getDayInstance(selectedYear!!, day) }) {
                             Text(day.toString())
                         }
                     }
                 }
             }
-            if (selectedDay != null && selectedYear != null) {
-                DayLayout(selectedYear!!, selectedDay!!)
+            if (selectedDay != null) {
+                val samples = IO.readSamples(selectedDay!!.year, selectedDay!!.day)
+                DayLayout(selectedDay!!, samples, state)
             }
         }
     }
 }
 
 @Composable
-private fun DayLayout(year: Int, day: Int) = Column(modifier = Modifier.fillMaxSize()) {
-    val state = remember { mutableStateOf(DayState()) }
+private fun DayLayout(day: Day<Any>, samples: Samples?, state: MutableState<DayState>) = Column(modifier = Modifier.fillMaxSize()) {
     val cScope = rememberCoroutineScope()
-    Row(modifier = Modifier.fillMaxWidth()) {
-        TextBlock("Year: $year  Day: $day")
-        Button(onClick = {
-            runDayComposeSingle(year, day, true, state, cScope)
-        }) {
-            Icon(Icons.Default.PlayArrow, "")
-            Text("Run")
-        }
+    Button(onClick = { runDayComposeSingle(day, samples, true, state, cScope) }) {
+        Icon(Icons.Default.PlayArrow, "")
+        Text("Run")
     }
-    state.value.part1SampleResults.forEach { (nr, result) ->
-        val time = state.value.part1SampleTimes[nr]!!
-        TextBlock("Sample 1 ($nr): [${time.formattedTime()}] [${result.correct}] [${result.result}]")
+    TextBlock("Year: ${day.year}  Day: ${day.day}")
+    samples?.part1?.indices?.forEach { index ->
+        val time = state.value.part1SampleTimes[index]
+        val result = state.value.part1SampleResults[index]
+        TextBlock("Sample 1 ($index): [${time?.formattedTime()}] [${result?.correct}] [${result?.result}]")
     }
-    state.value.part2SampleResults.forEach { (nr, result) ->
-        val time = state.value.part2SampleTimes[nr]!!
-        TextBlock("Sample 2 ($nr): [${time.formattedTime()}] [${result.correct}] [${result.result}]")
+    samples?.part2?.indices?.forEach { index ->
+        val time = state.value.part2SampleTimes[index]
+        val result = state.value.part2SampleResults[index]
+        TextBlock("Sample 2 ($index): [${time?.formattedTime()}] [${result?.correct}] [${result?.result}]")
     }
     TextBlock("Init: [${state.value.initTime?.formattedTime()}]")
     TextBlock("Part 1: [${state.value.part1Time?.formattedTime()}] [${state.value.part1Result?.correct}] [${state.value.part1Result?.result}]")
@@ -251,7 +250,7 @@ fun runDayCmdSingle(year: Int, day: Int, runSamples: Boolean) {
             val part2Time = (System.nanoTime() - part2StartTime) / 1000000000.0
             t.println(
                 "\tPart 2:\t${part2Time.coloredTime()}\tResult: ${
-                    if (part2Result.correct) (black on brightGreen)("CORRECT") else (black on brightRed)("FAILED")
+                    if (part2Result.correct) (black on brightGreen)("CORRECT") else (black on brightRed)("FAILED ")
                 } ${(black on white)(part2Result.result)}"
             )
             t.println("\tTotal:\t${(initTime + part1Time + part2Time).coloredTime()}")
@@ -259,17 +258,14 @@ fun runDayCmdSingle(year: Int, day: Int, runSamples: Boolean) {
     }
 }
 
-private fun runDayComposeSingle(year: Int, day: Int, runSamples: Boolean, state: MutableState<DayState>, cScope: CoroutineScope) {
+private fun runDayComposeSingle(day: Day<Any>, samples: Samples?, runSamples: Boolean, state: MutableState<DayState>, cScope: CoroutineScope) {
     cScope.launch {
-        val d = getDayInstance(year, day)
-        val samples = IO.readSamples(year, day)
-
         if (runSamples) {
             samples?.part1?.forEachIndexed { index, sample ->
                 state.value = state.value.copy(runningPart1Sample = index + 1)
                 val startTime = System.nanoTime()
-                val init = runInit(d, sample.input.lines())
-                val result = runPart(d, 1, init, sample.solution)
+                val init = runInit(day, sample.input.lines())
+                val result = runPart(day, 1, init, sample.solution)
                 val time = (System.nanoTime() - startTime) / 1000000000.0
                 state.value = state.value.apply {
                     part1SampleTimes[index + 1] = time
@@ -281,8 +277,8 @@ private fun runDayComposeSingle(year: Int, day: Int, runSamples: Boolean, state:
             samples?.part2?.forEachIndexed { index, sample ->
                 state.value = state.value.copy(runningPart2Sample = index + 1)
                 val startTime = System.nanoTime()
-                val init = runInit(d, sample.input.lines())
-                val result = runPart(d, 2, init, sample.solution)
+                val init = runInit(day, sample.input.lines())
+                val result = runPart(day, 2, init, sample.solution)
                 val time = (System.nanoTime() - startTime) / 1000000000.0
                 state.value = state.value.apply {
                     part2SampleTimes[index + 1] = time
@@ -292,12 +288,12 @@ private fun runDayComposeSingle(year: Int, day: Int, runSamples: Boolean, state:
             state.value = state.value.copy(runningPart2Sample = null)
         }
 
-        val rawInput = IO.readStrings(d.year, d.day)
+        val rawInput = IO.readStrings(day.year, day.day)
         if (rawInput.any { it.isNotBlank() }) {
             state.value = state.value.copy(runningInit = true)
             val initStartTime = System.nanoTime()
             val init = cScope.async {
-                runInit(d, rawInput)
+                runInit(day, rawInput)
             }
             cScope.launch {
                 while (init.isActive) {
@@ -312,7 +308,7 @@ private fun runDayComposeSingle(year: Int, day: Int, runSamples: Boolean, state:
 
             val part1StartTime = System.nanoTime()
             val part1 = cScope.async {
-                runPart(d, 1, input, expected[Triple(d.year, d.day, 1)])
+                runPart(day, 1, input, expected[Triple(day.year, day.day, 1)])
             }
             cScope.launch {
                 while (part1.isActive) {
@@ -327,7 +323,7 @@ private fun runDayComposeSingle(year: Int, day: Int, runSamples: Boolean, state:
 
             val part2StartTime = System.nanoTime()
             val part2 = cScope.async {
-                runPart(d, 2, input, expected[Triple(d.year, d.day, 2)])
+                runPart(day, 2, input, expected[Triple(day.year, day.day, 2)])
             }
             cScope.launch {
                 while (part2.isActive) {
