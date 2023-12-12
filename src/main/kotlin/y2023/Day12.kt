@@ -11,40 +11,28 @@ class Day12 : Day<List<Day12.Row>>(2023, 12) {
     }
 
     override fun solve1(input: List<Row>): Int {
-        input.forEach {
-            it.springs.getUnknownGroups()
-        }
-        return 0
-        //return sumOfValidConstellations(input)
+        return sumOfValidConstellations(input)
     }
 
     override fun solve2(input: List<Row>): Any = 0
 
     private fun sumOfValidConstellations(rows: List<Row>): Int {
         val cache = mutableMapOf<Int, Set<String>>()
-        var sum = 0
-        rows.forEachIndexed { index1, row ->
-            println("${index1 + 1} / ${rows.size}")
+        var index = 1
+        return rows.sumOf { row ->
+            println("$index / ${rows.size}")
+            index++
             val unknownGroups = row.springs.getUnknownGroups()
             val replacements = unknownGroups.map { cache.getOrPut(it.count()) { getPermutations(it.count()) } }
-            val replaced = replacements.count { replacement ->
-                val replaced = row.springs.apply {
-                    unknownIndices.forEachIndexed { index, springIndex ->
-                        set(springIndex, replacement[index])
-                    }
-                }
-                replaced.matches(row.groups)
-            }
-            sum += replaced
+            countValidConstellations(row, replacements, unknownGroups)
         }
-        return sum
     }
 
     private fun countValidConstellations(row: Row, replacements: List<Set<String>>, indicesToReplace: List<IntRange>): Int {
         return helper(row, replacements, indicesToReplace, 0)
     }
 
-    fun helper(row: Row, replacements: List<Set<String>>, indicesToReplace: List<IntRange>, currentIndex: Int): Int {
+    private fun helper(row: Row, replacements: List<Set<String>>, indicesToReplace: List<IntRange>, currentIndex: Int): Int {
         // base case - if currentIndex is the size of replacements, validate the configuration
         if (currentIndex == replacements.size) {
             return if (row.springs.matches(row.groups)) 1 else 0
@@ -70,7 +58,6 @@ class Day12 : Day<List<Day12.Row>>(2023, 12) {
                 row.springs[index] = '?'
             }
         }
-
         return validCombinations
     }
 
