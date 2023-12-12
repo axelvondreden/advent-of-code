@@ -10,21 +10,28 @@ class Day12 : Day<List<Day12.Row>>(2023, 12) {
         Row(s[0].toCharArray(), s[1].split(",").map { it.toInt() })
     }
 
-    override fun solve1(input: List<Row>): Any {
-        println("#.#.###".toCharArray().matches(listOf(1, 1, 3)))
-        println("#....######..#####.".toCharArray().matches(listOf(1, 6, 5)))
-        println(".###.##....#".toCharArray().matches(listOf(3, 2, 1)))
-        val p = getPermutations(2)
-        val p2 = getPermutations(3)
-        val p3 = getPermutations(5)
-        return 0
-    }
+    override fun solve1(input: List<Row>) = sumOfValidConstellations(input)
 
     override fun solve2(input: List<Row>): Any = 0
 
     private fun sumOfValidConstellations(rows: List<Row>): Int {
         val cache = mutableMapOf<Int, Set<String>>()
-        val unknownIndices = row.springs.withIndex().filter { it.value == '?' }.map { it.index }
+        var sum = 0
+        rows.forEachIndexed { index1, row ->
+            println("${index1 + 1} / ${rows.size}")
+            val unknownIndices = row.springs.withIndex().filter { it.value == '?' }.map { it.index }
+            val replacements = cache.getOrPut(unknownIndices.size) { getPermutations(unknownIndices.size) }
+            val replaced = replacements.count { replacement ->
+                val replaced = row.springs.apply {
+                    unknownIndices.forEachIndexed { index, springIndex ->
+                        set(springIndex, replacement[index])
+                    }
+                }
+                replaced.matches(row.groups)
+            }
+            sum += replaced
+        }
+        return sum
     }
 
     private fun getPermutations(length: Int): Set<String> {
@@ -52,6 +59,9 @@ class Day12 : Day<List<Day12.Row>>(2023, 12) {
                 currentSize = 0
             }
         }
-        return sizes.withIndex().all { it.value == groups[it.index] }
+        if (currentSize > 0) {
+            sizes += currentSize
+        }
+        return sizes.size == groups.size && sizes.withIndex().all { it.value == groups[it.index] }
     }
 }
