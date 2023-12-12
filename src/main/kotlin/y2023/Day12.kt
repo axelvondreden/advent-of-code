@@ -10,7 +10,13 @@ class Day12 : Day<List<Day12.Row>>(2023, 12) {
         Row(s[0].toCharArray(), s[1].split(",").map { it.toInt() })
     }
 
-    override fun solve1(input: List<Row>) = sumOfValidConstellations(input)
+    override fun solve1(input: List<Row>): Int {
+        input.forEach {
+            it.springs.getUnknownGroups()
+        }
+        return 0
+        //return sumOfValidConstellations(input)
+    }
 
     override fun solve2(input: List<Row>): Any = 0
 
@@ -44,6 +50,26 @@ class Day12 : Day<List<Day12.Row>>(2023, 12) {
             broken++
         }
         return list
+    }
+
+    private fun CharArray.getUnknownGroups(): List<IntRange> {
+        val ranges = mutableListOf<IntRange>()
+        var start: Int? = null
+
+        for (i in indices) {
+            if (this[i] == '?') {
+                if (start == null) {
+                    start = i
+                }
+            } else if (start != null) {
+                ranges.add(start..i - 1)
+                start = null
+            }
+        }
+
+        start?.let { ranges.add(it..lastIndex) }
+
+        return ranges
     }
 
     data class Row(val springs: CharArray, val groups: List<Int>)
