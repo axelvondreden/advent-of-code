@@ -10,11 +10,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 import expected
@@ -40,6 +42,7 @@ fun App() {
             var selectedYear by remember { mutableStateOf<Int?>(null) }
             var selectedDay by remember { mutableStateOf<Day<Any>?>(null) }
             val availableDays = remember { mutableStateListOf<Day<Any>>() }
+            var allOfYearSelected by remember { mutableStateOf(false) }
             val state = DayState(
                 initStartTime = remember { mutableStateOf(0L) },
                 initTime = remember { mutableStateOf(0L) },
@@ -60,6 +63,7 @@ fun App() {
                 onAllClick = {},
                 selectedYear = selectedYear,
                 onYearSelect = { year ->
+                    allOfYearSelected = false
                     selectedDay = null
                     selectedYear = year
                     availableDays.clear()
@@ -71,15 +75,26 @@ fun App() {
                 }
             )
             if (selectedYear != null) {
-                DaySelect(onAllClick = {}, availableDays, selectedDay?.day, onDaySelect = {
-                    state.reset()
-                    selectedDay = it
-                })
+                DaySelect(
+                    onAllClick = {
+                        selectedDay = null
+                        allOfYearSelected = true
+                    },
+                    days = availableDays,
+                    selectedDay = selectedDay?.day,
+                    allSelected = allOfYearSelected,
+                    onDaySelect = {
+                        allOfYearSelected = false
+                        state.reset()
+                        selectedDay = it
+                    })
 
                 val day = selectedDay
                 if (day != null) {
                     val samples = IO.readSamples(day.year, day.day)
                     DayLayout(day, samples, state, scope)
+                } else if (allOfYearSelected) {
+                    YearLayout(selectedYear!!, scope)
                 }
             }
         }
@@ -113,10 +128,14 @@ private fun DaySelect(
     onAllClick: () -> Unit,
     days: List<Day<Any>>,
     selectedDay: Int?,
+    allSelected: Boolean,
     onDaySelect: (Day<Any>) -> Unit
 ) {
     FlowRow(modifier = Modifier.fillMaxWidth().border(1.dp, Color.White)) {
-        Button(onClick = { onAllClick() }) {
+        Button(
+            onClick = { onAllClick() },
+            colors = if (allSelected) ButtonDefaults.buttonColors(backgroundColor = Color.Green) else ButtonDefaults.buttonColors()
+        ) {
             Text("All")
         }
         days.forEach { day ->
@@ -127,6 +146,21 @@ private fun DaySelect(
                 Text(day.day.toString())
             }
         }
+    }
+}
+
+@Composable
+private fun YearLayout(year: Int, scope: CoroutineScope) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        Button(
+            onClick = {
+
+            }) {
+            Icon(Icons.Default.PlayArrow, "")
+            Text("Run All")
+        }
+        Label("Year: ")
+        TextValue(year.toString())
     }
 }
 
@@ -192,7 +226,7 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: 
                     }
                 }) {
                 Icon(Icons.Default.PlayArrow, "")
-                Text("Run with samples")
+                Text("Run")
             }
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -260,19 +294,20 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: 
 @Composable
 private fun PartLayout(part: Int, time: Double?, result: ResultState?) =
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Label("Part $part: ")
+        Label("Part $part: ", minWidth = 120.dp)
         TimeValue(time ?: 0.0)
         ResultIcon(result)
         Spacer(Modifier.width(2.dp))
-        TextValue(result?.result ?: "")
+        result?.result?.let { TextValue(it) }
     }
 
 @Composable
 private fun ResultIcon(result: ResultState?) {
     Spacer(Modifier.width(2.dp))
-    result?.correct?.let {
-        if (it) Icon(Icons.Default.Check, "", tint = Color.Green)
-        else Icon(Icons.Default.Close, "", tint = Color.Red)
+    when (result?.correct) {
+        true -> Icon(Icons.Default.Check, "", tint = Color.Green)
+        false -> Icon(Icons.Default.Close, "", tint = Color.Red)
+        else -> Icon(Icons.Default.Refresh, "")
     }
 }
 
@@ -283,7 +318,12 @@ private fun TimeValue(time: Double) {
 }
 
 @Composable
-private fun SamplePartLayout(part: Int, sample: List<Sample>, times: Map<Int, Pair<Long, Long>>, results: Map<Int, ResultState>) {
+private fun SamplePartLayout(
+    part: Int,
+    sample: List<Sample>,
+    times: Map<Int, Pair<Long, Long>>,
+    results: Map<Int, ResultState>
+) {
     sample.indices.forEach { index ->
         val pair = times[index + 1]
         val time = pair?.let { it.second - it.first }
@@ -293,14 +333,14 @@ private fun SamplePartLayout(part: Int, sample: List<Sample>, times: Map<Int, Pa
             TimeValue(time?.div(1000000000.0) ?: 0.0)
             ResultIcon(result)
             Spacer(Modifier.width(2.dp))
-            TextValue(result?.result ?: "")
+            result?.result?.let { TextValue(it) }
         }
     }
 }
 
 @Composable
 private fun InitLayout(time: Double?) = Row(verticalAlignment = Alignment.CenterVertically) {
-    Label("Init: ")
+    Label("Init: ", minWidth = 120.dp)
     TimeValue(time ?: 0.0)
 }
 
@@ -311,8 +351,8 @@ private fun TextValue(text: String, color: Color = MaterialTheme.colors.onBackgr
     }
 
 @Composable
-private fun Label(text: String, color: Color = MaterialTheme.colors.onBackground) =
-    Text(text = text, modifier = Modifier.padding(4.dp), color = color)
+private fun Label(text: String, color: Color = MaterialTheme.colors.onBackground, minWidth: Dp = Dp.Unspecified) =
+    Text(text = text, modifier = Modifier.padding(4.dp).widthIn(min = minWidth), color = color)
 
 private fun runSingleDay(
     day: Day<Any>,
