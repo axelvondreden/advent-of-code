@@ -16,17 +16,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import com.github.ajalt.mordant.rendering.TextColors
+import androidx.compose.ui.unit.max
 import expected
 import formattedTime
 import getDayInstance
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import runInit
 import runPart
-import runner.DayState
-import runner.ResultState
-import runner.Sample
-import runner.Samples
+import runner.*
+import runner.Target
 import utils.IO
 import years
 
@@ -140,31 +141,52 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: 
                         runSingleDay(
                             day = day,
                             samples = samples,
-                            onInitStart = { state.initStartTime.value = it },
-                            onInitEnd = { state.initTime.value = System.nanoTime() - state.initStartTime.value },
-                            onPart1Start = { state.part1StartTime.value = it },
+                            onInitStart = {
+                                state.initStartTime.value = it
+                                state.target.value = Target.Init
+                            },
+                            onInitEnd = {
+                                state.initTime.value = System.nanoTime() - state.initStartTime.value
+                                state.target.value = null
+                            },
+                            onPart1Start = {
+                                state.part1StartTime.value = it
+                                state.target.value = Target.Part(1)
+                            },
                             onPart1End = { time, result ->
                                 state.part1Time.value = time - state.part1StartTime.value
                                 state.part1Result.value = result
+                                state.target.value = null
                             },
-                            onPart2Start = { state.part2StartTime.value = it },
+                            onPart2Start = {
+                                state.part2StartTime.value = it
+                                state.target.value = Target.Part(2)
+                            },
                             onPart2End = { time, result ->
                                 state.part2Result.value = result
                                 state.part2Time.value = time - state.part2StartTime.value
+                                state.target.value = null
                             },
                             onSampleStart = { part, nr, time ->
                                 if (part == 1) {
                                     state.part1SampleTimes[nr] = time to 0L
+                                    state.target.value = Target.Sample1(nr)
                                 } else {
                                     state.part2SampleTimes[nr] = time to 0L
+                                    state.target.value = Target.Sample2(nr)
                                 }
                             },
                             onSampleEnd = { part, nr, time, result ->
                                 if (part == 1) {
-
+                                    val start = state.part1SampleTimes[nr]!!.first
+                                    state.part1SampleTimes[nr] = start to time
+                                    state.part1SampleResults[nr] = result
                                 } else {
-
+                                    val start = state.part2SampleTimes[nr]!!.first
+                                    state.part2SampleTimes[nr] = start to time
+                                    state.part2SampleResults[nr] = result
                                 }
+                                state.target.value = null
                             }
                         )
                     }
@@ -180,20 +202,45 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: 
             TextValue(day.day.toString())
         }
         if (samples != null) {
+            LaunchedEffect(state.target.value) {
+                while (state.target.value is Target.Sample1) {
+                    delay(100)
+                    val nr = state.target.value?.nr
+                    if (nr != null) {
+                        val start = state.part1SampleTimes[nr]?.first
+                        if (start != null) {
+                            state.part1SampleTimes[nr] = start to System.nanoTime()
+                        }
+                    }
+                }
+            }
             SamplePartLayout(1, samples.part1, state.part1SampleTimes, state.part1SampleResults)
+
+            LaunchedEffect(state.target.value) {
+                while (state.target.value is Target.Sample2) {
+                    delay(100)
+                    val nr = state.target.value?.nr
+                    if (nr != null) {
+                        val start = state.part2SampleTimes[nr]?.first
+                        if (start != null) {
+                            state.part2SampleTimes[nr] = start to System.nanoTime()
+                        }
+                    }
+                }
+            }
             SamplePartLayout(2, samples.part2, state.part2SampleTimes, state.part2SampleResults)
         }
 
-        LaunchedEffect(state.initStartTime.value) {
-            while (state.initStartTime.value > 0 && state.part1StartTime.value == 0L) {
+        LaunchedEffect(state.target.value) {
+            while (state.target.value == Target.Init) {
                 delay(100)
                 state.initTime.value = System.nanoTime() - state.initStartTime.value
             }
         }
         InitLayout(state.initTime.value / 1000000000.0)
 
-        LaunchedEffect(state.part1StartTime.value) {
-            while (state.part1StartTime.value > 0 && state.part1Result.value == null) {
+        LaunchedEffect(state.target.value) {
+            while (state.target.value is Target.Part && state.target.value?.nr == 1) {
                 delay(100)
                 state.part1Time.value = System.nanoTime() - state.part1StartTime.value
             }
@@ -201,7 +248,7 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: 
         PartLayout(1, state.part1Time.value / 1000000000.0, state.part1Result.value)
 
         LaunchedEffect(state.part2StartTime.value) {
-            while (state.part2StartTime.value > 0 && state.part2Result.value == null) {
+            while (state.target.value is Target.Part && state.target.value?.nr == 2) {
                 delay(100)
                 state.part2Time.value = System.nanoTime() - state.part2StartTime.value
             }
@@ -230,16 +277,20 @@ private fun ResultIcon(result: ResultState?) {
 }
 
 @Composable
-private fun TimeValue(time: Double) = TextValue(time.formattedTime(), color = if (time < 1) Color.Green else Color.Red)
+private fun TimeValue(time: Double) {
+    val posTime = time.coerceAtLeast(0.0)
+    TextValue(posTime.formattedTime(), color = if (posTime < 1) Color.Green else Color.Red)
+}
 
 @Composable
-private fun SamplePartLayout(part: Int, sample: List<Sample>, times: Map<Int, Double>, results: Map<Int, ResultState>) {
+private fun SamplePartLayout(part: Int, sample: List<Sample>, times: Map<Int, Pair<Long, Long>>, results: Map<Int, ResultState>) {
     sample.indices.forEach { index ->
-        val time = times[index + 1]
+        val pair = times[index + 1]
+        val time = pair?.let { it.second - it.first }
         val result = results[index + 1]
         Row(verticalAlignment = Alignment.CenterVertically) {
             Label("Sample $part.${index + 1}: ")
-            TimeValue(time ?: 0.0)
+            TimeValue(time?.div(1000000000.0) ?: 0.0)
             ResultIcon(result)
             Spacer(Modifier.width(2.dp))
             TextValue(result?.result ?: "")

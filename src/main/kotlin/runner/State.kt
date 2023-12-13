@@ -38,9 +38,8 @@ data class DayState(
 data class ResultState(val result: String, val correct: Boolean)
 
 sealed class Target(var nr: Int) {
-    data object INIT : Target(0)
-    data object PART1 : Target(0)
-    data object PART2 : Target(0)
-    class SAMPLE1(nr: Int) : Target(nr)
-    class SAMPLE2(nr: Int) : Target(nr)
+    data object Init : Target(0)
+    class Part(nr: Int) : Target(nr)
+    class Sample1(nr: Int) : Target(nr)
+    class Sample2(nr: Int) : Target(nr)
 }
