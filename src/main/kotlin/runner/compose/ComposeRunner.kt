@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import com.github.ajalt.mordant.rendering.TextColors
 import expected
 import formattedTime
 import getDayInstance
@@ -46,7 +47,12 @@ fun App() {
                 part2StartTime = remember { mutableStateOf(0L) },
                 part2Time = remember { mutableStateOf(0L) },
                 part1Result = remember { mutableStateOf(null) },
-                part2Result = remember { mutableStateOf(null) }
+                part2Result = remember { mutableStateOf(null) },
+                part1SampleTimes = remember { mutableStateMapOf() },
+                part2SampleTimes = remember { mutableStateMapOf() },
+                part1SampleResults = remember { mutableStateMapOf() },
+                part2SampleResults = remember { mutableStateMapOf() },
+                target = remember { mutableStateOf(null) }
             )
 
             YearSelect(
@@ -133,6 +139,7 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: 
                     scope.launch(Dispatchers.IO) {
                         runSingleDay(
                             day = day,
+                            samples = samples,
                             onInitStart = { state.initStartTime.value = it },
                             onInitEnd = { state.initTime.value = System.nanoTime() - state.initStartTime.value },
                             onPart1Start = { state.part1StartTime.value = it },
@@ -144,6 +151,20 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: 
                             onPart2End = { time, result ->
                                 state.part2Result.value = result
                                 state.part2Time.value = time - state.part2StartTime.value
+                            },
+                            onSampleStart = { part, nr, time ->
+                                if (part == 1) {
+                                    state.part1SampleTimes[nr] = time to 0L
+                                } else {
+                                    state.part2SampleTimes[nr] = time to 0L
+                                }
+                            },
+                            onSampleEnd = { part, nr, time, result ->
+                                if (part == 1) {
+
+                                } else {
+
+                                }
                             }
                         )
                     }
@@ -158,10 +179,10 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: 
             Label("   Day: ")
             TextValue(day.day.toString())
         }
-        /*if (samples != null) {
-            SamplePartLayout(1, samples.part1, state.value.part1SampleTimes, state.value.part1SampleResults)
-            SamplePartLayout(2, samples.part2, state.value.part2SampleTimes, state.value.part2SampleResults)
-        }*/
+        if (samples != null) {
+            SamplePartLayout(1, samples.part1, state.part1SampleTimes, state.part1SampleResults)
+            SamplePartLayout(2, samples.part2, state.part2SampleTimes, state.part2SampleResults)
+        }
 
         LaunchedEffect(state.initStartTime.value) {
             while (state.initStartTime.value > 0 && state.part1StartTime.value == 0L) {
@@ -244,13 +265,31 @@ private fun Label(text: String, color: Color = MaterialTheme.colors.onBackground
 
 private fun runSingleDay(
     day: Day<Any>,
+    samples: Samples?,
     onInitStart: (Long) -> Unit,
     onInitEnd: (Long) -> Unit,
     onPart1Start: (Long) -> Unit,
     onPart1End: (Long, ResultState) -> Unit,
     onPart2Start: (Long) -> Unit,
-    onPart2End: (Long, ResultState) -> Unit
+    onPart2End: (Long, ResultState) -> Unit,
+    onSampleStart: (Int, Int, Long) -> Unit,
+    onSampleEnd: (Int, Int, Long, ResultState) -> Unit
 ) {
+    if (samples != null) {
+        samples.part1.forEachIndexed { index, sample ->
+            onSampleStart(1, index + 1, System.nanoTime())
+            val init = runInit(day, sample.input.lines())
+            val result = runPart(day, 1, init, sample.solution)
+            onSampleEnd(1, index + 1, System.nanoTime(), result)
+        }
+
+        samples.part2.forEachIndexed { index, sample ->
+            onSampleStart(2, index + 1, System.nanoTime())
+            val init = runInit(day, sample.input.lines())
+            val result = runPart(day, 2, init, sample.solution)
+            onSampleEnd(2, index + 1, System.nanoTime(), result)
+        }
+    }
     val rawInput = IO.readStrings(day.year, day.day)
     if (rawInput.any { it.isNotBlank() }) {
         onInitStart(System.nanoTime())
