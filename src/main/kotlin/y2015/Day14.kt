@@ -6,11 +6,9 @@ class Day14 : Day<List<List<String>>>(2015, 14) {
 
     override fun List<String>.parse() = map { it.split(" ") }
 
-    override fun solve1(input: List<List<String>>) {
-        input.associate {
-            it[0] to Reindeer(it[3].toInt(), it[6].toInt(), it[13].toInt())
-        }.values.maxOf { it.getDistance(2503) }
-    }
+    override fun solve1(input: List<List<String>>) = input.associate {
+        it[0] to Reindeer(it[3].toInt(), it[6].toInt(), it[13].toInt())
+    }.values.maxOf { it.getDistance(2503) }
 
     override fun solve2(input: List<List<String>>): Int {
         val reindeers = input.associate { it[0] to Reindeer(it[3].toInt(), it[6].toInt(), it[13].toInt()) }
