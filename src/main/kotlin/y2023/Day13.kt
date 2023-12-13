@@ -36,10 +36,10 @@ class Day13 : Day<List<Array<CharArray>>>(2023, 13) {
             for (y in this[x].indices) {
                 val copy = copy()
                 copy[x][y] = if (copy[x][y] == '#') '.' else '#'
-                val newV = copy.findVerticalSplits()
-                if (newV != null && newV != originalV) return newV
-                val newH = copy.findHorizontalSplits()
-                if (newH != null && newH != originalH) return newH * 100
+                val newV = copy.findVerticalSplits().firstOrNull { it != originalV }
+                if (newV != null) return newV
+                val newH = copy.findHorizontalSplits().firstOrNull { it != originalH }
+                if (newH != null) return newH * 100
             }
         }
         error("Big Fail")
