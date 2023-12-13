@@ -19,10 +19,7 @@ import androidx.compose.ui.unit.dp
 import expected
 import formattedTime
 import getDayInstance
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import runInit
 import runPart
 import runner.DayState
@@ -41,7 +38,16 @@ fun App() {
             var selectedYear by remember { mutableStateOf<Int?>(null) }
             var selectedDay by remember { mutableStateOf<Day<Any>?>(null) }
             val availableDays = remember { mutableStateListOf<Day<Any>>() }
-            val state = remember { mutableStateOf(DayState()) }
+            val state = DayState(
+                initStartTime = remember { mutableStateOf(0L) },
+                initTime = remember { mutableStateOf(0L) },
+                part1StartTime = remember { mutableStateOf(0L) },
+                part1Time = remember { mutableStateOf(0L) },
+                part2StartTime = remember { mutableStateOf(0L) },
+                part2Time = remember { mutableStateOf(0L) },
+                part1Result = remember { mutableStateOf(null) },
+                part2Result = remember { mutableStateOf(null) }
+            )
 
             YearSelect(
                 onAllClick = {},
@@ -59,7 +65,7 @@ fun App() {
             )
             if (selectedYear != null) {
                 DaySelect(onAllClick = {}, availableDays, selectedDay?.day, onDaySelect = {
-                    state.value = DayState()
+                    state.reset()
                     selectedDay = it
                 })
 
@@ -118,16 +124,32 @@ private fun DaySelect(
 }
 
 @Composable
-private fun DayLayout(day: Day<Any>, samples: Samples?, state: MutableState<DayState>, scope: CoroutineScope) =
+private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: CoroutineScope) {
     Column(modifier = Modifier.fillMaxSize()) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Button(onClick = { scope.launch { runDayComposeSingle(day, samples, true, state) } }) {
+            Button(
+                onClick = {
+                    state.reset()
+                    scope.launch(Dispatchers.IO) {
+                        runSingleDay(
+                            day = day,
+                            onInitStart = { state.initStartTime.value = it },
+                            onInitEnd = { state.initTime.value = System.nanoTime() - state.initStartTime.value },
+                            onPart1Start = { state.part1StartTime.value = it },
+                            onPart1End = { time, result ->
+                                state.part1Time.value = time - state.part1StartTime.value
+                                state.part1Result.value = result
+                            },
+                            onPart2Start = { state.part2StartTime.value = it },
+                            onPart2End = { time, result ->
+                                state.part2Result.value = result
+                                state.part2Time.value = time - state.part2StartTime.value
+                            }
+                        )
+                    }
+                }) {
                 Icon(Icons.Default.PlayArrow, "")
                 Text("Run with samples")
-            }
-            Button(onClick = { scope.launch { runDayComposeSingle(day, samples, false, state) } }) {
-                Icon(Icons.Default.PlayArrow, "")
-                Text("Run without samples")
             }
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -136,16 +158,36 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: MutableState<DayS
             Label("   Day: ")
             TextValue(day.day.toString())
         }
-        if (samples != null) {
+        /*if (samples != null) {
             SamplePartLayout(1, samples.part1, state.value.part1SampleTimes, state.value.part1SampleResults)
             SamplePartLayout(2, samples.part2, state.value.part2SampleTimes, state.value.part2SampleResults)
+        }*/
+
+        LaunchedEffect(state.initStartTime.value) {
+            while (state.initStartTime.value > 0 && state.part1StartTime.value == 0L) {
+                delay(100)
+                state.initTime.value = System.nanoTime() - state.initStartTime.value
+            }
         }
+        InitLayout(state.initTime.value / 1000000000.0)
 
-        InitLayout(state.value.initTime)
+        LaunchedEffect(state.part1StartTime.value) {
+            while (state.part1StartTime.value > 0 && state.part1Result.value == null) {
+                delay(100)
+                state.part1Time.value = System.nanoTime() - state.part1StartTime.value
+            }
+        }
+        PartLayout(1, state.part1Time.value / 1000000000.0, state.part1Result.value)
 
-        PartLayout(1, state.value.part1Time, state.value.part1Result)
-        PartLayout(2, state.value.part2Time, state.value.part2Result)
+        LaunchedEffect(state.part2StartTime.value) {
+            while (state.part2StartTime.value > 0 && state.part2Result.value == null) {
+                delay(100)
+                state.part2Time.value = System.nanoTime() - state.part2StartTime.value
+            }
+        }
+        PartLayout(2, state.part2Time.value / 1000000000.0, state.part2Result.value)
     }
+}
 
 @Composable
 private fun PartLayout(part: Int, time: Double?, result: ResultState?) =
@@ -200,63 +242,27 @@ private fun TextValue(text: String, color: Color = MaterialTheme.colors.onBackgr
 private fun Label(text: String, color: Color = MaterialTheme.colors.onBackground) =
     Text(text = text, modifier = Modifier.padding(4.dp), color = color)
 
-private suspend fun runDayComposeSingle(
+private fun runSingleDay(
     day: Day<Any>,
-    samples: Samples?,
-    runSamples: Boolean,
-    state: MutableState<DayState>,
+    onInitStart: (Long) -> Unit,
+    onInitEnd: (Long) -> Unit,
+    onPart1Start: (Long) -> Unit,
+    onPart1End: (Long, ResultState) -> Unit,
+    onPart2Start: (Long) -> Unit,
+    onPart2End: (Long, ResultState) -> Unit
 ) {
-    if (runSamples) {
-        samples?.part1?.forEachIndexed { index, sample ->
-            state.value = state.value.copy(runningPart1Sample = index + 1)
-            val startTime = System.nanoTime()
-            val init = runInit(day, sample.input.lines())
-            val result = runPart(day, 1, init, sample.solution)
-            val time = (System.nanoTime() - startTime) / 1000000000.0
-            state.value = state.value.apply {
-                part1SampleTimes[index + 1] = time
-                part1SampleResults[index + 1] = result
-            }
-        }
-        state.value = state.value.copy(runningPart1Sample = null)
-
-        samples?.part2?.forEachIndexed { index, sample ->
-            state.value = state.value.copy(runningPart2Sample = index + 1)
-            val startTime = System.nanoTime()
-            val init = runInit(day, sample.input.lines())
-            val result = runPart(day, 2, init, sample.solution)
-            val time = (System.nanoTime() - startTime) / 1000000000.0
-            state.value = state.value.apply {
-                part2SampleTimes[index + 1] = time
-                part2SampleResults[index + 1] = result
-            }
-        }
-        state.value = state.value.copy(runningPart2Sample = null)
-    }
-
     val rawInput = IO.readStrings(day.year, day.day)
     if (rawInput.any { it.isNotBlank() }) {
-        state.value = state.value.copy(runningInit = true)
-        val initStartTime = System.nanoTime()
+        onInitStart(System.nanoTime())
         val input = runInit(day, rawInput)
-        val initTime = (System.nanoTime() - initStartTime) / 1000000000.0
+        onInitEnd(System.nanoTime())
 
-        state.value = state.value.copy(runningInit = false, initTime = initTime, runningPart1 = true)
-
-        val part1StartTime = System.nanoTime()
+        onPart1Start(System.nanoTime())
         val part1Result = runPart(day, 1, input, expected[Triple(day.year, day.day, 1)])
-        val part1Time = (System.nanoTime() - part1StartTime) / 1000000000.0
+        onPart1End(System.nanoTime(), part1Result)
 
-        state.value = state.value.copy(
-            runningPart1 = false,
-            part1Time = part1Time,
-            part1Result = part1Result,
-            runningPart2 = true
-        )
-
-        val part2StartTime = System.nanoTime()
+        onPart2Start(System.nanoTime())
         val part2Result = runPart(day, 2, input, expected[Triple(day.year, day.day, 2)])
-        val part2Time = (System.nanoTime() - part2StartTime) / 1000000000.0
-        state.value = state.value.copy(runningPart2 = false, part2Time = part2Time, part2Result = part2Result)
+        onPart2End(System.nanoTime(), part2Result)
     }
 }
