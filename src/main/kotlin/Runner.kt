@@ -209,4 +209,4 @@ fun getDayInstance(year: Int, day: Int) = try {
 
 fun Double.coloredTime() = if (this < 1) green(formattedTime()) else red(formattedTime())
 
-fun Double.formattedTime() = "${"%.6f".format(this)}s"
+fun Double.formattedTime() = "${"%.${7 - (toInt().toString().length)}f".format(this)}s"

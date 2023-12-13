@@ -31,6 +31,7 @@ import runner.*
 import runner.Target
 import utils.IO
 import years
+import kotlin.math.max
 
 @Composable
 @Preview
@@ -166,33 +167,130 @@ private fun YearLayout(year: Int, days: List<Day<Any>>, state: YearState, scope:
                 scope.launch(Dispatchers.IO) {
                     runDays(
                         days = days,
-                        onInitStart = { day, time -> },
-                        onInitEnd = { day, time -> },
-                        onPart1Start = { day, time -> },
-                        onPart1End = { day, time, result -> },
-                        onPart2Start = { day, time -> },
-                        onPart2End = { day, time, result -> }
+                        onInitStart = { day, time ->
+                            state.initTimes[day] = time to 0L
+                            state.target.value = YearTarget.Init(day)
+                        },
+                        onInitEnd = { day, time ->
+                            val start = state.initTimes[day]!!.first
+                            state.initTimes[day] = start to time
+                            state.target.value = null
+                        },
+                        onPart1Start = { day, time ->
+                            state.part1Times[day] = time to 0L
+                            state.target.value = YearTarget.Part1(day)
+                        },
+                        onPart1End = { day, time, result ->
+                            val start = state.part1Times[day]!!.first
+                            state.part1Times[day] = start to time
+                            state.part1Results[day] = result
+                            state.target.value = null
+                        },
+                        onPart2Start = { day, time ->
+                            state.part2Times[day] = time to 0L
+                            state.target.value = YearTarget.Part2(day)
+                        },
+                        onPart2End = { day, time, result ->
+                            val start = state.part2Times[day]!!.first
+                            state.part2Times[day] = start to time
+                            state.part2Results[day] = result
+                            state.target.value = null
+                        }
                     )
                 }
             }) {
             Icon(Icons.Default.PlayArrow, "")
             Text("Run All")
         }
+        LaunchedEffect(state.target.value) {
+            while (state.target.value is YearTarget.Init) {
+                state.target.value?.day?.let { day ->
+                    state.initTimes[day]?.first?.let { start ->
+                        state.initTimes[day] = start to System.nanoTime()
+                    }
+                }
+                delay(100)
+            }
+        }
+        LaunchedEffect(state.target.value) {
+            while (state.target.value is YearTarget.Part1) {
+                state.target.value?.day?.let { day ->
+                    state.part1Times[day]?.first?.let { start ->
+                        state.part1Times[day] = start to System.nanoTime()
+                    }
+                }
+                delay(100)
+            }
+        }
+        LaunchedEffect(state.target.value) {
+            while (state.target.value is YearTarget.Part2) {
+                state.target.value?.day?.let { day ->
+                    state.part2Times[day]?.first?.let { start ->
+                        state.part2Times[day] = start to System.nanoTime()
+                    }
+                }
+                delay(100)
+            }
+        }
         Row(verticalAlignment = Alignment.CenterVertically) {
             Label("Year: ")
             TextValue(year.toString())
+            Spacer(Modifier.width(10.dp))
+            Label("Time Total: ")
+            val totalTime = state.initTimes.values.sumOf { max(0.0, (it.second - it.first) / 1000000000.0) } +
+                    state.part1Times.values.sumOf { max(0.0, (it.second - it.first) / 1000000000.0) } +
+                    state.part2Times.values.sumOf { max(0.0, (it.second - it.first) / 1000000000.0) }
+            TimeValue(
+                time = totalTime,
+                redValue = days.size.toDouble()
+            )
+            Spacer(Modifier.width(10.dp))
+            Label("Time / Day: ")
+            TimeValue(time = totalTime / days.size)
+            Spacer(Modifier.width(10.dp))
+            Label("Correct: ")
+            TextValue(
+                text = (state.part1Results.values.count { it.correct } + state.part2Results.values.count { it.correct }).toString(),
+                color = Color.Green
+            )
+            Spacer(Modifier.width(4.dp))
+            Label("Incorrect: ")
+            TextValue(
+                text = (state.part1Results.values.count { !it.correct } + state.part2Results.values.count { !it.correct }).toString(),
+                color = Color.Red
+            )
         }
         FlowRow {
             days.forEach {
-                Box(modifier = Modifier.border(1.dp, Color.White).padding(2.dp)) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Label("Day ${it.day}", minWidth = 40.dp)
-                        Column {
-                            Label("Part 1:")
-                            Label("Part 2:")
-                        }
-                    }
-                }
+                DayLayoutCompact(
+                    day = it,
+                    initTime = state.initTimes[it.day]?.let { it.second - it.first },
+                    part1Time = state.part1Times[it.day]?.let { it.second - it.first },
+                    part2Time = state.part2Times[it.day]?.let { it.second - it.first },
+                    part1Result = state.part1Results[it.day],
+                    part2Result = state.part2Results[it.day]
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun DayLayoutCompact(
+    day: Day<Any>,
+    initTime: Long?,
+    part1Time: Long?,
+    part2Time: Long?,
+    part1Result: ResultState?,
+    part2Result: ResultState?
+) {
+    Box(modifier = Modifier.border(1.dp, Color.White).padding(2.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Label("Day ${day.day}", minWidth = 60.dp)
+            Column {
+                InitLayout(initTime?.div(1000000000.0))
+                PartLayoutCompact(1, part1Time?.div(1000000000.0), part1Result)
+                PartLayoutCompact(2, part2Time?.div(1000000000.0), part2Result)
             }
         }
     }
@@ -336,6 +434,14 @@ private fun PartLayout(part: Int, time: Double?, result: ResultState?) =
     }
 
 @Composable
+private fun PartLayoutCompact(part: Int, time: Double?, result: ResultState?) =
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Label("Part $part: ", minWidth = 120.dp)
+        TimeValue(time ?: 0.0)
+        ResultIcon(result)
+    }
+
+@Composable
 private fun ResultIcon(result: ResultState?) {
     Spacer(Modifier.width(2.dp))
     when (result?.correct) {
@@ -346,9 +452,9 @@ private fun ResultIcon(result: ResultState?) {
 }
 
 @Composable
-private fun TimeValue(time: Double) {
+private fun TimeValue(time: Double, redValue: Double = 1.0) {
     val posTime = time.coerceAtLeast(0.0)
-    TextValue(posTime.formattedTime(), color = if (posTime < 1) Color.Green else Color.Red)
+    TextValue(posTime.formattedTime(), color = if (posTime < redValue) Color.Green else Color.Red)
 }
 
 @Composable

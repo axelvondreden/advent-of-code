@@ -9,7 +9,7 @@ data class YearState(
     val part2Times: SnapshotStateMap<Int, Pair<Long, Long>>,
     val part1Results: SnapshotStateMap<Int, ResultState>,
     val part2Results: SnapshotStateMap<Int, ResultState>,
-    val target: MutableState<Int?>
+    val target: MutableState<YearTarget?>
 ) {
     fun reset() {
         initTimes.clear()
@@ -60,4 +60,10 @@ sealed class Target(var nr: Int) {
     class Part(nr: Int) : Target(nr)
     class Sample1(nr: Int) : Target(nr)
     class Sample2(nr: Int) : Target(nr)
+}
+
+sealed class YearTarget(val day: Int) {
+    class Init(day: Int) : YearTarget(day)
+    class Part1(day: Int) : YearTarget(day)
+    class Part2(day: Int) : YearTarget(day)
 }
