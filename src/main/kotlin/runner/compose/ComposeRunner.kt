@@ -7,10 +7,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -240,9 +237,10 @@ private fun YearLayout(year: Int, days: List<Day<Any>>, state: YearState, scope:
             val totalTime = state.initTimes.values.sumOf { max(0.0, (it.second - it.first) / 1000000000.0) } +
                 state.part1Times.values.sumOf { max(0.0, (it.second - it.first) / 1000000000.0) } +
                 state.part2Times.values.sumOf { max(0.0, (it.second - it.first) / 1000000000.0) }
+            val size = days.size.toDouble()
             TimeValue(
                 time = totalTime,
-                redValue = days.size.toDouble()
+                colorRange = listOf(size / 10, size / 2, size)
             )
             Spacer(Modifier.width(10.dp))
             Label("Time / Day: ")
@@ -261,15 +259,15 @@ private fun YearLayout(year: Int, days: List<Day<Any>>, state: YearState, scope:
             )
         }
         FlowRow {
-            days.forEach {
+            days.forEach { day ->
                 DayLayoutCompact(
-                    day = it,
+                    day = day,
                     target = state.target.value,
-                    initTime = state.initTimes[it.day]?.let { it.second - it.first },
-                    part1Time = state.part1Times[it.day]?.let { it.second - it.first },
-                    part2Time = state.part2Times[it.day]?.let { it.second - it.first },
-                    part1Result = state.part1Results[it.day],
-                    part2Result = state.part2Results[it.day]
+                    initTime = state.initTimes[day.day]?.let { it.second - it.first },
+                    part1Time = state.part1Times[day.day]?.let { it.second - it.first },
+                    part2Time = state.part2Times[day.day]?.let { it.second - it.first },
+                    part1Result = state.part1Results[day.day],
+                    part2Result = state.part2Results[day.day]
                 )
             }
         }
@@ -453,14 +451,21 @@ private fun ResultIcon(result: ResultState?) {
     when (result?.correct) {
         true -> Icon(Icons.Default.Check, "", tint = Color.Green)
         false -> Icon(Icons.Default.Close, "", tint = Color.Red)
-        else -> Icon(Icons.Default.Refresh, "")
+        else -> Icon(Icons.Default.Build, "")
     }
 }
 
 @Composable
-private fun TimeValue(time: Double, redValue: Double = 1.0) {
+private fun TimeValue(time: Double, colorRange: List<Double> = listOf(0.1, 0.5, 1.0)) {
     val posTime = time.coerceAtLeast(0.0)
-    TextValue(posTime.formattedTime(), color = if (posTime < redValue) Color.Green else Color.Red)
+    TextValue(posTime.formattedTime(), color = colorRange.getColor(posTime))
+}
+
+private fun List<Double>.getColor(value: Double) = when {
+    value < this[0] -> Color.Green
+    value < this[1] -> Color.Yellow
+    value < this[2] -> Color(252, 145, 5)
+    else -> Color.Red
 }
 
 @Composable

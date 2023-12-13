@@ -2,156 +2,118 @@ package y2015
 
 import Day
 import kotlin.math.max
+import kotlin.math.min
 
 class Day22 : Day<Pair<Int, Int>>(2015, 22) {
+
+    data class Stats(
+        val hp: Int,
+        val armor: Int,
+        val power: Int
+    )
+
+    data class Spell(
+        val cost: Int,
+        val duration: Int,
+        val action: (Pair<Stats, Stats>) -> Pair<Stats, Stats>
+    )
+
+    private val magicMissile = Spell(53, 1) { (me, boss) ->
+        me to boss.copy(hp = boss.hp - 4)
+    }
+    private val drain = Spell(73, 1) { (me, boss) ->
+        me.copy(hp = me.hp + 2) to boss.copy(hp = boss.hp - 2)
+    }
+    private val shield = Spell(113, 6) { (me, boss) ->
+        me.copy(armor = 7) to boss
+    }
+    private val poison = Spell(173, 6) { (me, boss) ->
+        me to boss.copy(hp = boss.hp - 3)
+    }
+    private val recharge = Spell(229, 5) { (me, boss) ->
+        me.copy(power = me.power + 101) to boss
+    }
+
+    private val bossHit = Spell(0, 1) { (me, boss) ->
+        me.copy(hp = me.hp - max(boss.power - me.armor, 1)) to boss
+    }
+    private val hardBossHit = Spell(0, 1) { (me, boss) ->
+        me.copy(hp = me.hp - max(boss.power - me.armor, 1) - 1) to boss
+    }
+
+    private val spells = listOf(magicMissile, drain, shield, poison, recharge)
+
+    data class Game(
+        val me: Stats,
+        val boss: Stats,
+        val spells: Map<Spell, Int> = mapOf(),
+        val mana: Int = 0,
+        val myMove: Boolean = true
+    )
+
+    private fun countMana(
+        bossHp: Int,
+        bossPower: Int,
+        mySpells: List<Spell>,
+        bossSpells: List<Spell>
+    ): Int {
+        val me = Stats(50, 0, 500)
+        val boss = Stats(bossHp, 0, bossPower)
+        val queue = ArrayDeque(listOf(Game(me, boss)))
+        var best = Int.MAX_VALUE
+        while (queue.isNotEmpty()) {
+            val game = queue.removeFirst()
+
+            val states = game.spells.keys
+                .fold(game.me to game.boss) { acc, spell -> spell.action(acc) }
+                .let { state ->
+                    if (game.spells[shield] != 1) {
+                        state
+                    } else {
+                        state.copy(first = state.first.copy(armor = 0))
+                    }
+                }
+
+            if (states.first.hp <= 0) {
+                continue
+            }
+            if (states.second.hp <= 0) {
+                best = min(best, game.mana)
+                continue
+            }
+            val activeSpells = game.spells
+                .mapValues { it.value - 1 }
+                .filterValues { it > 0 }
+
+            val spells = if (game.myMove) {
+                mySpells
+                    .filter { it.cost <= states.first.power }
+                    .filterNot { it in activeSpells }
+                    .filter { game.mana + it.cost < best }
+            } else {
+                bossSpells
+            }
+
+            queue += spells.map { spell ->
+                game.copy(
+                    me = states.first.copy(power = states.first.power - spell.cost),
+                    boss = states.second,
+                    spells = activeSpells + (spell to spell.duration),
+                    mana = game.mana + spell.cost,
+                    myMove = !game.myMove,
+                )
+            }
+        }
+        return best
+    }
 
     override fun List<String>.parse() = with(map { it.split(": ")[1].toInt() }) { get(0) to get(1)}
 
     override fun solve1(input: Pair<Int, Int>): Int {
-        val v = intArrayOf(999999)
-        getMinSpellCost(Wizard(), Boss(input.first, input.second), v, 0, false)
-        return v[0] - 20
+        return countMana(input.first, input.second, spells, listOf(bossHit))
     }
 
     override fun solve2(input: Pair<Int, Int>): Int {
-        val v = intArrayOf(999999)
-        getMinSpellCost(Wizard(), Boss(input.first, input.second), v, 0, true)
-        return v[0]
-    }
-
-    private fun getMinSpellCost(wizard: Wizard, boss: Boss, v: IntArray, cost: Int, part2: Boolean) {
-        var myCost = cost
-        try {
-            wizard.turn(boss)
-
-            val spells = getAvailableSpells(wizard)
-            if (spells.isEmpty()) return
-            spells.forEach { s ->
-                val w = wizard.copy()
-                val b = boss.copy()
-                myCost = cost + s.cost
-                s.cast(w, b)
-
-                if (part2) w.hp--
-
-                w.turn(b)
-                w.defend(b.dmg)
-                getMinSpellCost(w, b, v, myCost, part2)
-            }
-        } catch (e: IllegalStateException) {
-            if (e.message == "Wizard dead") return
-            else if (e.message == "Boss dead") {
-                if (myCost < v[0]) v[0] = myCost
-                return
-            }
-            throw e
-        }
-    }
-
-    private fun getAvailableSpells(wizard: Wizard): List<Spell> {
-        val list = mutableListOf<Spell>()
-        if (wizard.mana >= Drain.cost) list.add(Drain)
-        if (wizard.mana >= MagicMissile.cost) list.add(MagicMissile)
-        if (wizard.mana >= Poison.cost && wizard.activeEffects.none { it.name == "Poison" }) list.add(Poison)
-        if (wizard.mana >= Recharge.cost && wizard.activeEffects.none { it.name == "Recharge" }) list.add(Recharge)
-        if (wizard.mana >= Shield.cost && wizard.activeEffects.none { it.name == "Shield" }) list.add(Shield)
-        return list
-    }
-
-    private class Wizard {
-        var hp = 50
-        var mana = 500
-        var arm = 0
-        var activeEffects = mutableListOf<Effect>()
-
-        fun addEffect(effect: Effect) {
-            activeEffects.add(effect)
-        }
-
-        fun defend(dmg: Int) {
-            hp -= max(dmg - arm, 1)
-            if (hp <= 0) error("Wizard dead")
-        }
-
-        fun turn(boss: Boss) {
-            activeEffects.forEach { it.trigger(this, boss) }
-            activeEffects.removeIf { it.left == 0 }
-        }
-
-        fun copy(): Wizard {
-            val wizard = Wizard()
-            wizard.hp = hp
-            wizard.mana = mana
-            wizard.arm = arm
-            wizard.activeEffects = activeEffects.map { it.copy() }.toMutableList()
-            return wizard
-        }
-    }
-
-    private class Boss(private var hp: Int, val dmg: Int) {
-
-        fun defend(dmg: Int) {
-            hp -= max(dmg, 1)
-            if (hp <= 0) error("Boss dead")
-        }
-
-        fun copy() = Boss(hp, dmg)
-    }
-
-    private abstract class Spell {
-        abstract val cost: Int
-
-        abstract fun cast(wizard: Wizard, boss: Boss)
-    }
-
-    private object Drain : Spell() {
-        override var cost = 73
-        override fun cast(wizard: Wizard, boss: Boss) {
-            wizard.mana -= cost
-            wizard.hp += 2
-            boss.defend(2)
-        }
-    }
-
-    private object MagicMissile : Spell() {
-        override var cost = 53
-        override fun cast(wizard: Wizard, boss: Boss) {
-            wizard.mana -= cost
-            boss.defend(4)
-        }
-    }
-
-    private object Poison : Spell() {
-        override var cost = 173
-        override fun cast(wizard: Wizard, boss: Boss) {
-            wizard.mana -= cost
-            wizard.addEffect(Effect("Poison", 6) { _, b, c -> if (c > 0) b.defend(3) })
-        }
-    }
-
-    private object Recharge : Spell() {
-        override var cost = 229
-        override fun cast(wizard: Wizard, boss: Boss) {
-            wizard.mana -= cost
-            wizard.addEffect(Effect("Recharge", 5) { w, _, c -> if (c > 0) w.mana += 101 })
-        }
-    }
-
-    private object Shield : Spell() {
-        override var cost = 113
-        override fun cast(wizard: Wizard, boss: Boss) {
-            wizard.mana -= cost
-            wizard.addEffect(Effect("Shield", 6) { w, _, c -> if (c == 6) w.arm += 7 else if (c == 1) w.arm -= 7 })
-        }
-    }
-
-    private class Effect(var name: String, var left: Int, private val effect: (Wizard, Boss, Int) -> Unit) {
-
-        fun trigger(w: Wizard, b: Boss) {
-            effect.invoke(w, b, left)
-            left--
-        }
-
-        fun copy() = Effect(name, left, this.effect)
+        return countMana(input.first, input.second, spells, listOf(hardBossHit))
     }
 }

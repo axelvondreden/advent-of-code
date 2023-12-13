@@ -1,6 +1,7 @@
 package y2016
 
 import Day
+import java.util.*
 
 
 class Day19 : Day<Int>(2016, 19) {
@@ -8,37 +9,36 @@ class Day19 : Day<Int>(2016, 19) {
     override fun List<String>.parse() = first().toInt()
 
     override fun solve1(input: Int): Int {
-        val map = Array(input) { Elf(it + 1, 1) }
-        var thief = 0
-        while (true) {
-            var target = if (thief < input - 1) thief + 1 else 0
-            while (map[target].presents == 0) {
-                if (target < input - 1) target++ else target = 0
-            }
-            val newAmount = map[thief].presents + map[target].presents
-            map[thief].presents = newAmount
-            map[target].presents = 0
-            if (newAmount >= input) return thief + 1
-            if (thief < input - 1) thief++ else thief = 0
-            while (map[thief].presents == 0) {
-                if (thief < input - 1) thief++ else thief = 0
-            }
+        val elves = BitSet(input)
+        elves.set(0, input)
+        var position = 0
+        repeat(input - 1) {
+            val next = maxOf(elves.nextSetBit(position + 1), elves.nextSetBit(0))
+            elves.clear(next)
+            position = maxOf(elves.nextSetBit(next + 1), elves.nextSetBit(0))
         }
+
+        return (position + 1)
     }
 
     override fun solve2(input: Int): Int {
-        val map = (0 until input).map { Elf(it + 1, 1) }.toMutableList()
-        var thief = 0
-        while (map.size > 1) {
-            var target = thief + map.size / 2
-            if (target >= map.size) target -= map.size
-            map[thief].presents += map[target].presents
-            map.removeAt(target)
-            if (target < thief) thief--
-            if (thief < map.size - 1) thief++ else thief = 0
+        val elves = LinkedList((1..input).toList())
+        var target = elves.listIterator(input / 2)
+        target.next()
+        for (i in input downTo 2) {
+            target.remove()
+            repeat(i % 2 + 1) {
+                if (!target.hasNext()) {
+                    target = elves.listIterator()
+                }
+                target.next()
+            }
         }
-        return map.first().nr
-    }
 
-    private data class Elf(val nr: Int, var presents: Int)
+        if (!target.hasNext()) {
+            target = elves.listIterator()
+        }
+
+        return target.next()
+    }
 }
