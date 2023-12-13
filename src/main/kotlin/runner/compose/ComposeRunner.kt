@@ -238,8 +238,8 @@ private fun YearLayout(year: Int, days: List<Day<Any>>, state: YearState, scope:
             Spacer(Modifier.width(10.dp))
             Label("Time Total: ")
             val totalTime = state.initTimes.values.sumOf { max(0.0, (it.second - it.first) / 1000000000.0) } +
-                    state.part1Times.values.sumOf { max(0.0, (it.second - it.first) / 1000000000.0) } +
-                    state.part2Times.values.sumOf { max(0.0, (it.second - it.first) / 1000000000.0) }
+                state.part1Times.values.sumOf { max(0.0, (it.second - it.first) / 1000000000.0) } +
+                state.part2Times.values.sumOf { max(0.0, (it.second - it.first) / 1000000000.0) }
             TimeValue(
                 time = totalTime,
                 redValue = days.size.toDouble()
@@ -264,6 +264,7 @@ private fun YearLayout(year: Int, days: List<Day<Any>>, state: YearState, scope:
             days.forEach {
                 DayLayoutCompact(
                     day = it,
+                    target = state.target.value,
                     initTime = state.initTimes[it.day]?.let { it.second - it.first },
                     part1Time = state.part1Times[it.day]?.let { it.second - it.first },
                     part2Time = state.part2Times[it.day]?.let { it.second - it.first },
@@ -278,6 +279,7 @@ private fun YearLayout(year: Int, days: List<Day<Any>>, state: YearState, scope:
 @Composable
 private fun DayLayoutCompact(
     day: Day<Any>,
+    target: YearTarget?,
     initTime: Long?,
     part1Time: Long?,
     part2Time: Long?,
@@ -286,11 +288,13 @@ private fun DayLayoutCompact(
 ) {
     Box(modifier = Modifier.border(1.dp, Color.White).padding(2.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Label("Day ${day.day}", minWidth = 60.dp)
+            Box(modifier = Modifier.background(if (target?.day == day.day) Color.DarkGray else MaterialTheme.colors.background)) {
+                Label("Day ${day.day}", minWidth = 60.dp)
+            }
             Column {
-                InitLayout(initTime?.div(1000000000.0))
-                PartLayoutCompact(1, part1Time?.div(1000000000.0), part1Result)
-                PartLayoutCompact(2, part2Time?.div(1000000000.0), part2Result)
+                InitLayoutCompact(initTime?.div(1000000000.0), target is YearTarget.Init && target.day == day.day)
+                PartLayoutCompact(1, part1Time?.div(1000000000.0), part1Result, target is YearTarget.Part1 && target.day == day.day)
+                PartLayoutCompact(2, part2Time?.div(1000000000.0), part2Result, target is YearTarget.Part2 && target.day == day.day)
             }
         }
     }
@@ -434,12 +438,14 @@ private fun PartLayout(part: Int, time: Double?, result: ResultState?) =
     }
 
 @Composable
-private fun PartLayoutCompact(part: Int, time: Double?, result: ResultState?) =
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Label("Part $part: ", minWidth = 120.dp)
-        TimeValue(time ?: 0.0)
-        ResultIcon(result)
-    }
+private fun PartLayoutCompact(part: Int, time: Double?, result: ResultState?, active: Boolean) = Row(
+    modifier = if (active) Modifier.background(Color.DarkGray) else Modifier,
+    verticalAlignment = Alignment.CenterVertically
+) {
+    Label("Part $part: ", minWidth = 100.dp)
+    TimeValue(time ?: 0.0)
+    ResultIcon(result)
+}
 
 @Composable
 private fun ResultIcon(result: ResultState?) {
@@ -481,6 +487,15 @@ private fun SamplePartLayout(
 @Composable
 private fun InitLayout(time: Double?) = Row(verticalAlignment = Alignment.CenterVertically) {
     Label("Init: ", minWidth = 120.dp)
+    TimeValue(time ?: 0.0)
+}
+
+@Composable
+private fun InitLayoutCompact(time: Double?, active: Boolean) = Row(
+    modifier = if (active) Modifier.background(Color.DarkGray) else Modifier,
+    verticalAlignment = Alignment.CenterVertically
+) {
+    Label("Init: ", minWidth = 100.dp)
     TimeValue(time ?: 0.0)
 }
 
