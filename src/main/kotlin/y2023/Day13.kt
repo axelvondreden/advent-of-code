@@ -1,6 +1,7 @@
 package y2023
 
 import Day
+import utils.copy
 import utils.toCharMatrix
 import kotlin.math.min
 
@@ -24,11 +25,28 @@ class Day13 : Day<List<Array<CharArray>>>(2023, 13) {
 
     override fun solve1(input: List<Array<CharArray>>) = input.sumOf { it.getSplitValue() }
 
-    override fun solve2(input: List<Array<CharArray>>): Int = 0
+    override fun solve2(input: List<Array<CharArray>>) = input.sumOf { it.getSecondSplitValue() }
 
-    private fun Array<CharArray>.getSplitValue() = findVerticalSplit() ?: (findHorizontalSplit()!! * 100)
+    private fun Array<CharArray>.getSplitValue() = findVerticalSplits().firstOrNull() ?: (findHorizontalSplits().first() * 100)
 
-    private fun Array<CharArray>.findVerticalSplit(): Int? {
+    private fun Array<CharArray>.getSecondSplitValue(): Int {
+        val originalV = findVerticalSplits().firstOrNull()
+        val originalH = if (originalV == null) findHorizontalSplits().first() else null
+        for (x in indices) {
+            for (y in this[x].indices) {
+                val copy = copy()
+                copy[x][y] = if (copy[x][y] == '#') '.' else '#'
+                val newV = copy.findVerticalSplits()
+                if (newV != null && newV != originalV) return newV
+                val newH = copy.findHorizontalSplits()
+                if (newH != null && newH != originalH) return newH * 100
+            }
+        }
+        error("Big Fail")
+    }
+
+    private fun Array<CharArray>.findVerticalSplits(): List<Int> {
+        val list = mutableListOf<Int>()
         for (index in 1..lastIndex) {
             val range = min(index, lastIndex - index)
             var mirrored = true
@@ -42,12 +60,13 @@ class Day13 : Day<List<Array<CharArray>>>(2023, 13) {
                 }
                 if (!mirrored) break
             }
-            if (mirrored) return index
+            if (mirrored) list += index
         }
-        return null
+        return list
     }
 
-    private fun Array<CharArray>.findHorizontalSplit(): Int? {
+    private fun Array<CharArray>.findHorizontalSplits(): List<Int> {
+        val list = mutableListOf<Int>()
         for (index in 1..this[0].lastIndex) {
             val range = min(index, this[0].lastIndex - index)
             var mirrored = true
@@ -61,8 +80,8 @@ class Day13 : Day<List<Array<CharArray>>>(2023, 13) {
                 }
                 if (!mirrored) break
             }
-            if (mirrored) return index
+            if (mirrored) list += index
         }
-        return null
+        return list
     }
 }
