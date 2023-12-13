@@ -18,7 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import expected
 import formattedTime
 import getDayInstance
@@ -43,7 +42,7 @@ fun App() {
             var selectedDay by remember { mutableStateOf<Day<Any>?>(null) }
             val availableDays = remember { mutableStateListOf<Day<Any>>() }
             var allOfYearSelected by remember { mutableStateOf(false) }
-            val state = DayState(
+            val dayState = DayState(
                 initStartTime = remember { mutableStateOf(0L) },
                 initTime = remember { mutableStateOf(0L) },
                 part1StartTime = remember { mutableStateOf(0L) },
@@ -56,6 +55,14 @@ fun App() {
                 part2SampleTimes = remember { mutableStateMapOf() },
                 part1SampleResults = remember { mutableStateMapOf() },
                 part2SampleResults = remember { mutableStateMapOf() },
+                target = remember { mutableStateOf(null) }
+            )
+            val yearState = YearState(
+                initTimes = remember { mutableStateMapOf() },
+                part1Times = remember { mutableStateMapOf() },
+                part2Times = remember { mutableStateMapOf() },
+                part1Results = remember { mutableStateMapOf() },
+                part2Results = remember { mutableStateMapOf() },
                 target = remember { mutableStateOf(null) }
             )
 
@@ -77,6 +84,7 @@ fun App() {
             if (selectedYear != null) {
                 DaySelect(
                     onAllClick = {
+                        yearState.reset()
                         selectedDay = null
                         allOfYearSelected = true
                     },
@@ -85,16 +93,16 @@ fun App() {
                     allSelected = allOfYearSelected,
                     onDaySelect = {
                         allOfYearSelected = false
-                        state.reset()
+                        dayState.reset()
                         selectedDay = it
                     })
 
                 val day = selectedDay
                 if (day != null) {
                     val samples = IO.readSamples(day.year, day.day)
-                    DayLayout(day, samples, state, scope)
+                    DayLayout(day, samples, dayState, scope)
                 } else if (allOfYearSelected) {
-                    YearLayout(selectedYear!!, scope)
+                    YearLayout(selectedYear!!, availableDays, yearState, scope)
                 }
             }
         }
@@ -149,18 +157,44 @@ private fun DaySelect(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun YearLayout(year: Int, scope: CoroutineScope) {
+private fun YearLayout(year: Int, days: List<Day<Any>>, state: YearState, scope: CoroutineScope) {
     Column(modifier = Modifier.fillMaxSize()) {
         Button(
             onClick = {
-
+                scope.launch(Dispatchers.IO) {
+                    runDays(
+                        days = days,
+                        onInitStart = { day, time -> },
+                        onInitEnd = { day, time -> },
+                        onPart1Start = { day, time -> },
+                        onPart1End = { day, time, result -> },
+                        onPart2Start = { day, time -> },
+                        onPart2End = { day, time, result -> }
+                    )
+                }
             }) {
             Icon(Icons.Default.PlayArrow, "")
             Text("Run All")
         }
-        Label("Year: ")
-        TextValue(year.toString())
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Label("Year: ")
+            TextValue(year.toString())
+        }
+        FlowRow {
+            days.forEach {
+                Box(modifier = Modifier.border(1.dp, Color.White).padding(2.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Label("Day ${it.day}", minWidth = 40.dp)
+                        Column {
+                            Label("Part 1:")
+                            Label("Part 2:")
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -394,5 +428,32 @@ private fun runSingleDay(
         onPart2Start(System.nanoTime())
         val part2Result = runPart(day, 2, input, expected[Triple(day.year, day.day, 2)])
         onPart2End(System.nanoTime(), part2Result)
+    }
+}
+
+private fun runDays(
+    days: List<Day<Any>>,
+    onInitStart: (Int, Long) -> Unit,
+    onInitEnd: (Int, Long) -> Unit,
+    onPart1Start: (Int, Long) -> Unit,
+    onPart1End: (Int, Long, ResultState) -> Unit,
+    onPart2Start: (Int, Long) -> Unit,
+    onPart2End: (Int, Long, ResultState) -> Unit
+) {
+    days.forEach { day ->
+        val rawInput = IO.readStrings(day.year, day.day)
+        if (rawInput.any { it.isNotBlank() }) {
+            onInitStart(day.day, System.nanoTime())
+            val input = runInit(day, rawInput)
+            onInitEnd(day.day, System.nanoTime())
+
+            onPart1Start(day.day, System.nanoTime())
+            val part1Result = runPart(day, 1, input, expected[Triple(day.year, day.day, 1)])
+            onPart1End(day.day, System.nanoTime(), part1Result)
+
+            onPart2Start(day.day, System.nanoTime())
+            val part2Result = runPart(day, 2, input, expected[Triple(day.year, day.day, 2)])
+            onPart2End(day.day, System.nanoTime(), part2Result)
+        }
     }
 }

@@ -3,6 +3,24 @@ package runner
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 
+data class YearState(
+    val initTimes: SnapshotStateMap<Int, Pair<Long, Long>>,
+    val part1Times: SnapshotStateMap<Int, Pair<Long, Long>>,
+    val part2Times: SnapshotStateMap<Int, Pair<Long, Long>>,
+    val part1Results: SnapshotStateMap<Int, ResultState>,
+    val part2Results: SnapshotStateMap<Int, ResultState>,
+    val target: MutableState<Int?>
+) {
+    fun reset() {
+        initTimes.clear()
+        part1Times.clear()
+        part2Times.clear()
+        part1Results.clear()
+        part2Results.clear()
+        target.value = null
+    }
+}
+
 data class DayState(
     val initStartTime: MutableState<Long>,
     val initTime: MutableState<Long>,
