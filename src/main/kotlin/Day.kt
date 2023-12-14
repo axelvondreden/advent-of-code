@@ -8,11 +8,7 @@ abstract class Day<T>(val year: Int, val day: Int) {
 
     abstract fun solve2(input: T): Any
 
-    open suspend fun visualize1(input: T, onProgress: (Double?) -> Unit, awaitSignal: suspend () -> Unit): Any {
-        return 0
-    }
-
-    suspend fun visualize1(input: String, onProgress: (Double?) -> Unit, awaitSignal: suspend () -> Unit): Any {
+    suspend fun visualize1(input: T, onProgress: (String?) -> Unit, awaitSignal: suspend () -> Unit): Any {
         return coroutineScope {
             doComputation(input) { progress ->
                 onProgress(progress)
@@ -21,7 +17,7 @@ abstract class Day<T>(val year: Int, val day: Int) {
         }
     }
 
-    open suspend fun doComputation(input: String, onProgress: suspend (Double) -> Unit): Any {
+    open suspend fun doComputation(input: T, onProgress: suspend (String) -> Unit): Any {
         return 0
     }
 }

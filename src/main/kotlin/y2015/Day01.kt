@@ -20,7 +20,16 @@ class Day01 : Day<String>(2015, 1) {
         return 0
     }
 
-    override suspend fun doComputation(input: String, onProgress: suspend (Double) -> Unit): Int {
-        return input.count { it == '(' } - input.count { it == ')' }
+    override suspend fun doComputation(input: String, onProgress: suspend (String) -> Unit): Int {
+        var lvl = 0
+        for (c in input) {
+            if (c == '(') {
+                lvl++
+            } else {
+                lvl--
+            }
+            onProgress(c.toString())
+        }
+        return lvl
     }
 }

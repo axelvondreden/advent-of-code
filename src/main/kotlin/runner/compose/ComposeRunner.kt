@@ -557,6 +557,33 @@ private fun runSingleDay(
     }
 }
 
+private suspend fun runSingleDayVisualized(
+    day: Day<Any>,
+    onInitStart: (Long) -> Unit,
+    onInitEnd: (Long) -> Unit,
+    onPart1Start: (Long) -> Unit,
+    onPart1Progress: (String?) -> Unit,
+    onPart1End: (Long, ResultState) -> Unit,
+    onPart2Start: (Long) -> Unit,
+    onPart2Progress: (String?) -> Unit,
+    onPart2End: (Long, ResultState) -> Unit
+) {
+    val rawInput = IO.readStrings(day.year, day.day)
+    if (rawInput.any { it.isNotBlank() }) {
+        onInitStart(System.nanoTime())
+        val input = runInit(day, rawInput)
+        onInitEnd(System.nanoTime())
+
+        onPart1Start(System.nanoTime())
+        val result1 = runPart1WithVisualization(day, input, expected[Triple(day.year, day.day, 1)], onPart1Progress)
+        onPart1End(System.nanoTime(), result1)
+
+        onPart2Start(System.nanoTime())
+        val result2 = runPart2WithVisualization(day, input, expected[Triple(day.year, day.day, 2)], onPart2Progress)
+        onPart2End(System.nanoTime(), result2)
+    }
+}
+
 private fun runDays(
     days: List<Day<Any>>,
     onInitStart: (Int, Long) -> Unit,
@@ -584,8 +611,14 @@ private fun runDays(
     }
 }
 
-suspend fun runPart1WithVisualization(day: Day<Any>, input: Any, expected: String?): ResultState {
-    val result = day.visualize1(input, onProgress = {}, awaitSignal = { delay(1000) }).toString()
+suspend fun runPart1WithVisualization(day: Day<Any>, input: Any, expected: String?, onProgress: (String?) -> Unit): ResultState {
+    val result = day.visualize1(input, onProgress = onProgress, awaitSignal = { delay(1000) }).toString()
+    val isCorrect = !expected.isNullOrEmpty() && expected == result
+    return ResultState(result, isCorrect)
+}
+
+suspend fun runPart2WithVisualization(day: Day<Any>, input: Any, expected: String?, onProgress: (String?) -> Unit): ResultState {
+    val result = day.visualize2(input, onProgress = onProgress, awaitSignal = { delay(1000) }).toString()
     val isCorrect = !expected.isNullOrEmpty() && expected == result
     return ResultState(result, isCorrect)
 }
