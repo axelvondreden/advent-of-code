@@ -50,6 +50,10 @@ class Day16 : Day<List<String>>(2018, 16) {
         }
     }
 
+    sealed class Op(run: IntArray.(Int, Int, Int) -> Unit) {
+        data object Addr : Op({ a, b, c -> this[c] = this[a] + this[b] })
+    }
+
     companion object {
         fun IntArray.addr(a: Int, b: Int, c: Int) = this.apply { this[c] = this[a] + this[b] }
         fun IntArray.addi(a: Int, b: Int, c: Int) = this.apply { this[c] = this[a] + b }
