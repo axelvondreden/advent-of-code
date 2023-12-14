@@ -2,85 +2,71 @@ package y2023
 
 import Day
 
-class Day07 : Day<List<Day07.Game>>(2023, 7) {
+class Day07 : Day<List<String>>(2023, 7) {
 
-    override fun List<String>.parse() = map { line ->
-        val s = line.split(" ")
-        val cards = s[0].map { it.toCard() }
-        Game(cards, s[1].toLong())
+    override fun List<String>.parse() = this
+
+    override fun solve1(input: List<String>) = solve("AKQJT98765432", input)
+
+    override fun solve2(input: List<String>) = solve("AKQT98765432J", input)
+
+    private fun solve(deck: String, input: List<String>): Long {
+        val hands = input
+            .map { line ->
+                val cards = line.substringBefore(" ")
+                val score = line.substringAfter(" ").toLong()
+                recognize(cards, deck) to score
+            }.sortedBy { it.first }
+
+        // Smallest first
+        return hands.withIndex().sumOf { (index, hand) -> (index + 1) * hand.second }
     }
 
-    override fun solve1(input: List<Game>) = input.sorted().withIndex().sumOf { (it.index + 1) * it.value.bet }
+    private fun recognize(cards: String, deck: String): Hand {
+        val joker = deck.last() == JOKER
+        val count = deck.map { card -> cards.count { (!joker && card == it) || (joker && card == it && card != JOKER) } }
+            .sortedDescending()
+            .toMutableList()
 
-    override fun solve2(input: List<Game>) = input.onEach { it.mode2 = true }.sorted().withIndex().sumOf { (it.index + 1) * it.value.bet }
+        // Jokers go to the strongest position.
+        if (joker) count[0] += cards.count { it == JOKER }
 
-    data class Game(val cards: List<Card>, val bet: Long) : Comparable<Game> {
+        val one = count[0]
+        val two = count[1]
 
-        var mode2 = false
-
-        private val cardCounts get() = if (!mode2) {
-            cards.groupBy { it.value }.mapValues { it.value.size }
-        } else {
-            val map = cards.groupBy { it.value }.mapValues { it.value.size }.toMutableMap()
-            val maxSize = map.filterKeys { it != 11 }.values.maxOrNull()
-            if (maxSize != null) {
-                val maxIndex = map.filterKeys { it != 11 }.filterValues { it == maxSize }.maxByOrNull { it.key }?.key
-                if (maxIndex != null) {
-                    map[maxIndex] = map[maxIndex]!! + (map[11] ?: 0)
-                    map[11] = 0
-                }
+        return Hand(cards, deck) {
+            when {
+                one == 5 -> Type.FIVE_OF_A_KIND
+                one == 4 -> Type.FOUR_OF_A_KIND
+                one == 3 && two == 2 -> Type.FULL_HOUSE
+                one == 3 -> Type.THREE_OF_A_KIND
+                one == 2 && two == 2 -> Type.TWO_PAIR
+                one == 2 -> Type.ONE_PAIR
+                else -> Type.HIGH_CARD
             }
-            map
-        }
-
-        private fun has5OfAKind() = cardCounts.size == 1
-
-        private fun has4OfAKind() = cardCounts.any { it.value == 4 }
-
-        private fun hasFullHouse() = cardCounts.size == 2 && !has4OfAKind()
-
-        private fun has3OfAKind() = cardCounts.size == 3 && cardCounts.any { it.value == 3 }
-
-        private fun hasTwoPairs() = cardCounts.size == 3 && cardCounts.count { it.value == 2 } == 2
-
-        private fun hasPair() = cardCounts.size == 4
-
-        private fun getTypeScore() = when {
-            has5OfAKind() -> 7
-            has4OfAKind() -> 6
-            hasFullHouse() -> 5
-            has3OfAKind() -> 4
-            hasTwoPairs() -> 3
-            hasPair() -> 2
-            else -> 1
-        }
-
-        override fun compareTo(other: Game): Int {
-            val myScore = getTypeScore()
-            val otherScore = other.getTypeScore()
-            if (myScore < otherScore) return -1
-            if (myScore > otherScore) return 1
-            cards.forEachIndexed { index, card ->
-                val otherCard = other.cards[index]
-                val myValue = if (mode2 && card.value == 11) 1 else card.value
-                val otherValue = if (mode2 && otherCard.value == 11) 1 else otherCard.value
-                if (myValue < otherValue) return -1
-                if (myValue > otherValue) return 1
-            }
-            return 0
         }
     }
 
-    data class Card(val value: Int)
+    private enum class Type { FIVE_OF_A_KIND, FOUR_OF_A_KIND, FULL_HOUSE, THREE_OF_A_KIND, TWO_PAIR, ONE_PAIR, HIGH_CARD }
 
-    private fun Char.toCard() = Card(
-        when (this) {
-            'A' -> 14
-            'K' -> 13
-            'Q' -> 12
-            'J' -> 11
-            'T' -> 10
-            else -> digitToInt()
-        }
-    )
+    private data class Hand(private val type: Type, private val deck: String, private val cards: String) : Comparable<Hand> {
+        constructor(cards: String, deck: String, type: () -> Type) : this(type(), deck, cards)
+
+        private val rank get() = Type.entries.indexOf(type)
+
+        override fun compareTo(other: Hand) =
+            if (rank - other.rank != 0) {
+                other.rank - rank
+            } else {
+                (0..4).firstNotNullOfOrNull { index ->
+                    val a = deck.indexOf(cards[index])
+                    val b = deck.indexOf(other.cards[index])
+                    if (a != b) b - a else null
+                } ?: error("Invalid card comparison.")
+            }
+    }
+
+    companion object {
+        private const val JOKER = 'J'
+    }
 }

@@ -29,6 +29,26 @@ class Day05 : Day<Unit>(2023, 5) {
 
     override fun solve1(input: Unit) = seeds.minOf { it.hash() }
 
+    override fun solve2(input: Unit): Long {
+        var seed = 1
+        val chunked = seeds.chunked(2)
+        return chunked.minOf { (source, range) ->
+            var result = Long.MAX_VALUE
+            var number = source
+            val target = number + range
+
+            do {
+                if (number % 1000000 == 0L) {
+                    println("Seed $seed/${chunked.size}: ${number.toDouble() / target}")
+                }
+                val value = number.hash()
+                if (result > value) result = value
+            } while (++number < target)
+            seed++
+            result
+        }
+    }
+
     private fun Long.hash(): Long {
         var phase = "seed"
         var value = this
@@ -42,39 +62,9 @@ class Day05 : Day<Unit>(2023, 5) {
         return value
     }
 
-    override fun solve2(input: Unit) = seeds.chunked(2).minOf { (source, range) ->
-        var result = Long.MAX_VALUE
-        var number = source
-        val target = number + range
+    private data class HashingRange(val source: Long, val target: Long, val range: Long) {
+        operator fun contains(num: Long) = num in source until (source + range)
 
-        do {
-            val value = number.hash()
-            if (result > value) result = value
-        } while (++number < target)
-
-        result
+        fun hash(num: Long) = num + (target - source)
     }
-}
-
-data class MappingGroup(val mappings: List<Mapping>) {
-
-    fun map(source: Long): Long {
-        mappings.forEach { m ->
-            if (source >= m.sourceRangeStart && source < m.sourceRangeStart + m.length) {
-                val index = source - m.sourceRangeStart
-                if (index >= 0) {
-                    return m.destRangeStart + index
-                }
-            }
-        }
-        return source
-    }
-}
-
-data class Mapping(val destRangeStart: Long, val sourceRangeStart: Long, val length: Long)
-
-private data class HashingRange(val source: Long, val target: Long, val range: Long) {
-    operator fun contains(num: Long) = num in source until (source + range)
-
-    fun hash(num: Long) = num + (target - source)
 }
