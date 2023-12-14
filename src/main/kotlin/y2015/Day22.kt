@@ -6,18 +6,6 @@ import kotlin.math.min
 
 class Day22 : Day<Pair<Int, Int>>(2015, 22) {
 
-    data class Stats(
-        val hp: Int,
-        val armor: Int,
-        val power: Int
-    )
-
-    data class Spell(
-        val cost: Int,
-        val duration: Int,
-        val action: (Pair<Stats, Stats>) -> Pair<Stats, Stats>
-    )
-
     private val magicMissile = Spell(53, 1) { (me, boss) ->
         me to boss.copy(hp = boss.hp - 4)
     }
@@ -42,6 +30,28 @@ class Day22 : Day<Pair<Int, Int>>(2015, 22) {
     }
 
     private val spells = listOf(magicMissile, drain, shield, poison, recharge)
+
+    override fun List<String>.parse() = with(map { it.split(": ")[1].toInt() }) { get(0) to get(1)}
+
+    override fun solve1(input: Pair<Int, Int>): Int {
+        return countMana(input.first, input.second, spells, listOf(bossHit))
+    }
+
+    override fun solve2(input: Pair<Int, Int>): Int {
+        return countMana(input.first, input.second, spells, listOf(hardBossHit))
+    }
+
+    data class Stats(
+        val hp: Int,
+        val armor: Int,
+        val power: Int
+    )
+
+    data class Spell(
+        val cost: Int,
+        val duration: Int,
+        val action: (Pair<Stats, Stats>) -> Pair<Stats, Stats>
+    )
 
     data class Game(
         val me: Stats,
@@ -105,15 +115,5 @@ class Day22 : Day<Pair<Int, Int>>(2015, 22) {
             }
         }
         return best
-    }
-
-    override fun List<String>.parse() = with(map { it.split(": ")[1].toInt() }) { get(0) to get(1)}
-
-    override fun solve1(input: Pair<Int, Int>): Int {
-        return countMana(input.first, input.second, spells, listOf(bossHit))
-    }
-
-    override fun solve2(input: Pair<Int, Int>): Int {
-        return countMana(input.first, input.second, spells, listOf(hardBossHit))
     }
 }
