@@ -19,4 +19,8 @@ class Day01 : Day<String>(2015, 1) {
         }
         return 0
     }
+
+    override suspend fun doComputation(input: String, onProgress: suspend (Double) -> Unit): Int {
+        return input.count { it == '(' } - input.count { it == ')' }
+    }
 }

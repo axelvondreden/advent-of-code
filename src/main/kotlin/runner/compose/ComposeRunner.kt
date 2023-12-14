@@ -583,3 +583,9 @@ private fun runDays(
         }
     }
 }
+
+suspend fun runPart1WithVisualization(day: Day<Any>, input: Any, expected: String?): ResultState {
+    val result = day.visualize1(input, onProgress = {}, awaitSignal = { delay(1000) }).toString()
+    val isCorrect = !expected.isNullOrEmpty() && expected == result
+    return ResultState(result, isCorrect)
+}
