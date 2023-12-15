@@ -2,13 +2,14 @@ package runner
 
 import androidx.compose.ui.graphics.Color
 
-class Viz(val progress: Double? = null, val size: Int = 32) {
+class Viz(val progress: Double? = null, val width: Int = 30, val height: Int = 10) {
 
-    private val map: Array<Tile> = Array(size * size) { Tile() }
+    val map: Array<Array<Tile>> = Array(width) { Array(height) { Tile() } }
 
-    private class Tile(
+    class Tile(
         val char: Char? = null,
         val color: Color = Color.White,
-        val bgColor: Color = Color(0xFF121212)
+        val backgroundColor: Color = Color(0xFF121212),
+        val borderColor: Color = Color.DarkGray
     )
 }

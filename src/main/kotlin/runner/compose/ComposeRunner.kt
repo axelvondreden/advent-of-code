@@ -12,11 +12,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import expected
-import formattedTime
 import getDayInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -103,7 +101,7 @@ fun App() {
                     onDaySelect = {
                         allOfYearSelected = false
                         dayState.reset()
-                        vizState.reset()
+                        vizState.reset(it.vizWidth, it.vizHeight)
                         selectedDay = it
                     })
 
@@ -322,15 +320,18 @@ private fun DayLayoutCompact(
 
 @Composable
 private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, vizState: VizState, scope: CoroutineScope) {
+    var delay by remember { mutableStateOf(day.vizDelay) }
     Column(modifier = Modifier.fillMaxSize()) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            DaySingleButton(day, samples, state, scope)
+            var jobRunning by remember { mutableStateOf(false) }
+            DaySingleButton(day, samples, !jobRunning, state, scope, onStart = { jobRunning = true }, onEnd = { jobRunning = false })
             val caller1 = day::class.memberFunctions.first { it.name == "solve1Visualized" }.javaMethod!!.declaringClass
             val caller2 = day::class.memberFunctions.first { it.name == "solve2Visualized" }.javaMethod!!.declaringClass
             Button(
                 onClick = {
+                    jobRunning = true
                     scope.launch(Dispatchers.IO) {
-                        vizState.reset()
+                        vizState.reset(day.vizWidth, day.vizHeight)
                         runPart1Visualized(
                             day = day,
                             onInitStart = {
@@ -350,16 +351,21 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, vizStat
                                 vizState.time.value = time - vizState.startTime.value
                                 vizState.result.value = result
                                 vizState.target.value = null
-                            }
+                                jobRunning = false
+                            },
+                            vizDelay = { delay }
                         )
                     }
                 },
-                enabled = caller1.name != "Day"
+                enabled = caller1.name != "Day" && !jobRunning
             ) {
                 Icon(Icons.Default.Star, "")
                 Text("Visualize Part 1")
             }
-            Button(onClick = {}, enabled = caller2.name != "Day") {
+            Button(
+                onClick = {},
+                enabled = caller2.name != "Day" && !jobRunning
+            ) {
                 Icon(Icons.Default.Star, "")
                 Text("Visualize Part 2")
             }
@@ -371,7 +377,7 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, vizStat
             TextValue(day.day.toString())
         }
         Row(Modifier.fillMaxWidth()) {
-            Column(Modifier.width(400.dp).border(1.dp, Color.LightGray)) {
+            Column(Modifier.width(300.dp).border(1.dp, Color.LightGray)) {
                 if (samples != null) {
                     LaunchedEffect(state.target.value) {
                         while (state.target.value is Target.Sample1) {
@@ -426,46 +432,24 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, vizStat
                 }
                 PartLayout(2, state.part2Time.value / 1000000000.0, state.part2Result.value)
             }
-            VizLayout(vizState)
+            VizLayout(vizState, delay, onDelayChange = { delay = it })
         }
     }
 }
 
 @Composable
-private fun VizLayout(state: VizState) {
-    Column(Modifier.fillMaxHeight()) {
-        Row {
-            LaunchedEffect(state.target.value) {
-                while (state.target.value == Target.Init) {
-                    delay(100)
-                    state.initTime.value = System.nanoTime() - state.initStartTime.value
-                }
-            }
-            InitLayout(state.initTime.value / 1000000000.0)
-            VizHeaderLayout(state.viz.value.progress, state.result.value)
-        }
-
-        VizGrid(state.viz.value)
-    }
-}
-
-@Composable
-private fun VizGrid(viz: Viz) {
-    Box(Modifier.fillMaxSize().border(1.dp, Color.LightGray)) {
-        repeat(viz.size) {
-            Column(modifier = Modifier.border(1.dp, Color.White).fillMaxWidth(1F / viz.size)) {
-                Row(modifier = Modifier.border(1.dp, Color.White).fillMaxWidth(1F / viz.size)) {
-
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun DaySingleButton(day: Day<Any>, samples: Samples?, state: DayState, scope: CoroutineScope) {
+private fun DaySingleButton(
+    day: Day<Any>,
+    samples: Samples?,
+    enabled: Boolean,
+    state: DayState,
+    scope: CoroutineScope,
+    onStart: () -> Unit,
+    onEnd: () -> Unit
+) {
     Button(
         onClick = {
+            onStart()
             state.reset()
             scope.launch(Dispatchers.IO) {
                 runSingleDay(
@@ -496,6 +480,7 @@ private fun DaySingleButton(day: Day<Any>, samples: Samples?, state: DayState, s
                         state.part2Result.value = result
                         state.part2Time.value = time - state.part2StartTime.value
                         state.target.value = null
+                        onEnd()
                     },
                     onSampleStart = { part, nr, time ->
                         if (part == 1) {
@@ -520,7 +505,9 @@ private fun DaySingleButton(day: Day<Any>, samples: Samples?, state: DayState, s
                     }
                 )
             }
-        }) {
+        },
+        enabled = enabled
+    ) {
         Icon(Icons.Default.PlayArrow, "")
         Text("Run")
     }
@@ -537,16 +524,6 @@ private fun PartLayout(part: Int, time: Double?, result: ResultState?) =
     }
 
 @Composable
-private fun VizHeaderLayout(progress: Double?, result: ResultState?) =
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Label("Progress: ", minWidth = 80.dp)
-        TextValue(progress?.toString() ?: "?")
-        ResultIcon(result)
-        Spacer(Modifier.width(2.dp))
-        result?.result?.let { TextValue(it) }
-    }
-
-@Composable
 private fun PartLayoutCompact(part: Int, time: Double?, result: ResultState?, active: Boolean) = Row(
     modifier = if (active) Modifier.background(Color.DarkGray) else Modifier,
     verticalAlignment = Alignment.CenterVertically
@@ -554,29 +531,6 @@ private fun PartLayoutCompact(part: Int, time: Double?, result: ResultState?, ac
     Label("Part $part: ", minWidth = 100.dp)
     TimeValue(time ?: 0.0)
     ResultIcon(result)
-}
-
-@Composable
-private fun ResultIcon(result: ResultState?) {
-    Spacer(Modifier.width(2.dp))
-    when (result?.correct) {
-        true -> Icon(Icons.Default.Check, "", tint = Color.Green)
-        false -> Icon(Icons.Default.Close, "", tint = Color.Red)
-        else -> Icon(Icons.Default.Build, "")
-    }
-}
-
-@Composable
-private fun TimeValue(time: Double, colorRange: List<Double> = listOf(0.1, 0.5, 1.0)) {
-    val posTime = time.coerceAtLeast(0.0)
-    TextValue(posTime.formattedTime(), color = colorRange.getColor(posTime))
-}
-
-private fun List<Double>.getColor(value: Double) = when {
-    value < this[0] -> Color.Green
-    value < this[1] -> Color.Yellow
-    value < this[2] -> Color(252, 145, 5)
-    else -> Color.Red
 }
 
 @Composable
@@ -601,8 +555,8 @@ private fun SamplePartLayout(
 }
 
 @Composable
-private fun InitLayout(time: Double?) = Row(verticalAlignment = Alignment.CenterVertically) {
-    Label("Init: ", minWidth = 120.dp)
+private fun InitLayout(time: Double?, width: Dp = 120.dp) = Row(verticalAlignment = Alignment.CenterVertically) {
+    Label("Init: ", minWidth = width)
     TimeValue(time ?: 0.0)
 }
 
@@ -614,16 +568,6 @@ private fun InitLayoutCompact(time: Double?, active: Boolean) = Row(
     Label("Init: ", minWidth = 100.dp)
     TimeValue(time ?: 0.0)
 }
-
-@Composable
-private fun TextValue(text: String, color: Color = MaterialTheme.colors.onBackground) =
-    Box(modifier = Modifier.border(1.dp, Color.Gray), contentAlignment = Alignment.Center) {
-        Text(text, modifier = Modifier.padding(4.dp), color = color, fontFamily = FontFamily.Monospace)
-    }
-
-@Composable
-private fun Label(text: String, color: Color = MaterialTheme.colors.onBackground, minWidth: Dp = Dp.Unspecified) =
-    Text(text = text, modifier = Modifier.padding(4.dp).widthIn(min = minWidth), color = color)
 
 private fun runSingleDay(
     day: Day<Any>,
@@ -674,7 +618,8 @@ private suspend fun runPart1Visualized(
     onInitEnd: (Long) -> Unit,
     onStart: (Long) -> Unit,
     onProgress: (Viz) -> Unit,
-    onEnd: (Long, ResultState) -> Unit
+    onEnd: (Long, ResultState) -> Unit,
+    vizDelay: () -> Long
 ) {
     val rawInput = IO.readStrings(day.year, day.day)
     if (rawInput.any { it.isNotBlank() }) {
@@ -683,7 +628,7 @@ private suspend fun runPart1Visualized(
         onInitEnd(System.nanoTime())
 
         onStart(System.nanoTime())
-        val result = runPart1WithVisualization(day, input, expected[Triple(day.year, day.day, 1)], onProgress)
+        val result = runPart1WithVisualization(day, input, expected[Triple(day.year, day.day, 1)], onProgress, vizDelay)
         onEnd(System.nanoTime(), result)
     }
 }
@@ -719,9 +664,10 @@ suspend fun runPart1WithVisualization(
     day: Day<Any>,
     input: Any,
     expected: String?,
-    onProgress: (Viz) -> Unit
+    onProgress: (Viz) -> Unit,
+    delay: () -> Long
 ): ResultState {
-    val result = day.visualize1(input, onProgress = onProgress, awaitSignal = { delay(1000) }).toString()
+    val result = day.visualize1(input, onProgress = onProgress, awaitSignal = { delay(delay()) }).toString()
     val isCorrect = !expected.isNullOrEmpty() && expected == result
     return ResultState(result, isCorrect)
 }

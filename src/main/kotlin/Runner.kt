@@ -1,4 +1,6 @@
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
 import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.terminal.Terminal
@@ -44,7 +46,11 @@ val t = Terminal()
 fun main(args: Array<String>) {
     if (args.isEmpty()) {
         application {
-            Window(onCloseRequest = ::exitApplication) {
+            Window(
+                onCloseRequest = ::exitApplication,
+                state = WindowState(width = 1200.dp, height = 800.dp),
+                title = "Advent of Code"
+            ) {
                 App()
             }
         }

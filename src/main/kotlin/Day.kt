@@ -34,4 +34,8 @@ abstract class Day<T>(val year: Int, val day: Int) {
     open suspend fun solve2Visualized(input: T, onProgress: suspend (Viz) -> Unit): Any {
         return 0
     }
+
+    open val vizWidth = 30
+    open val vizHeight = 10
+    open val vizDelay = 1000L
 }

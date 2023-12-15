@@ -77,13 +77,13 @@ data class VizState(
     val viz: MutableState<Viz>,
     val target: MutableState<Target?>
 ) {
-    fun reset() {
+    fun reset(width: Int = 30, height: Int = 10) {
         initStartTime.value = 0L
         initTime.value = 0L
         startTime.value = 0L
         time.value = 0L
         result.value = null
-        viz.value = Viz()
+        viz.value = Viz(width = width, height = height)
         target.value = null
     }
 }

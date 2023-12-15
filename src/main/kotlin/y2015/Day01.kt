@@ -21,6 +21,9 @@ class Day01 : Day<String>(2015, 1) {
         return 0
     }
 
+    override val vizWidth: Int
+        get() = 50
+
     override suspend fun solve1Visualized(input: String, onProgress: suspend (Viz) -> Unit): Int {
         var lvl = 0
         input.forEachIndexed { index, c ->
