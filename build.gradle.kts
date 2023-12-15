@@ -20,6 +20,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.21")
     implementation("com.github.ajalt.mordant:mordant:2.2.0")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.8.10")
 }
 
 compose.desktop {

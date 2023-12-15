@@ -29,6 +29,9 @@ import runner.Target
 import utils.IO
 import years
 import kotlin.math.max
+import kotlin.reflect.full.memberFunctions
+import kotlin.reflect.jvm.javaMethod
+import kotlin.reflect.jvm.reflect
 
 @Composable
 @Preview
@@ -291,8 +294,18 @@ private fun DayLayoutCompact(
             }
             Column {
                 InitLayoutCompact(initTime?.div(1000000000.0), target is YearTarget.Init && target.day == day.day)
-                PartLayoutCompact(1, part1Time?.div(1000000000.0), part1Result, target is YearTarget.Part1 && target.day == day.day)
-                PartLayoutCompact(2, part2Time?.div(1000000000.0), part2Result, target is YearTarget.Part2 && target.day == day.day)
+                PartLayoutCompact(
+                    1,
+                    part1Time?.div(1000000000.0),
+                    part1Result,
+                    target is YearTarget.Part1 && target.day == day.day
+                )
+                PartLayoutCompact(
+                    2,
+                    part2Time?.div(1000000000.0),
+                    part2Result,
+                    target is YearTarget.Part2 && target.day == day.day
+                )
             }
         }
     }
@@ -302,65 +315,16 @@ private fun DayLayoutCompact(
 private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: CoroutineScope) {
     Column(modifier = Modifier.fillMaxSize()) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Button(
-                onClick = {
-                    state.reset()
-                    scope.launch(Dispatchers.IO) {
-                        runSingleDay(
-                            day = day,
-                            samples = samples,
-                            onInitStart = {
-                                state.initStartTime.value = it
-                                state.target.value = Target.Init
-                            },
-                            onInitEnd = {
-                                state.initTime.value = System.nanoTime() - state.initStartTime.value
-                                state.target.value = null
-                            },
-                            onPart1Start = {
-                                state.part1StartTime.value = it
-                                state.target.value = Target.Part(1)
-                            },
-                            onPart1End = { time, result ->
-                                state.part1Time.value = time - state.part1StartTime.value
-                                state.part1Result.value = result
-                                state.target.value = null
-                            },
-                            onPart2Start = {
-                                state.part2StartTime.value = it
-                                state.target.value = Target.Part(2)
-                            },
-                            onPart2End = { time, result ->
-                                state.part2Result.value = result
-                                state.part2Time.value = time - state.part2StartTime.value
-                                state.target.value = null
-                            },
-                            onSampleStart = { part, nr, time ->
-                                if (part == 1) {
-                                    state.part1SampleTimes[nr] = time to 0L
-                                    state.target.value = Target.Sample1(nr)
-                                } else {
-                                    state.part2SampleTimes[nr] = time to 0L
-                                    state.target.value = Target.Sample2(nr)
-                                }
-                            },
-                            onSampleEnd = { part, nr, time, result ->
-                                if (part == 1) {
-                                    val start = state.part1SampleTimes[nr]!!.first
-                                    state.part1SampleTimes[nr] = start to time
-                                    state.part1SampleResults[nr] = result
-                                } else {
-                                    val start = state.part2SampleTimes[nr]!!.first
-                                    state.part2SampleTimes[nr] = start to time
-                                    state.part2SampleResults[nr] = result
-                                }
-                                state.target.value = null
-                            }
-                        )
-                    }
-                }) {
-                Icon(Icons.Default.PlayArrow, "")
-                Text("Run")
+            DaySingleButton(day, samples, state, scope)
+            val caller1 = day::class.memberFunctions.first { it.name == "solve1Visualized" }.javaMethod!!.declaringClass
+            val caller2 = day::class.memberFunctions.first { it.name == "solve2Visualized" }.javaMethod!!.declaringClass
+            Button(onClick = {}, enabled = caller1.name != "Day") {
+                Icon(Icons.Default.Star, "")
+                Text("Visualize Part 1")
+            }
+            Button(onClick = {}, enabled = caller2.name != "Day") {
+                Icon(Icons.Default.Star, "")
+                Text("Visualize Part 2")
             }
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -422,6 +386,70 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: 
             }
         }
         PartLayout(2, state.part2Time.value / 1000000000.0, state.part2Result.value)
+    }
+}
+
+@Composable
+private fun DaySingleButton(day: Day<Any>, samples: Samples?, state: DayState, scope: CoroutineScope) {
+    Button(
+        onClick = {
+            state.reset()
+            scope.launch(Dispatchers.IO) {
+                runSingleDay(
+                    day = day,
+                    samples = samples,
+                    onInitStart = {
+                        state.initStartTime.value = it
+                        state.target.value = Target.Init
+                    },
+                    onInitEnd = {
+                        state.initTime.value = System.nanoTime() - state.initStartTime.value
+                        state.target.value = null
+                    },
+                    onPart1Start = {
+                        state.part1StartTime.value = it
+                        state.target.value = Target.Part(1)
+                    },
+                    onPart1End = { time, result ->
+                        state.part1Time.value = time - state.part1StartTime.value
+                        state.part1Result.value = result
+                        state.target.value = null
+                    },
+                    onPart2Start = {
+                        state.part2StartTime.value = it
+                        state.target.value = Target.Part(2)
+                    },
+                    onPart2End = { time, result ->
+                        state.part2Result.value = result
+                        state.part2Time.value = time - state.part2StartTime.value
+                        state.target.value = null
+                    },
+                    onSampleStart = { part, nr, time ->
+                        if (part == 1) {
+                            state.part1SampleTimes[nr] = time to 0L
+                            state.target.value = Target.Sample1(nr)
+                        } else {
+                            state.part2SampleTimes[nr] = time to 0L
+                            state.target.value = Target.Sample2(nr)
+                        }
+                    },
+                    onSampleEnd = { part, nr, time, result ->
+                        if (part == 1) {
+                            val start = state.part1SampleTimes[nr]!!.first
+                            state.part1SampleTimes[nr] = start to time
+                            state.part1SampleResults[nr] = result
+                        } else {
+                            val start = state.part2SampleTimes[nr]!!.first
+                            state.part2SampleTimes[nr] = start to time
+                            state.part2SampleResults[nr] = result
+                        }
+                        state.target.value = null
+                    }
+                )
+            }
+        }) {
+        Icon(Icons.Default.PlayArrow, "")
+        Text("Run")
     }
 }
 
@@ -611,13 +639,23 @@ private fun runDays(
     }
 }
 
-suspend fun runPart1WithVisualization(day: Day<Any>, input: Any, expected: String?, onProgress: (String?) -> Unit): ResultState {
+suspend fun runPart1WithVisualization(
+    day: Day<Any>,
+    input: Any,
+    expected: String?,
+    onProgress: (String?) -> Unit
+): ResultState {
     val result = day.visualize1(input, onProgress = onProgress, awaitSignal = { delay(1000) }).toString()
     val isCorrect = !expected.isNullOrEmpty() && expected == result
     return ResultState(result, isCorrect)
 }
 
-suspend fun runPart2WithVisualization(day: Day<Any>, input: Any, expected: String?, onProgress: (String?) -> Unit): ResultState {
+suspend fun runPart2WithVisualization(
+    day: Day<Any>,
+    input: Any,
+    expected: String?,
+    onProgress: (String?) -> Unit
+): ResultState {
     val result = day.visualize2(input, onProgress = onProgress, awaitSignal = { delay(1000) }).toString()
     val isCorrect = !expected.isNullOrEmpty() && expected == result
     return ResultState(result, isCorrect)
