@@ -313,8 +313,9 @@ private fun DayLayoutCompact(
 
 @Composable
 private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: CoroutineScope) {
+    var visualizationData by remember { mutableStateOf("") }
     Column(modifier = Modifier.fillMaxSize()) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             DaySingleButton(day, samples, state, scope)
             val caller1 = day::class.memberFunctions.first { it.name == "solve1Visualized" }.javaMethod!!.declaringClass
             val caller2 = day::class.memberFunctions.first { it.name == "solve2Visualized" }.javaMethod!!.declaringClass
@@ -333,59 +334,69 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: 
             Label("   Day: ")
             TextValue(day.day.toString())
         }
-        if (samples != null) {
-            LaunchedEffect(state.target.value) {
-                while (state.target.value is Target.Sample1) {
-                    delay(100)
-                    val nr = state.target.value?.nr
-                    if (nr != null) {
-                        val start = state.part1SampleTimes[nr]?.first
-                        if (start != null) {
-                            state.part1SampleTimes[nr] = start to System.nanoTime()
+        Row(Modifier.fillMaxWidth()) {
+            Column(Modifier.width(400.dp).border(1.dp, Color.LightGray)) {
+                if (samples != null) {
+                    LaunchedEffect(state.target.value) {
+                        while (state.target.value is Target.Sample1) {
+                            delay(100)
+                            val nr = state.target.value?.nr
+                            if (nr != null) {
+                                val start = state.part1SampleTimes[nr]?.first
+                                if (start != null) {
+                                    state.part1SampleTimes[nr] = start to System.nanoTime()
+                                }
+                            }
                         }
                     }
-                }
-            }
-            SamplePartLayout(1, samples.part1, state.part1SampleTimes, state.part1SampleResults)
+                    SamplePartLayout(1, samples.part1, state.part1SampleTimes, state.part1SampleResults)
 
-            LaunchedEffect(state.target.value) {
-                while (state.target.value is Target.Sample2) {
-                    delay(100)
-                    val nr = state.target.value?.nr
-                    if (nr != null) {
-                        val start = state.part2SampleTimes[nr]?.first
-                        if (start != null) {
-                            state.part2SampleTimes[nr] = start to System.nanoTime()
+                    LaunchedEffect(state.target.value) {
+                        while (state.target.value is Target.Sample2) {
+                            delay(100)
+                            val nr = state.target.value?.nr
+                            if (nr != null) {
+                                val start = state.part2SampleTimes[nr]?.first
+                                if (start != null) {
+                                    state.part2SampleTimes[nr] = start to System.nanoTime()
+                                }
+                            }
                         }
                     }
+                    SamplePartLayout(2, samples.part2, state.part2SampleTimes, state.part2SampleResults)
+                }
+
+                LaunchedEffect(state.target.value) {
+                    while (state.target.value == Target.Init) {
+                        delay(100)
+                        state.initTime.value = System.nanoTime() - state.initStartTime.value
+                    }
+                }
+                InitLayout(state.initTime.value / 1000000000.0)
+
+                LaunchedEffect(state.target.value) {
+                    while (state.target.value is Target.Part && state.target.value?.nr == 1) {
+                        delay(100)
+                        state.part1Time.value = System.nanoTime() - state.part1StartTime.value
+                    }
+                }
+                PartLayout(1, state.part1Time.value / 1000000000.0, state.part1Result.value)
+
+                LaunchedEffect(state.part2StartTime.value) {
+                    while (state.target.value is Target.Part && state.target.value?.nr == 2) {
+                        delay(100)
+                        state.part2Time.value = System.nanoTime() - state.part2StartTime.value
+                    }
+                }
+                PartLayout(2, state.part2Time.value / 1000000000.0, state.part2Result.value)
+            }
+            Column(Modifier.fillMaxHeight()) {
+                Label("Visualized:")
+                Box(Modifier.fillMaxSize().border(1.dp, Color.LightGray)) {
+                    Text(visualizationData)
                 }
             }
-            SamplePartLayout(2, samples.part2, state.part2SampleTimes, state.part2SampleResults)
         }
-
-        LaunchedEffect(state.target.value) {
-            while (state.target.value == Target.Init) {
-                delay(100)
-                state.initTime.value = System.nanoTime() - state.initStartTime.value
-            }
-        }
-        InitLayout(state.initTime.value / 1000000000.0)
-
-        LaunchedEffect(state.target.value) {
-            while (state.target.value is Target.Part && state.target.value?.nr == 1) {
-                delay(100)
-                state.part1Time.value = System.nanoTime() - state.part1StartTime.value
-            }
-        }
-        PartLayout(1, state.part1Time.value / 1000000000.0, state.part1Result.value)
-
-        LaunchedEffect(state.part2StartTime.value) {
-            while (state.target.value is Target.Part && state.target.value?.nr == 2) {
-                delay(100)
-                state.part2Time.value = System.nanoTime() - state.part2StartTime.value
-            }
-        }
-        PartLayout(2, state.part2Time.value / 1000000000.0, state.part2Result.value)
     }
 }
 
