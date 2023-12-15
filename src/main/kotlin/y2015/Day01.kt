@@ -1,6 +1,7 @@
 package y2015
 
 import Day
+import runner.Viz
 
 class Day01 : Day<String>(2015, 1) {
 
@@ -20,15 +21,15 @@ class Day01 : Day<String>(2015, 1) {
         return 0
     }
 
-    override suspend fun solve1Visualized(input: String, onProgress: suspend (String) -> Unit): Int {
+    override suspend fun solve1Visualized(input: String, onProgress: suspend (Viz) -> Unit): Int {
         var lvl = 0
-        for (c in input) {
+        input.forEachIndexed { index, c ->
             if (c == '(') {
                 lvl++
             } else {
                 lvl--
             }
-            onProgress(c.toString())
+            onProgress(Viz((index + 1).toDouble() / input.length))
         }
         return lvl
     }

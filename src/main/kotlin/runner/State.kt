@@ -67,3 +67,23 @@ sealed class YearTarget(val day: Int) {
     class Part1(day: Int) : YearTarget(day)
     class Part2(day: Int) : YearTarget(day)
 }
+
+data class VizState(
+    val initStartTime: MutableState<Long>,
+    val initTime: MutableState<Long>,
+    val startTime: MutableState<Long>,
+    val time: MutableState<Long>,
+    val result: MutableState<ResultState?>,
+    val viz: MutableState<Viz>,
+    val target: MutableState<Target?>
+) {
+    fun reset() {
+        initStartTime.value = 0L
+        initTime.value = 0L
+        startTime.value = 0L
+        time.value = 0L
+        result.value = null
+        viz.value = Viz()
+        target.value = null
+    }
+}

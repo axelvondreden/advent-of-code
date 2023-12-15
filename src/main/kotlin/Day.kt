@@ -1,4 +1,5 @@
 import kotlinx.coroutines.coroutineScope
+import runner.Viz
 
 abstract class Day<T>(val year: Int, val day: Int) {
 
@@ -8,29 +9,29 @@ abstract class Day<T>(val year: Int, val day: Int) {
 
     abstract fun solve2(input: T): Any
 
-    suspend fun visualize1(input: T, onProgress: (String?) -> Unit, awaitSignal: suspend () -> Unit): Any {
+    suspend fun visualize1(input: T, onProgress: (Viz) -> Unit, awaitSignal: suspend () -> Unit): Any {
         return coroutineScope {
-            solve1Visualized(input) { progress ->
-                onProgress(progress)
+            solve1Visualized(input) { viz ->
+                onProgress(viz)
                 awaitSignal()
             }
         }
     }
 
-    suspend fun visualize2(input: T, onProgress: (String?) -> Unit, awaitSignal: suspend () -> Unit): Any {
+    suspend fun visualize2(input: T, onProgress: (Viz) -> Unit, awaitSignal: suspend () -> Unit): Any {
         return coroutineScope {
-            solve2Visualized(input) { progress ->
-                onProgress(progress)
+            solve2Visualized(input) { viz ->
+                onProgress(viz)
                 awaitSignal()
             }
         }
     }
 
-    open suspend fun solve1Visualized(input: T, onProgress: suspend (String) -> Unit): Any {
+    open suspend fun solve1Visualized(input: T, onProgress: suspend (Viz) -> Unit): Any {
         return 0
     }
 
-    open suspend fun solve2Visualized(input: T, onProgress: suspend (String) -> Unit): Any {
+    open suspend fun solve2Visualized(input: T, onProgress: suspend (Viz) -> Unit): Any {
         return 0
     }
 }

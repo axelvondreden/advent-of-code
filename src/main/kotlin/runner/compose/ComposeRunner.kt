@@ -31,7 +31,6 @@ import years
 import kotlin.math.max
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.jvm.javaMethod
-import kotlin.reflect.jvm.reflect
 
 @Composable
 @Preview
@@ -66,6 +65,15 @@ fun App() {
                 part2Results = remember { mutableStateMapOf() },
                 target = remember { mutableStateOf(null) }
             )
+            val vizState = VizState(
+                initStartTime = remember { mutableStateOf(0L) },
+                initTime = remember { mutableStateOf(0L) },
+                startTime = remember { mutableStateOf(0L) },
+                time = remember { mutableStateOf(0L) },
+                result = remember { mutableStateOf(null) },
+                viz = remember { mutableStateOf(Viz()) },
+                target = remember { mutableStateOf(null) }
+            )
 
             YearSelect(
                 onAllClick = {},
@@ -95,13 +103,14 @@ fun App() {
                     onDaySelect = {
                         allOfYearSelected = false
                         dayState.reset()
+                        vizState.reset()
                         selectedDay = it
                     })
 
                 val day = selectedDay
                 if (day != null) {
                     val samples = IO.readSamples(day.year, day.day)
-                    DayLayout(day, samples, dayState, scope)
+                    DayLayout(day, samples, dayState, vizState, scope)
                 } else if (allOfYearSelected) {
                     YearLayout(selectedYear!!, availableDays, yearState, scope)
                 }
@@ -312,14 +321,41 @@ private fun DayLayoutCompact(
 }
 
 @Composable
-private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: CoroutineScope) {
-    var visualizationData by remember { mutableStateOf("") }
+private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, vizState: VizState, scope: CoroutineScope) {
     Column(modifier = Modifier.fillMaxSize()) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             DaySingleButton(day, samples, state, scope)
             val caller1 = day::class.memberFunctions.first { it.name == "solve1Visualized" }.javaMethod!!.declaringClass
             val caller2 = day::class.memberFunctions.first { it.name == "solve2Visualized" }.javaMethod!!.declaringClass
-            Button(onClick = {}, enabled = caller1.name != "Day") {
+            Button(
+                onClick = {
+                    scope.launch(Dispatchers.IO) {
+                        vizState.reset()
+                        runPart1Visualized(
+                            day = day,
+                            onInitStart = {
+                                vizState.initStartTime.value = it
+                                vizState.target.value = Target.Init
+                            },
+                            onInitEnd = {
+                                vizState.initTime.value = System.nanoTime() - vizState.initStartTime.value
+                                vizState.target.value = null
+                            },
+                            onStart = {
+                                vizState.startTime.value = it
+                                vizState.target.value = Target.Part(1)
+                            },
+                            onProgress = { vizState.viz.value = it },
+                            onEnd = { time, result ->
+                                vizState.time.value = time - vizState.startTime.value
+                                vizState.result.value = result
+                                vizState.target.value = null
+                            }
+                        )
+                    }
+                },
+                enabled = caller1.name != "Day"
+            ) {
                 Icon(Icons.Default.Star, "")
                 Text("Visualize Part 1")
             }
@@ -390,10 +426,36 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: 
                 }
                 PartLayout(2, state.part2Time.value / 1000000000.0, state.part2Result.value)
             }
-            Column(Modifier.fillMaxHeight()) {
-                Label("Visualized:")
-                Box(Modifier.fillMaxSize().border(1.dp, Color.LightGray)) {
-                    Text(visualizationData)
+            VizLayout(vizState)
+        }
+    }
+}
+
+@Composable
+private fun VizLayout(state: VizState) {
+    Column(Modifier.fillMaxHeight()) {
+        Row {
+            LaunchedEffect(state.target.value) {
+                while (state.target.value == Target.Init) {
+                    delay(100)
+                    state.initTime.value = System.nanoTime() - state.initStartTime.value
+                }
+            }
+            InitLayout(state.initTime.value / 1000000000.0)
+            VizHeaderLayout(state.viz.value.progress, state.result.value)
+        }
+
+        VizGrid(state.viz.value)
+    }
+}
+
+@Composable
+private fun VizGrid(viz: Viz) {
+    Box(Modifier.fillMaxSize().border(1.dp, Color.LightGray)) {
+        repeat(viz.size) {
+            Column(modifier = Modifier.border(1.dp, Color.White).fillMaxWidth(1F / viz.size)) {
+                Row(modifier = Modifier.border(1.dp, Color.White).fillMaxWidth(1F / viz.size)) {
+
                 }
             }
         }
@@ -469,6 +531,16 @@ private fun PartLayout(part: Int, time: Double?, result: ResultState?) =
     Row(verticalAlignment = Alignment.CenterVertically) {
         Label("Part $part: ", minWidth = 120.dp)
         TimeValue(time ?: 0.0)
+        ResultIcon(result)
+        Spacer(Modifier.width(2.dp))
+        result?.result?.let { TextValue(it) }
+    }
+
+@Composable
+private fun VizHeaderLayout(progress: Double?, result: ResultState?) =
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Label("Progress: ", minWidth = 80.dp)
+        TextValue(progress?.toString() ?: "?")
         ResultIcon(result)
         Spacer(Modifier.width(2.dp))
         result?.result?.let { TextValue(it) }
@@ -596,16 +668,13 @@ private fun runSingleDay(
     }
 }
 
-private suspend fun runSingleDayVisualized(
+private suspend fun runPart1Visualized(
     day: Day<Any>,
     onInitStart: (Long) -> Unit,
     onInitEnd: (Long) -> Unit,
-    onPart1Start: (Long) -> Unit,
-    onPart1Progress: (String?) -> Unit,
-    onPart1End: (Long, ResultState) -> Unit,
-    onPart2Start: (Long) -> Unit,
-    onPart2Progress: (String?) -> Unit,
-    onPart2End: (Long, ResultState) -> Unit
+    onStart: (Long) -> Unit,
+    onProgress: (Viz) -> Unit,
+    onEnd: (Long, ResultState) -> Unit
 ) {
     val rawInput = IO.readStrings(day.year, day.day)
     if (rawInput.any { it.isNotBlank() }) {
@@ -613,13 +682,9 @@ private suspend fun runSingleDayVisualized(
         val input = runInit(day, rawInput)
         onInitEnd(System.nanoTime())
 
-        onPart1Start(System.nanoTime())
-        val result1 = runPart1WithVisualization(day, input, expected[Triple(day.year, day.day, 1)], onPart1Progress)
-        onPart1End(System.nanoTime(), result1)
-
-        onPart2Start(System.nanoTime())
-        val result2 = runPart2WithVisualization(day, input, expected[Triple(day.year, day.day, 2)], onPart2Progress)
-        onPart2End(System.nanoTime(), result2)
+        onStart(System.nanoTime())
+        val result = runPart1WithVisualization(day, input, expected[Triple(day.year, day.day, 1)], onProgress)
+        onEnd(System.nanoTime(), result)
     }
 }
 
@@ -654,7 +719,7 @@ suspend fun runPart1WithVisualization(
     day: Day<Any>,
     input: Any,
     expected: String?,
-    onProgress: (String?) -> Unit
+    onProgress: (Viz) -> Unit
 ): ResultState {
     val result = day.visualize1(input, onProgress = onProgress, awaitSignal = { delay(1000) }).toString()
     val isCorrect = !expected.isNullOrEmpty() && expected == result
@@ -665,7 +730,7 @@ suspend fun runPart2WithVisualization(
     day: Day<Any>,
     input: Any,
     expected: String?,
-    onProgress: (String?) -> Unit
+    onProgress: (Viz) -> Unit
 ): ResultState {
     val result = day.visualize2(input, onProgress = onProgress, awaitSignal = { delay(1000) }).toString()
     val isCorrect = !expected.isNullOrEmpty() && expected == result
