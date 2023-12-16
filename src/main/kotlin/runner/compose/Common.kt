@@ -56,7 +56,7 @@ private fun List<Double>.getColor(value: Double) = when {
 }
 
 @Composable
-fun BorderLeftShape(thickness: Dp) : Shape {
+fun BorderLeftShape(thickness: Dp = 1.dp) : Shape {
     val thicknessPx = with(LocalDensity.current) {thickness.toPx()}
     return GenericShape { size, _ ->
         moveTo(0F, 0F)
@@ -67,7 +67,7 @@ fun BorderLeftShape(thickness: Dp) : Shape {
 }
 
 @Composable
-fun BorderRightShape(thickness: Dp) : Shape {
+fun BorderRightShape(thickness: Dp = 1.dp) : Shape {
     val thicknessPx = with(LocalDensity.current) {thickness.toPx()}
     return GenericShape { size, _ ->
         moveTo(size.width - thicknessPx, 0F)
@@ -78,7 +78,7 @@ fun BorderRightShape(thickness: Dp) : Shape {
 }
 
 @Composable
-fun BorderTopShape(thickness: Dp) : Shape {
+fun BorderTopShape(thickness: Dp = 1.dp) : Shape {
     val thicknessPx = with(LocalDensity.current) {thickness.toPx()}
     return GenericShape { size, _ ->
         moveTo(0F, 0F)
@@ -89,7 +89,7 @@ fun BorderTopShape(thickness: Dp) : Shape {
 }
 
 @Composable
-fun BorderBottomShape(thickness: Dp) : Shape {
+fun BorderBottomShape(thickness: Dp = 1.dp) : Shape {
     val thicknessPx = with(LocalDensity.current) {thickness.toPx()}
     return GenericShape { size, _ ->
         moveTo(0F, size.height)
@@ -100,12 +100,40 @@ fun BorderBottomShape(thickness: Dp) : Shape {
 }
 
 @Composable
-fun BorderTopLeftShape(thickness: Dp) : Shape {
+fun BorderTopLeftShape(thickness: Dp = 1.dp) : Shape {
     val thicknessPx = with(LocalDensity.current) {thickness.toPx()}
     return GenericShape { size, _ ->
         moveTo(0F, 0F)
         lineTo(size.width, 0F)
+        lineTo(size.width, thicknessPx)
+        lineTo(thicknessPx, thicknessPx)
         lineTo(thicknessPx, size.height)
+        lineTo(0F, size.height)
+    }
+}
+
+@Composable
+fun BorderTopRightShape(thickness: Dp = 1.dp) : Shape {
+    val thicknessPx = with(LocalDensity.current) {thickness.toPx()}
+    return GenericShape { size, _ ->
+        moveTo(0F, 0F)
+        lineTo(size.width, 0F)
+        lineTo(size.width, size.height)
+        lineTo(size.width - thicknessPx, size.height)
+        lineTo(size.width - thicknessPx, thicknessPx)
+        lineTo(0F, thicknessPx)
+    }
+}
+
+@Composable
+fun BorderBottomLeftShape(thickness: Dp = 1.dp) : Shape {
+    val thicknessPx = with(LocalDensity.current) {thickness.toPx()}
+    return GenericShape { size, _ ->
+        moveTo(0F, 0F)
+        lineTo(0F, size.height)
+        lineTo(size.width, size.height)
+        lineTo(size.width, size.height - thicknessPx)
+        lineTo(thicknessPx, size.height - thicknessPx)
         lineTo(thicknessPx, 0F)
     }
 }
