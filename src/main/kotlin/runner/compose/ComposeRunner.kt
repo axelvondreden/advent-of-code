@@ -63,15 +63,7 @@ fun App() {
                 part2Results = remember { mutableStateMapOf() },
                 target = remember { mutableStateOf(null) }
             )
-            val vizState = VizState(
-                initStartTime = remember { mutableStateOf(0L) },
-                initTime = remember { mutableStateOf(0L) },
-                startTime = remember { mutableStateOf(0L) },
-                time = remember { mutableStateOf(0L) },
-                result = remember { mutableStateOf(null) },
-                viz = remember { mutableStateOf(Viz()) },
-                target = remember { mutableStateOf(null) }
-            )
+
 
             YearSelect(
                 onAllClick = {},
@@ -101,14 +93,13 @@ fun App() {
                     onDaySelect = {
                         allOfYearSelected = false
                         dayState.reset()
-                        vizState.reset(it.vizWidth, it.vizHeight)
                         selectedDay = it
                     })
 
                 val day = selectedDay
                 if (day != null) {
                     val samples = IO.readSamples(day.year, day.day)
-                    DayLayout(day, samples, dayState, vizState, scope)
+                    DayLayout(day, samples, dayState, scope)
                 } else if (allOfYearSelected) {
                     YearLayout(selectedYear!!, availableDays, yearState, scope)
                 }
@@ -319,42 +310,31 @@ private fun DayLayoutCompact(
 }
 
 @Composable
-private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, vizState: VizState, scope: CoroutineScope) {
-    var delay by remember { mutableStateOf(day.vizDelay) }
+private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: CoroutineScope) {
+    val delay = remember { mutableStateOf(day.vizDelay) }
+    var jobRunning by remember { mutableStateOf(false) }
+    val vizState = remember(day) { mutableStateOf<VizState?>(null) }
+    val viz = remember { mutableStateOf<Viz?>(null) }
     Column(modifier = Modifier.fillMaxSize()) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            var jobRunning by remember { mutableStateOf(false) }
             DaySingleButton(day, samples, !jobRunning, state, scope, onStart = { jobRunning = true }, onEnd = { jobRunning = false })
             val caller1 = day::class.memberFunctions.first { it.name == "solve1Visualized" }.javaMethod!!.declaringClass
             val caller2 = day::class.memberFunctions.first { it.name == "solve2Visualized" }.javaMethod!!.declaringClass
             Button(
                 onClick = {
-                    jobRunning = true
                     scope.launch(Dispatchers.IO) {
-                        vizState.reset(day.vizWidth, day.vizHeight)
-                        runPart1Visualized(
-                            day = day,
-                            onInitStart = {
-                                vizState.initStartTime.value = it
-                                vizState.target.value = Target.Init
-                            },
-                            onInitEnd = {
-                                vizState.initTime.value = System.nanoTime() - vizState.initStartTime.value
-                                vizState.target.value = null
-                            },
-                            onStart = {
-                                vizState.startTime.value = it
-                                vizState.target.value = Target.Part(1)
-                            },
-                            onProgress = { vizState.viz.value = it },
-                            onEnd = { time, result ->
-                                vizState.time.value = time - vizState.startTime.value
-                                vizState.result.value = result
-                                vizState.target.value = null
-                                jobRunning = false
-                            },
-                            vizDelay = { delay }
-                        )
+                        val rawInput = IO.readStrings(day.year, day.day)
+                        if (rawInput.any { it.isNotBlank() }) {
+                            val start = System.nanoTime()
+                            val input = runInit(day, rawInput)
+                            val time = System.nanoTime() - start
+                            viz.value = day.initViz(input)
+                            vizState.value = VizState(
+                                initTime = time,
+                                result = mutableStateOf(null),
+                                input = input
+                            )
+                        }
                     }
                 },
                 enabled = caller1.name != "Day" && !jobRunning
@@ -432,7 +412,23 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, vizStat
                 }
                 PartLayout(2, state.part2Time.value / 1000000000.0, state.part2Result.value)
             }
-            VizLayout(vizState, delay, onDelayChange = { delay = it })
+            val vState = vizState.value
+            if (vState != null) {
+                VizLayout(
+                    day = day,
+                    state = vState,
+                    viz = viz,
+                    delay = delay,
+                    scope = scope,
+                    onDelayChange = { delay.value = it },
+                    onStart = {
+                        jobRunning = true
+                    },
+                    onEnd = {
+                        jobRunning = false
+                    }
+                )
+            }
         }
     }
 }
@@ -609,27 +605,6 @@ private fun runSingleDay(
         onPart2Start(System.nanoTime())
         val part2Result = runPart(day, 2, input, expected[Triple(day.year, day.day, 2)])
         onPart2End(System.nanoTime(), part2Result)
-    }
-}
-
-private suspend fun runPart1Visualized(
-    day: Day<Any>,
-    onInitStart: (Long) -> Unit,
-    onInitEnd: (Long) -> Unit,
-    onStart: (Long) -> Unit,
-    onProgress: (Viz) -> Unit,
-    onEnd: (Long, ResultState) -> Unit,
-    vizDelay: () -> Long
-) {
-    val rawInput = IO.readStrings(day.year, day.day)
-    if (rawInput.any { it.isNotBlank() }) {
-        onInitStart(System.nanoTime())
-        val input = runInit(day, rawInput)
-        onInitEnd(System.nanoTime())
-
-        onStart(System.nanoTime())
-        val result = runPart1WithVisualization(day, input, expected[Triple(day.year, day.day, 1)], onProgress, vizDelay)
-        onEnd(System.nanoTime(), result)
     }
 }
 
