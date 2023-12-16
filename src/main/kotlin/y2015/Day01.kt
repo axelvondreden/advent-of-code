@@ -2,9 +2,7 @@ package y2015
 
 import Day
 import androidx.compose.ui.graphics.Color
-import runner.compose.Tile
 import runner.compose.Viz
-import runner.compose.tileText
 
 class Day01 : Day<String>(2015, 1) {
 
@@ -25,9 +23,9 @@ class Day01 : Day<String>(2015, 1) {
     }
 
     override fun initViz1(input: String) = Viz().apply {
-        text(0, 0, "Level:")
+        text(0, 0, "Level:", borderColor = Color.LightGray)
         text(6, 0, "0", borderColor = Color.LightGray)
-        set(0, 5, Tile(borderColor = Color.Yellow))
+        borderColor(0, 5, Color.Yellow)
         text(1, 5, input.take(29))
     }
 
@@ -36,7 +34,7 @@ class Day01 : Day<String>(2015, 1) {
         text(6, 0, "0", borderColor = Color.LightGray)
         text(0, 1, "Position:")
         text(9, 1, "0", borderColor = Color.LightGray)
-        set(0, 5, Tile(borderColor = Color.Yellow))
+        borderColor(0, 5, Color.Yellow)
         text(1, 5, input.take(29))
     }
 
@@ -44,25 +42,22 @@ class Day01 : Day<String>(2015, 1) {
         var lvl = 0
         for ((index, c) in input.withIndex()) {
             val viz = Viz((index + 1).toDouble() / input.length).apply {
-                text(0, 0, "Level:")
+                text(0, 0, "Level:", borderColor = Color.LightGray)
                 text(1, 5, input.substring(index + 1).take(29))
             }
 
             if (c == '(') {
                 lvl++
-                viz.set(0, 5, Tile(c, borderColor = Color.Green))
+                viz.text(0, 5, c.toString(), borderColor = Color.Green)
             } else {
                 lvl--
-                viz.set(0, 5, Tile(c, borderColor = Color.Red))
+                viz.text(0, 5, c.toString(), borderColor = Color.Red)
             }
-            viz.set(
-                6, 0, *tileText(
-                    lvl.toString(), borderColor = when {
-                        lvl < 0 -> Color.Red
-                        lvl > 0 -> Color.Green
-                        else -> Color.LightGray
-                    }
-                )
+            viz.text(
+                6,
+                0,
+                lvl.toString(),
+                borderColor = if (lvl < 0) Color.Red else if (lvl > 0) Color.Green else Color.LightGray
             )
 
             onProgress(viz)
@@ -74,31 +69,28 @@ class Day01 : Day<String>(2015, 1) {
         var floor = 0
         for ((index, c) in input.withIndex()) {
             val viz = Viz((index + 1).toDouble() / input.length).apply {
-                set(0, 0, *tileText("Level:"))
-                set(0, 1, *tileText("Position:"))
-                set(1, 5, *tileText(input.substring(index + 1).take(29)))
+                text(0, 0, "Level:")
+                text(0, 1, "Position:")
+                text(1, 5, input.substring(index + 1).take(29))
             }
             when (c) {
                 '(' -> {
                     floor++
-                    viz.set(0, 5, Tile(c, borderColor = Color.Green))
+                    viz.text(0, 5, c.toString(), borderColor = Color.Green)
                 }
 
                 ')' -> {
                     floor--
-                    viz.set(0, 5, Tile(c, borderColor = Color.Red))
+                    viz.text(0, 5, c.toString(), borderColor = Color.Red)
                 }
             }
-            viz.set(
-                6, 0, *tileText(
-                    floor.toString(), borderColor = when {
-                        floor < 0 -> Color.Red
-                        floor > 0 -> Color.Green
-                        else -> Color.LightGray
-                    }
-                )
+            viz.text(
+                6,
+                0,
+                floor.toString(),
+                borderColor = if (floor < 0) Color.Red else if (floor > 0) Color.Green else Color.LightGray
             )
-            viz.set(9, 1, *tileText((index + 1).toString(), borderColor = Color.LightGray))
+            viz.text(9, 1, (index + 1).toString(), borderColor = Color.LightGray)
             onProgress(viz)
             if (floor < 0) return index + 1
         }

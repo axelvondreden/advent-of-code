@@ -98,3 +98,14 @@ fun BorderBottomShape(thickness: Dp) : Shape {
         lineTo(0F, size.height - thicknessPx)
     }
 }
+
+@Composable
+fun BorderTopLeftShape(thickness: Dp) : Shape {
+    val thicknessPx = with(LocalDensity.current) {thickness.toPx()}
+    return GenericShape { size, _ ->
+        moveTo(0F, 0F)
+        lineTo(size.width, 0F)
+        lineTo(thicknessPx, size.height)
+        lineTo(thicknessPx, 0F)
+    }
+}

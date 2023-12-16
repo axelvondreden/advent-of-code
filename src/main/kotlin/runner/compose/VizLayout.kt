@@ -117,7 +117,7 @@ private fun ColumnScope.Tile(tile: Tile) {
         modifier = Modifier
             .fillMaxWidth()
             .weight(1F)
-            .border(1.dp, tile.borderColor, shape = tile.borderShape)
+            .border(1.dp, tile.borderColor, shape = tile.borderShape())
             .background(tile.backgroundColor),
         contentAlignment = Alignment.Center
     ) {
