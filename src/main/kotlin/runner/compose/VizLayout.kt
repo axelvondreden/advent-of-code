@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -116,7 +117,7 @@ private fun ColumnScope.Tile(tile: Tile) {
         modifier = Modifier
             .fillMaxWidth()
             .weight(1F)
-            .border(1.dp, tile.borderColor)
+            .border(1.dp, tile.borderColor, shape = tile.borderShape)
             .background(tile.backgroundColor),
         contentAlignment = Alignment.Center
     ) {

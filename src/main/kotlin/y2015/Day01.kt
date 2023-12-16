@@ -25,27 +25,27 @@ class Day01 : Day<String>(2015, 1) {
     }
 
     override fun initViz1(input: String) = Viz().apply {
-        set(0, 0, *tileText("Level:"))
-        set(6, 0, *tileText("0", borderColor = Color.LightGray))
+        text(0, 0, "Level:")
+        text(6, 0, "0", borderColor = Color.LightGray)
         set(0, 5, Tile(borderColor = Color.Yellow))
-        set(1, 5, *tileText(input.take(29)))
+        text(1, 5, input.take(29))
     }
 
     override fun initViz2(input: String) = Viz().apply {
-        set(0, 0, *tileText("Level:"))
-        set(6, 0, *tileText("0", borderColor = Color.LightGray))
-        set(0, 1, *tileText("Position:"))
-        set(9, 1, *tileText("0", borderColor = Color.LightGray))
+        text(0, 0, "Level:")
+        text(6, 0, "0", borderColor = Color.LightGray)
+        text(0, 1, "Position:")
+        text(9, 1, "0", borderColor = Color.LightGray)
         set(0, 5, Tile(borderColor = Color.Yellow))
-        set(1, 5, *tileText(input.take(29)))
+        text(1, 5, input.take(29))
     }
 
     override suspend fun solve1Visualized(input: String, onProgress: suspend (Viz) -> Unit): Int {
         var lvl = 0
         for ((index, c) in input.withIndex()) {
             val viz = Viz((index + 1).toDouble() / input.length).apply {
-                set(0, 0, *tileText("Level:"))
-                set(1, 5, *tileText(input.substring(index + 1).take(29)))
+                text(0, 0, "Level:")
+                text(1, 5, input.substring(index + 1).take(29))
             }
 
             if (c == '(') {

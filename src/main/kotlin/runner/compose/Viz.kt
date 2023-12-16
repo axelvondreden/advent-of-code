@@ -1,29 +1,37 @@
 package runner.compose
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 
 class Viz(val progress: Double? = null, val width: Int = 30, val height: Int = 10) {
 
     val map: Array<Array<Tile>> = Array(width) { Array(height) { Tile() } }
 
-    fun set(x: Int, y: Int, vararg tiles: Tile) {
-        for (i in tiles.indices) {
-            map[x + i][y] = tiles[i]
+    fun text(
+        x: Int,
+        y: Int,
+        text: String,
+        color: Color = Color.White,
+        backgroundColor: Color = Color(0xFF121212),
+        borderColor: Color = Color(30, 30, 30)
+    ) {
+        for (i in text.indices) {
+            with(map[x + i][y]) {
+                char = text[i]
+                this.color = color
+                this.backgroundColor = backgroundColor
+                this.borderColor = borderColor
+            }
         }
     }
 
 }
 
-class Tile(
-    val char: Char? = null,
-    val color: Color = Color.White,
-    val backgroundColor: Color = Color(0xFF121212),
-    val borderColor: Color = Color(30, 30, 30)
+data class Tile(
+    var char: Char? = null,
+    var color: Color = Color.White,
+    var backgroundColor: Color = Color(0xFF121212),
+    var borderColor: Color = Color(30, 30, 30),
+    var borderShape: Shape = RectangleShape
 )
-
-fun tileText(
-    text: String,
-    color: Color = Color.White,
-    backgroundColor: Color = Color(0xFF121212),
-    borderColor: Color = Color(30, 30, 30)
-): Array<Tile> = text.map { Tile(it, color, backgroundColor, borderColor) }.toTypedArray()
