@@ -17,10 +17,9 @@ import androidx.compose.ui.unit.sp
 import expected
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import runner.ResultState
-import runner.Tile
-import runner.Viz
 import runner.VizState
 
 @Composable
@@ -42,8 +41,9 @@ fun VizLayout(
                     onStart()
                     jobRunning = true
                     scope.launch(Dispatchers.IO) {
-                        runPart1Visualized(
+                        runPartVisualized(
                             day = day,
+                            part = state.part,
                             input = state.input,
                             onProgress = { viz.value = it },
                             onEnd = {
@@ -131,13 +131,42 @@ private fun ColumnScope.Tile(tile: Tile) {
     }
 }
 
-private suspend fun runPart1Visualized(
+private suspend fun runPartVisualized(
     day: Day<Any>,
+    part: Int,
     input: Any,
     onProgress: (Viz) -> Unit,
     onEnd: (ResultState) -> Unit,
     vizDelay: () -> Long
 ) {
-    val result = runPart1WithVisualization(day, input, expected[Triple(day.year, day.day, 1)], onProgress, vizDelay)
+    val result = if (part == 1) {
+        runPart1WithVisualization(day, input, expected[Triple(day.year, day.day, 1)], onProgress, vizDelay)
+    } else {
+        runPart2WithVisualization(day, input, expected[Triple(day.year, day.day, 2)], onProgress, vizDelay)
+    }
     onEnd(result)
+}
+
+suspend fun runPart1WithVisualization(
+    day: Day<Any>,
+    input: Any,
+    expected: String?,
+    onProgress: (Viz) -> Unit,
+    delay: () -> Long
+): ResultState {
+    val result = day.visualize1(input, onProgress = onProgress, awaitSignal = { delay(delay()) }).toString()
+    val isCorrect = !expected.isNullOrEmpty() && expected == result
+    return ResultState(result, isCorrect)
+}
+
+suspend fun runPart2WithVisualization(
+    day: Day<Any>,
+    input: Any,
+    expected: String?,
+    onProgress: (Viz) -> Unit,
+    delay: () -> Long
+): ResultState {
+    val result = day.visualize2(input, onProgress = onProgress, awaitSignal = { delay(delay()) }).toString()
+    val isCorrect = !expected.isNullOrEmpty() && expected == result
+    return ResultState(result, isCorrect)
 }

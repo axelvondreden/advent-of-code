@@ -69,6 +69,7 @@ sealed class YearTarget(val day: Int) {
 }
 
 data class VizState(
+    val part: Int,
     val initTime: Long,
     val result: MutableState<ResultState?>,
     val input: Any

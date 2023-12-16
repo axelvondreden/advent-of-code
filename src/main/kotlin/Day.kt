@@ -1,5 +1,5 @@
 import kotlinx.coroutines.coroutineScope
-import runner.Viz
+import runner.compose.Viz
 
 abstract class Day<T>(val year: Int, val day: Int) {
 
@@ -27,7 +27,8 @@ abstract class Day<T>(val year: Int, val day: Int) {
         }
     }
 
-    open fun initViz(input: T): Viz = Viz()
+    open fun initViz1(input: T): Viz = Viz()
+    open fun initViz2(input: T): Viz = Viz()
 
     open suspend fun solve1Visualized(input: T, onProgress: suspend (Viz) -> Unit): Any {
         return 0
@@ -39,5 +40,5 @@ abstract class Day<T>(val year: Int, val day: Int) {
 
     open val vizWidth = 30
     open val vizHeight = 10
-    open val vizDelay = 100L
+    open val vizDelay = 20L
 }

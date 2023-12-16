@@ -1,4 +1,4 @@
-package runner
+package runner.compose
 
 import androidx.compose.ui.graphics.Color
 
