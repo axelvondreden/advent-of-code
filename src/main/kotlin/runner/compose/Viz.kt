@@ -42,9 +42,9 @@ class Viz(val progress: Double? = null, val width: Int = 30, val height: Int = 1
         backgroundColor: Color = Color(0xFF121212),
         borderColor: Color = Color(30, 30, 30)
     ) {
-        if (text.length == 1) {
+        if (text.length <= 1) {
             with(map[x][y]) {
-                char = text.first()
+                char = text.firstOrNull()
                 this.color = color
                 this.backgroundColor = backgroundColor
                 this.borderColor = borderColor
@@ -55,7 +55,7 @@ class Viz(val progress: Double? = null, val width: Int = 30, val height: Int = 1
                 this.color = color
                 this.backgroundColor = backgroundColor
                 this.borderColor = borderColor
-                borderShape = { BorderLeftShape(1.dp) }
+                borderShape = { BorderLeftTopBottomShape() }
             }
             for (i in 1 until text.lastIndex) {
                 with(map[x + i][y]) {
@@ -63,7 +63,7 @@ class Viz(val progress: Double? = null, val width: Int = 30, val height: Int = 1
                     this.color = color
                     this.backgroundColor = backgroundColor
                     this.borderColor = borderColor
-                    borderShape = { BorderBottomShape(1.dp) }
+                    borderShape = { BorderTopBottomShape() }
                 }
             }
             with(map[x + text.lastIndex][y]) {
@@ -71,7 +71,7 @@ class Viz(val progress: Double? = null, val width: Int = 30, val height: Int = 1
                 this.color = color
                 this.backgroundColor = backgroundColor
                 this.borderColor = borderColor
-                borderShape = { BorderRightShape(1.dp) }
+                borderShape = { BorderRightTopBottomShape() }
             }
         }
     }

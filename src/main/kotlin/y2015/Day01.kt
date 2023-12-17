@@ -23,17 +23,14 @@ class Day01 : Day<String>(2015, 1) {
     }
 
     override fun initViz1(input: String) = Viz().apply {
-        text(0, 0, "Level:", borderColor = Color.LightGray)
-        text(6, 0, "0", borderColor = Color.LightGray)
+        text(0, 0, "Level:0", borderColor = Color.White)
         borderColor(0, 5, Color.Yellow)
         text(1, 5, input.take(29))
     }
 
     override fun initViz2(input: String) = Viz().apply {
-        text(0, 0, "Level:")
-        text(6, 0, "0", borderColor = Color.LightGray)
-        text(0, 1, "Position:")
-        text(9, 1, "0", borderColor = Color.LightGray)
+        text(0, 0, "Level:0", borderColor = Color.White)
+        text(0, 1, "Position:0", borderColor = Color.White)
         borderColor(0, 5, Color.Yellow)
         text(1, 5, input.take(29))
     }
@@ -42,7 +39,6 @@ class Day01 : Day<String>(2015, 1) {
         var lvl = 0
         for ((index, c) in input.withIndex()) {
             val viz = Viz((index + 1).toDouble() / input.length).apply {
-                text(0, 0, "Level:", borderColor = Color.LightGray)
                 text(1, 5, input.substring(index + 1).take(29))
             }
 
@@ -53,12 +49,7 @@ class Day01 : Day<String>(2015, 1) {
                 lvl--
                 viz.text(0, 5, c.toString(), borderColor = Color.Red)
             }
-            viz.text(
-                6,
-                0,
-                lvl.toString(),
-                borderColor = if (lvl < 0) Color.Red else if (lvl > 0) Color.Green else Color.LightGray
-            )
+            viz.text(0, 0, "Level:$lvl", borderColor = if (lvl < 0) Color.Red else if (lvl > 0) Color.Green else Color.LightGray)
 
             onProgress(viz)
         }
@@ -66,33 +57,26 @@ class Day01 : Day<String>(2015, 1) {
     }
 
     override suspend fun solve2Visualized(input: String, onProgress: suspend (Viz) -> Unit): Any {
-        var floor = 0
+        var lvl = 0
         for ((index, c) in input.withIndex()) {
             val viz = Viz((index + 1).toDouble() / input.length).apply {
-                text(0, 0, "Level:")
-                text(0, 1, "Position:")
                 text(1, 5, input.substring(index + 1).take(29))
             }
             when (c) {
                 '(' -> {
-                    floor++
+                    lvl++
                     viz.text(0, 5, c.toString(), borderColor = Color.Green)
                 }
 
                 ')' -> {
-                    floor--
+                    lvl--
                     viz.text(0, 5, c.toString(), borderColor = Color.Red)
                 }
             }
-            viz.text(
-                6,
-                0,
-                floor.toString(),
-                borderColor = if (floor < 0) Color.Red else if (floor > 0) Color.Green else Color.LightGray
-            )
-            viz.text(9, 1, (index + 1).toString(), borderColor = Color.LightGray)
+            viz.text(0, 0, "Level:$lvl", borderColor = if (lvl < 0) Color.Red else if (lvl > 0) Color.Green else Color.LightGray)
+            viz.text(0, 1, "Position:${(index + 1)}", borderColor = Color.LightGray)
             onProgress(viz)
-            if (floor < 0) return index + 1
+            if (lvl < 0) return index + 1
         }
         return 0
     }
