@@ -529,7 +529,7 @@ private fun DaySingleButton(
 @Composable
 private fun PartLayout(part: Int, time: Double?, result: ResultState?) =
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Label("Part $part: ", minWidth = 120.dp)
+        Label("Part $part: ", minWidth = 100.dp)
         TimeValue(time ?: 0.0)
         ResultIcon(result)
         Spacer(Modifier.width(2.dp))
@@ -558,7 +558,7 @@ private fun SamplePartLayout(
         val time = pair?.let { it.second - it.first }
         val result = results[index + 1]
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Label("Sample $part.${index + 1}: ")
+            Label("Sample $part.${index + 1}: ", minWidth = 100.dp)
             TimeValue(time?.div(1000000000.0) ?: 0.0)
             ResultIcon(result)
             Spacer(Modifier.width(2.dp))
@@ -568,7 +568,7 @@ private fun SamplePartLayout(
 }
 
 @Composable
-private fun InitLayout(time: Double?, width: Dp = 120.dp) = Row(verticalAlignment = Alignment.CenterVertically) {
+private fun InitLayout(time: Double?, width: Dp = 100.dp) = Row(verticalAlignment = Alignment.CenterVertically) {
     Label("Init: ", minWidth = width)
     TimeValue(time ?: 0.0)
 }
