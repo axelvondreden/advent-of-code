@@ -17,6 +17,13 @@ class Point(x: Long, y: Long): PFNode(x, y) {
 
     operator fun plus(pair: Pair<Int, Int>) = Point(x + pair.first, y + pair.second)
 
+    operator fun plus(dir: Dir) = when (dir) {
+        Dir.UP -> up(1)
+        Dir.DOWN -> down(1)
+        Dir.LEFT -> left(1)
+        Dir.RIGHT -> right(1)
+    }
+
     operator fun minus(pair: Pair<Int, Int>) = Point(x - pair.first, y - pair.second)
 
     infix fun left(steps: Int) = Point(x - steps, y)

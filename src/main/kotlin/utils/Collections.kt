@@ -50,6 +50,18 @@ fun List<String>.toCharMatrix(): Array<CharArray> {
     return matrix
 }
 
+fun List<String>.toIntMatrix(): Array<IntArray> {
+    val max = maxOf { it.length }
+    val matrix = Array(max) { IntArray(size) }
+    for (y in indices) {
+        val s = get(y)
+        for (x in s.indices) {
+            matrix[x][y] = s[x].digitToInt()
+        }
+    }
+    return matrix
+}
+
 fun String.toIntArray(delim: String = ",") = split(delim.toRegex()).map(String::toInt).toIntArray()
 
 fun String.toLongArray(delim: String = ",") = split(delim.toRegex()).map(String::toLong).toLongArray()
