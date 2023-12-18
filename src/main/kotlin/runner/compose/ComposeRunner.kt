@@ -111,16 +111,14 @@ fun App() {
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun YearSelect(onAllClick: () -> Unit, selectedYear: Int?, onYearSelect: (Int) -> Unit) {
-    FlowRow(
-        modifier = Modifier.fillMaxWidth().border(1.dp, Color.White),
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-        Button(onClick = { onAllClick() }) {
+    FlowRow(modifier = Modifier.fillMaxWidth().border(1.dp, Color.White)) {
+        Button(onClick = { onAllClick() }, modifier = Modifier.padding(horizontal = 5.dp)) {
             Text("All")
         }
         years.forEach { year ->
             Button(
                 onClick = { if (year != selectedYear) onYearSelect(year) },
+                modifier = Modifier.padding(horizontal = 5.dp),
                 colors = if (year == selectedYear) ButtonDefaults.buttonColors(backgroundColor = Color.Green) else ButtonDefaults.buttonColors()
             ) {
                 Text(year.toString())
@@ -141,6 +139,7 @@ private fun DaySelect(
     FlowRow(modifier = Modifier.fillMaxWidth().border(1.dp, Color.White)) {
         Button(
             onClick = { onAllClick() },
+            modifier = Modifier.padding(horizontal = 5.dp),
             colors = if (allSelected) ButtonDefaults.buttonColors(backgroundColor = Color.Green) else ButtonDefaults.buttonColors()
         ) {
             Text("All")
@@ -148,6 +147,7 @@ private fun DaySelect(
         days.forEach { day ->
             Button(
                 onClick = { if (day.day != selectedDay) onDaySelect(day) },
+                modifier = Modifier.padding(horizontal = 5.dp),
                 colors = if (day.day == selectedDay) ButtonDefaults.buttonColors(backgroundColor = Color.Green) else ButtonDefaults.buttonColors()
             ) {
                 Text(day.day.toString())
