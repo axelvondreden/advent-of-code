@@ -1,6 +1,9 @@
 package y2015
 
 import Day
+import androidx.compose.ui.graphics.Color
+import runner.compose.Tile
+import runner.compose.Viz
 
 class Day18 : Day<CharArray>(2015, 18) {
 
@@ -20,6 +23,51 @@ class Day18 : Day<CharArray>(2015, 18) {
         input[100 * 100 - 1] = '#'
         Grid(100, 100, input).let { grid ->
             repeat(100) { grid.tick(true) }
+            return grid.onCells()
+        }
+    }
+
+    override fun initViz1(input: CharArray) = Viz(width = 100, height = 101).apply {
+        text(0, 0, "Lights:0", borderColor = Color.White)
+    }
+
+    override fun initViz2(input: CharArray) = Viz(width = 100, height = 101).apply {
+        text(0, 0, "Lights:0", borderColor = Color.White)
+    }
+
+    override val vizDelay: Long
+        get() = 80
+
+    override suspend fun solve1Visualized(input: CharArray, onProgress: suspend (Viz) -> Unit): Int {
+        Grid(100, 100, input.clone()).let { grid ->
+            var viz = Viz(0.0, 100, 101)
+            grid.paint(viz)
+            onProgress(viz)
+            repeat(100) {
+                grid.tick()
+                viz = Viz((it + 1).toDouble() / 100, 100, 101)
+                grid.paint(viz)
+                onProgress(viz)
+            }
+            return grid.onCells()
+        }
+    }
+
+    override suspend fun solve2Visualized(input: CharArray, onProgress: suspend (Viz) -> Unit): Int {
+        input[0] = '#'
+        input[100 - 1] = '#'
+        input[100 * 100 - 100] = '#'
+        input[100 * 100 - 1] = '#'
+        Grid(100, 100, input.clone()).let { grid ->
+            var viz = Viz(0.0, 100, 101)
+            grid.paint(viz)
+            onProgress(viz)
+            repeat(100) {
+                grid.tick(true)
+                viz = Viz((it + 1).toDouble() / 100, 100, 101)
+                grid.paint(viz)
+                onProgress(viz)
+            }
             return grid.onCells()
         }
     }
@@ -65,6 +113,11 @@ class Day18 : Day<CharArray>(2015, 18) {
             this.cells = cells
         }
 
+        fun paint(viz: Viz) {
+            viz.text(0, 0, "Lights:${onCells()}", borderColor = Color.White)
+            viz.grid(0, 1, Array(100) { x -> Array(100) { y -> Tile(backgroundColor = if (isOn(x, y)) Color.White else Color(0xFF121212)) } })
+        }
+
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (javaClass != other?.javaClass) return false
@@ -83,5 +136,4 @@ class Day18 : Day<CharArray>(2015, 18) {
             return result
         }
     }
-
 }
