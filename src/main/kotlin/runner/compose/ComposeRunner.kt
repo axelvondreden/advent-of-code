@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import expected
@@ -113,7 +114,7 @@ fun App() {
 private fun YearSelect(onAllClick: () -> Unit, selectedYear: Int?, onYearSelect: (Int) -> Unit) {
     FlowRow(modifier = Modifier.fillMaxWidth().border(1.dp, Color.White)) {
         Button(onClick = { onAllClick() }, modifier = Modifier.padding(horizontal = 5.dp)) {
-            Text("All")
+            Text("All", fontFamily = FontFamily.Monospace)
         }
         years.forEach { year ->
             Button(
@@ -121,7 +122,7 @@ private fun YearSelect(onAllClick: () -> Unit, selectedYear: Int?, onYearSelect:
                 modifier = Modifier.padding(horizontal = 5.dp),
                 colors = if (year == selectedYear) ButtonDefaults.buttonColors(backgroundColor = Color.Green) else ButtonDefaults.buttonColors()
             ) {
-                Text(year.toString())
+                Text(year.toString(), fontFamily = FontFamily.Monospace)
             }
         }
     }
@@ -142,15 +143,28 @@ private fun DaySelect(
             modifier = Modifier.padding(horizontal = 5.dp),
             colors = if (allSelected) ButtonDefaults.buttonColors(backgroundColor = Color.Green) else ButtonDefaults.buttonColors()
         ) {
-            Text("All")
+            Text("All", fontFamily = FontFamily.Monospace)
         }
         days.forEach { day ->
-            Button(
-                onClick = { if (day.day != selectedDay) onDaySelect(day) },
-                modifier = Modifier.padding(horizontal = 5.dp),
-                colors = if (day.day == selectedDay) ButtonDefaults.buttonColors(backgroundColor = Color.Green) else ButtonDefaults.buttonColors()
-            ) {
-                Text(day.day.toString())
+            val viz1 =
+                day::class.memberFunctions.first { it.name == "solve1Visualized" }.javaMethod!!.declaringClass.name != "Day"
+            val viz2 =
+                day::class.memberFunctions.first { it.name == "solve2Visualized" }.javaMethod!!.declaringClass.name != "Day"
+            Row(Modifier.wrapContentSize(), verticalAlignment = Alignment.CenterVertically) {
+                Button(
+                    onClick = { if (day.day != selectedDay) onDaySelect(day) },
+                    modifier = Modifier.padding(horizontal = 5.dp),
+                    colors = if (day.day == selectedDay) ButtonDefaults.buttonColors(backgroundColor = Color.Green) else ButtonDefaults.buttonColors()
+                ) {
+                    Text(day.day.toString(), fontFamily = FontFamily.Monospace)
+                }
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Icon(Icons.Default.Star, "", modifier = Modifier.size(12.dp), tint = if (viz1) Color.Yellow else Color.DarkGray)
+                    Icon(Icons.Default.Star, "", modifier = Modifier.size(12.dp), tint = if (viz2) Color.Yellow else Color.DarkGray)
+                }
             }
         }
     }
@@ -317,7 +331,14 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: 
     val viz = remember { mutableStateOf<Viz?>(null) }
     Column(modifier = Modifier.fillMaxSize()) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            DaySingleButton(day, samples, !jobRunning, state, scope, onStart = { jobRunning = true }, onEnd = { jobRunning = false })
+            DaySingleButton(
+                day,
+                samples,
+                !jobRunning,
+                state,
+                scope,
+                onStart = { jobRunning = true },
+                onEnd = { jobRunning = false })
             val caller1 = day::class.memberFunctions.first { it.name == "solve1Visualized" }.javaMethod!!.declaringClass
             val caller2 = day::class.memberFunctions.first { it.name == "solve2Visualized" }.javaMethod!!.declaringClass
             Button(

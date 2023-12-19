@@ -45,6 +45,14 @@ class Day03 : Day<List<Char>>(2015, 3) {
         }
     }
 
+    override suspend fun solve2Visualized(input: List<Char>, onProgress: suspend (Viz) -> Unit): Int {
+        with(mutableMapOf(Point(0, 0) to 1)) {
+            runSteps(input.filterIndexed { index, _ -> index % 2 == 0 }, onProgress)
+            runSteps(input.filterIndexed { index, _ -> index % 2 == 1 }, onProgress)
+            return size
+        }
+    }
+
     private suspend fun MutableMap<Point, Int>.runSteps(steps: List<Char>, onProgress: (suspend (Viz) -> Unit)? = null) {
         var point = Point(0, 0)
         steps.forEachIndexed { index, it ->
