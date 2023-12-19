@@ -5,18 +5,18 @@ import Day
 
 class Day21 : Day<Map<Set<String>, Set<String>>>(2020, 21) {
 
-    override fun List<String>.parse() = associate { line ->
+    override suspend fun List<String>.parse() = associate { line ->
         val ingredients = line.substringBefore(" (").split(" ").toSet()
         val allergens = line.substringAfter("(contains ").substringBefore(")").split(", ").toSet()
         ingredients to allergens
     }
 
-    override fun solve1(input: Map<Set<String>, Set<String>>): Int {
+    override suspend fun solve1(input: Map<Set<String>, Set<String>>): Int {
         val safe = input.safeIngredients()
         return input.keys.sumOf { food -> food.count { it in safe } }
     }
 
-    override fun solve2(input: Map<Set<String>, Set<String>>): String {
+    override suspend fun solve2(input: Map<Set<String>, Set<String>>): String {
         val ingredientsByAllergy = input.ingredientsByAllergy()
         val found = mutableMapOf<String, String>()
 

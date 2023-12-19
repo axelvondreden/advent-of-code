@@ -5,7 +5,7 @@ import kotlin.math.max
 
 class Day15 : Day<List<Day15.Ingredient>>(2015, 15) {
 
-    override fun List<String>.parse() = map {
+    override suspend fun List<String>.parse() = map {
         val split = it.split(", ")
         Ingredient(
             split[0].split(":")[0], split[0].split(" ")[2].toInt(), split[1].split(" ")[1].toInt(),
@@ -13,7 +13,7 @@ class Day15 : Day<List<Day15.Ingredient>>(2015, 15) {
         )
     }
 
-    override fun solve1(input: List<Ingredient>): Int {
+    override suspend fun solve1(input: List<Ingredient>): Int {
         var maxScore = 0
         (0..100).forEach { i ->
             (0..100 - i).forEach { j ->
@@ -27,7 +27,7 @@ class Day15 : Day<List<Day15.Ingredient>>(2015, 15) {
         return maxScore
     }
 
-    override fun solve2(input: List<Ingredient>): Int {
+    override suspend fun solve2(input: List<Ingredient>): Int {
         var maxScore = 0
         (0..100).forEach { i ->
             (0..100 - i).forEach { j ->

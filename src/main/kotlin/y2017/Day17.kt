@@ -4,14 +4,14 @@ import Day
 
 class Day17 : Day<Int>(2017, 17) {
 
-    override fun List<String>.parse() = first().toInt()
+    override suspend fun List<String>.parse() = first().toInt()
 
-    override fun solve1(input: Int): Int {
+    override suspend fun solve1(input: Int): Int {
         val buffer = input.fillBuffer(2017)
         return buffer[buffer.indexOf(2017) + 1]
     }
 
-    override fun solve2(input: Int): Int {
+    override suspend fun solve2(input: Int): Int {
         val buffer = input.fillBuffer(50000000)
         return buffer[buffer.indexOf(0) + 1]
     }

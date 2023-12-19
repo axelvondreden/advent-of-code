@@ -4,11 +4,11 @@ import Day
 
 class Day07 : Day<List<String>>(2016, 7) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>) = input.count { it.supportsTLS() }
+    override suspend fun solve1(input: List<String>) = input.count { it.supportsTLS() }
 
-    override fun solve2(input: List<String>) = input.count { it.supportsSSL() }
+    override suspend fun solve2(input: List<String>) = input.count { it.supportsSSL() }
 
     private fun String.supportsTLS(): Boolean {
         var tls = false

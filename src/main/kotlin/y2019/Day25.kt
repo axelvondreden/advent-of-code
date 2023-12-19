@@ -5,9 +5,9 @@ import utils.toLongArray
 
 class Day25 : Day<LongArray>(2019, 25) {
 
-    override fun List<String>.parse() = first().toLongArray()
+    override suspend fun List<String>.parse() = first().toLongArray()
 
-    override fun solve1(input: LongArray): Int {
+    override suspend fun solve1(input: LongArray): Int {
         val comp = IntCodeComputer(input)
         var last9 = ""
         while (true) {
@@ -23,5 +23,5 @@ class Day25 : Day<LongArray>(2019, 25) {
         }
     }
 
-    override fun solve2(input: LongArray) = 0
+    override suspend fun solve2(input: LongArray) = 0
 }

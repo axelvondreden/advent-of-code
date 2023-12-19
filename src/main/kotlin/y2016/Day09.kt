@@ -4,11 +4,11 @@ import Day
 
 class Day09 : Day<String>(2016, 9) {
 
-    override fun List<String>.parse() = first()
+    override suspend fun List<String>.parse() = first()
 
-    override fun solve1(input: String) = input.decodeCount()
+    override suspend fun solve1(input: String) = input.decodeCount()
 
-    override fun solve2(input: String) = input.decodeCountRec()
+    override suspend fun solve2(input: String) = input.decodeCountRec()
 
     private fun String.decodeCount(): Long {
         var count = 0L

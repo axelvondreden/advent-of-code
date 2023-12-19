@@ -31,13 +31,13 @@ class Day22 : Day<Pair<Int, Int>>(2015, 22) {
 
     private val spells = listOf(magicMissile, drain, shield, poison, recharge)
 
-    override fun List<String>.parse() = with(map { it.split(": ")[1].toInt() }) { get(0) to get(1)}
+    override suspend fun List<String>.parse() = with(map { it.split(": ")[1].toInt() }) { get(0) to get(1)}
 
-    override fun solve1(input: Pair<Int, Int>): Int {
+    override suspend fun solve1(input: Pair<Int, Int>): Int {
         return countMana(input.first, input.second, spells, listOf(bossHit))
     }
 
-    override fun solve2(input: Pair<Int, Int>): Int {
+    override suspend fun solve2(input: Pair<Int, Int>): Int {
         return countMana(input.first, input.second, spells, listOf(hardBossHit))
     }
 

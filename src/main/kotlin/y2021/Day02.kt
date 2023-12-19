@@ -4,15 +4,15 @@ import Day
 
 class Day02 : Day<List<String>>(2021, 2) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>): Int {
+    override suspend fun solve1(input: List<String>): Int {
         val sub = SimpleSubmarine()
         input.forEach { sub.step(it) }
         return sub.hpos * sub.depth
     }
 
-    override fun solve2(input: List<String>): Int {
+    override suspend fun solve2(input: List<String>): Int {
         val sub = AimingSubmarine()
         input.forEach { sub.step(it) }
         return sub.hpos * sub.depth

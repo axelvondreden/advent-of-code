@@ -4,7 +4,7 @@ import Day
 
 class Day16 : Day<List<String>>(2015, 16) {
 
-    override fun List<String>.parse() = map { it.removePrefix("Sue ") }
+    override suspend fun List<String>.parse() = map { it.removePrefix("Sue ") }
 
     private val searchValues = mutableMapOf(
         "children" to 3,
@@ -19,7 +19,7 @@ class Day16 : Day<List<String>>(2015, 16) {
         "perfumes" to 1
     )
 
-    override fun solve1(input: List<String>): Int {
+    override suspend fun solve1(input: List<String>): Int {
         val sues = input.associate { s ->
             s.substringBefore(":").toInt() to s.drop(s.indexOf(":") + 2).split(", ").map {
                 it.split(": ")[0] to it.split(": ")[1].toInt()
@@ -38,7 +38,7 @@ class Day16 : Day<List<String>>(2015, 16) {
         return 0
     }
 
-    override fun solve2(input: List<String>): Int {
+    override suspend fun solve2(input: List<String>): Int {
         val sues = input.associate { s ->
             s.substringBefore(":").toInt() to s.drop(s.indexOf(":") + 2).split(", ").map {
                 it.split(": ")[0] to it.split(": ")[1].toInt()

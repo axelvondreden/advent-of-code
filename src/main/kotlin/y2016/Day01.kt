@@ -6,9 +6,9 @@ import kotlin.math.abs
 
 class Day01 : Day<List<String>>(2016, 1) {
 
-    override fun List<String>.parse() = first().split(", ")
+    override suspend fun List<String>.parse() = first().split(", ")
 
-    override fun solve1(input: List<String>): Int {
+    override suspend fun solve1(input: List<String>): Int {
         var x = 0
         var y = 0
         var dir = 0
@@ -31,7 +31,7 @@ class Day01 : Day<List<String>>(2016, 1) {
         return abs(x) + abs(y)
     }
 
-    override fun solve2(input: List<String>): Long {
+    override suspend fun solve2(input: List<String>): Long {
         var x = 0L
         var y = 0L
         var dir = 0

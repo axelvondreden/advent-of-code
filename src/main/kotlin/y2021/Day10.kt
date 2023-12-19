@@ -4,7 +4,7 @@ import Day
 
 class Day10 : Day<List<String>>(2021, 10) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
     private val scoreMapping = mapOf(
         ')' to 3,
@@ -20,9 +20,9 @@ class Day10 : Day<List<String>>(2021, 10) {
         '>' to 4
     )
 
-    override fun solve1(input: List<String>) = input.mapNotNull { it.findCorruptedChar() }.sumOf { scoreMapping[it]!! }
+    override suspend fun solve1(input: List<String>) = input.mapNotNull { it.findCorruptedChar() }.sumOf { scoreMapping[it]!! }
 
-    override fun solve2(input: List<String>): Long {
+    override suspend fun solve2(input: List<String>): Long {
         val scores = input.mapNotNull { it.findAutocomplete() }.map {
             it.fold(0L) { acc, c -> (acc * 5) + (scoreMapping2[c] ?: 0) }
         }

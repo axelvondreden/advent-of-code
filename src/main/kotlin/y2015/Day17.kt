@@ -6,16 +6,16 @@ import utils.sumByLong
 
 class Day17 : Day<List<Point>>(2015, 17) {
 
-    override fun List<String>.parse() = mapIndexed { index, nr -> Point(index.toLong(), nr.toLong()) }
+    override suspend fun List<String>.parse() = mapIndexed { index, nr -> Point(index.toLong(), nr.toLong()) }
 
     private val combinations = mutableListOf<List<Point>>()
 
-    override fun solve1(input: List<Point>): Int {
+    override suspend fun solve1(input: List<Point>): Int {
         fill(input, mutableListOf(), 150)
         return combinations.size
     }
 
-    override fun solve2(input: List<Point>): Int {
+    override suspend fun solve2(input: List<Point>): Int {
         val min = combinations.minOf { it.size }
         return combinations.count { it.size == min }
     }

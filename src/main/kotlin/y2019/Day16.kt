@@ -4,9 +4,9 @@ import Day
 
 class Day16 : Day<IntArray>(2019, 16) {
 
-    override fun List<String>.parse() = first().map { it.toString().toInt() }.toIntArray()
+    override suspend fun List<String>.parse() = first().map { it.toString().toInt() }.toIntArray()
 
-    override fun solve1(input: IntArray): String {
+    override suspend fun solve1(input: IntArray): String {
         var txt = input.copyOf()
         repeat(100) {
             txt = translate(txt)
@@ -14,7 +14,7 @@ class Day16 : Day<IntArray>(2019, 16) {
         return txt.joinToString(separator = "").substring(0..7)
     }
 
-    override fun solve2(input: IntArray): String {
+    override suspend fun solve2(input: IntArray): String {
         val input2 = mutableListOf<Int>()
         repeat(10000) {
             input2.addAll(input.toList())

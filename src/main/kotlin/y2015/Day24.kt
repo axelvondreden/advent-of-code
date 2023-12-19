@@ -5,9 +5,9 @@ import utils.product
 
 class Day24 : Day<List<Long>>(2015, 24) {
 
-    override fun List<String>.parse() = map { it.toLong() }
+    override suspend fun List<String>.parse() = map { it.toLong() }
 
-    override fun solve1(input: List<Long>): Long {
+    override suspend fun solve1(input: List<Long>): Long {
         (1..input.size).forEach { i ->
             val set = mutableSetOf<Set<Long>>()
             input.getGroups(input.sum() / 3, emptySet(), 0L, set, i)
@@ -19,7 +19,7 @@ class Day24 : Day<List<Long>>(2015, 24) {
         return 0
     }
 
-    override fun solve2(input: List<Long>): Long {
+    override suspend fun solve2(input: List<Long>): Long {
         (1..input.size).forEach { i ->
             val set = mutableSetOf<Set<Long>>()
             input.getGroups(input.sum() / 4, emptySet(), 0L, set, i)

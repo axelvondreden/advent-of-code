@@ -4,11 +4,11 @@ import Day
 
 class Day02 : Day<List<String>>(2017, 2) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>) = input.sumOf { rowChecksum(it) }
+    override suspend fun solve1(input: List<String>) = input.sumOf { rowChecksum(it) }
 
-    override fun solve2(input: List<String>) = input.sumOf { rowChecksum2(it) }
+    override suspend fun solve2(input: List<String>) = input.sumOf { rowChecksum2(it) }
 
     private fun rowChecksum(row: String): Int {
         val values = row.split(Regex("\\s+")).map { it.toInt() }

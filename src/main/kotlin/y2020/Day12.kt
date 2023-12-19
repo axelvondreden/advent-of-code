@@ -6,14 +6,14 @@ import kotlin.math.abs
 
 class Day12 : Day<List<String>>(2020, 12) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>): Long {
+    override suspend fun solve1(input: List<String>): Long {
         val p = move(input)
         return abs(p.x) + abs(p.y)
     }
 
-    override fun solve2(input: List<String>): Long {
+    override suspend fun solve2(input: List<String>): Long {
         val p = moveByWaypoint(input)
         return abs(p.x) + abs(p.y)
     }

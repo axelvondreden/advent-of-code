@@ -7,14 +7,14 @@ import utils.sqrt
 
 class Day20 : Day<List<Day20.Tile>>(2020, 20) {
 
-    override fun List<String>.parse() = joinToString("|").toTiles()
+    override suspend fun List<String>.parse() = joinToString("|").toTiles()
 
-    override fun solve1(input: List<Tile>): Long {
+    override suspend fun solve1(input: List<Tile>): Long {
         val img = input.createImage()
         return img.first().first().id * img.first().last().id * img.last().first().id * img.last().last().id
     }
 
-    override fun solve2(input: List<Tile>): Int {
+    override suspend fun solve2(input: List<Tile>): Int {
         val monsterPattern = listOf(
             Point(0, 18), Point(1, 0), Point(1, 5), Point(1, 6), Point(1, 11),
             Point(1, 12), Point(1, 17), Point(1, 18), Point(1, 19), Point(2, 1),

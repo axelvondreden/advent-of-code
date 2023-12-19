@@ -4,7 +4,7 @@ import Day
 
 class Day19 : Day<Day19.ReplacementInput>(2015, 19) {
 
-    override fun List<String>.parse(): ReplacementInput {
+    override suspend fun List<String>.parse(): ReplacementInput {
         val replacements = takeWhile { it.isNotBlank() }.map {
             Replacement(
                 it.split(" => ")[0],
@@ -14,9 +14,9 @@ class Day19 : Day<Day19.ReplacementInput>(2015, 19) {
         return ReplacementInput(last(), replacements)
     }
 
-    override fun solve1(input: ReplacementInput) = input.replacements.flatMap { input.start.getReplacements(it) }.distinct().size
+    override suspend fun solve1(input: ReplacementInput) = input.replacements.flatMap { input.start.getReplacements(it) }.distinct().size
 
-    override fun solve2(input: ReplacementInput): Int {
+    override suspend fun solve2(input: ReplacementInput): Int {
         var count = 0
         var start = input.start
         while (start != "e") {

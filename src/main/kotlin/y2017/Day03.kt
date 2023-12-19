@@ -8,9 +8,9 @@ import kotlin.math.max
 
 class Day03 : Day<Int>(2017, 3) {
 
-    override fun List<String>.parse() = first().toInt()
+    override suspend fun List<String>.parse() = first().toInt()
 
-    override fun solve1(input: Int): Long {
+    override suspend fun solve1(input: Int): Long {
         var maxWidth = input.sqrt() + 1
         if (maxWidth % 2 == 0) maxWidth++
         val map = generateSpiral(maxWidth)
@@ -21,7 +21,7 @@ class Day03 : Day<Int>(2017, 3) {
         return pStart.distance(pTarget)
     }
 
-    override fun solve2(input: Int): Int {
+    override suspend fun solve2(input: Int): Int {
         var maxWidth = input.sqrt() + 1
         if (maxWidth % 2 == 0) maxWidth++
 

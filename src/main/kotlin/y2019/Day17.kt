@@ -7,9 +7,9 @@ import utils.toLongArray
 
 class Day17 : Day<LongArray>(2019, 17) {
 
-    override fun List<String>.parse() = first().toLongArray()
+    override suspend fun List<String>.parse() = first().toLongArray()
 
-    override fun solve1(input: LongArray): Long {
+    override suspend fun solve1(input: LongArray): Long {
         val computer = IntCodeComputer(input)
         val map = mutableMapOf<Point, Char>()
         var x = 0
@@ -36,7 +36,7 @@ class Day17 : Day<LongArray>(2019, 17) {
         return intersections.sumByLong { it.x * it.y }
     }
 
-    override fun solve2(input: LongArray): Long {
+    override suspend fun solve2(input: LongArray): Long {
         val register = input.copyOf().apply { set(0, 2) }
         val a = "L,6,R,12,L,4,L,6".map { it.code.toLong() }.toMutableList().apply { add(10L) }
         val b = "R,6,L,6,R,12".map { it.code.toLong() }.toMutableList().apply { add(10L) }

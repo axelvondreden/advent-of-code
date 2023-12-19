@@ -6,15 +6,15 @@ import utils.toCharMatrix
 
 class Day18 : Day<Array<CharArray>>(2018, 18) {
 
-    override fun List<String>.parse(): Array<CharArray> = toCharMatrix()
+    override suspend fun List<String>.parse(): Array<CharArray> = toCharMatrix()
 
-    override fun solve1(input: Array<CharArray>): Int {
+    override suspend fun solve1(input: Array<CharArray>): Int {
         var map = input
         repeat(10) { map = map.step() }
         return map.findPoints('#').size * map.findPoints('|').size
     }
 
-    override fun solve2(input: Array<CharArray>): Int {
+    override suspend fun solve2(input: Array<CharArray>): Int {
         var map = input
         repeat(1000000000) { map = map.step() }
         return map.findPoints('#').size * map.findPoints('|').size

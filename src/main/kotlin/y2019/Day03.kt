@@ -6,9 +6,9 @@ import kotlin.math.min
 
 class Day03 : Day<List<String>>(2019, 3) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>): Int {
+    override suspend fun solve1(input: List<String>): Int {
         val steps1 = getSteps(input[0].split(","))
         val steps2 = getSteps(input[1].split(","))
         val intersections = steps1.filter { steps2.contains(it) }
@@ -16,7 +16,7 @@ class Day03 : Day<List<String>>(2019, 3) {
         return intersections.minOf { it.distance(center) }
     }
 
-    override fun solve2(input: List<String>) = getShortestIntersection(getSteps(input[0].split(",")), getSteps(input[1].split(",")))
+    override suspend fun solve2(input: List<String>) = getShortestIntersection(getSteps(input[0].split(",")), getSteps(input[1].split(",")))
 
     private fun getShortestIntersection(steps1: List<Step>, steps2: List<Step>): Int {
         var min = Int.MAX_VALUE

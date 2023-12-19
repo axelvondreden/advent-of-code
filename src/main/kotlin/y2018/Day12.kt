@@ -4,9 +4,9 @@ import Day
 
 class Day12 : Day<List<String>>(2018, 12) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>): Long {
+    override suspend fun solve1(input: List<String>): Long {
         val initialState = input[0].removePrefix("initial state: ").mapIndexed { index, c -> index.toLong() to (c == '#') }.toMap()
         val rules = input.subList(2, input.lastIndex + 1).mapNotNull {
             val split = it.split(" ")
@@ -19,7 +19,7 @@ class Day12 : Day<List<String>>(2018, 12) {
         return plants.filter { it.value }.keys.sum()
     }
 
-    override fun solve2(input: List<String>): Long {
+    override suspend fun solve2(input: List<String>): Long {
         val initialState = input[0].removePrefix("initial state: ").mapIndexed { index, c -> index.toLong() to (c == '#') }.toMap()
         val rules = input.subList(2, input.lastIndex + 1).mapNotNull {
             val split = it.split(" ")

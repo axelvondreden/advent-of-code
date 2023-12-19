@@ -4,19 +4,19 @@ import Day
 
 class Day10 : Day<List<String>>(2022, 10) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
     private val rows = 6
     private val columns = 40
 
-    override fun solve1(input: List<String>) = input.asSequence()
+    override suspend fun solve1(input: List<String>) = input.asSequence()
         .toInstructions()
         .toStates()
         .filter { it.pc >= 20 }
         .filter { (it.pc - 20) % 40 == 0 }
         .sumOf { it.pc * it.x }
 
-    override fun solve2(input: List<String>): String {
+    override suspend fun solve2(input: List<String>): String {
         val res = input.asSequence()
             .toInstructions()
             .toStates()

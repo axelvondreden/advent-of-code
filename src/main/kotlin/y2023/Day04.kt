@@ -5,7 +5,7 @@ import kotlin.math.pow
 
 class Day04 : Day<List<Day04.Game>>(2023, 4) {
 
-    override fun List<String>.parse() = map { line ->
+    override suspend fun List<String>.parse() = map { line ->
         val split = line.removePrefix("Card ").split(":")
         val split2 = split[1].trim().split("|")
         Game(
@@ -15,9 +15,9 @@ class Day04 : Day<List<Day04.Game>>(2023, 4) {
         )
     }
 
-    override fun solve1(input: List<Game>) = input.sumOf { it.score }
+    override suspend fun solve1(input: List<Game>) = input.sumOf { it.score }
 
-    override fun solve2(input: List<Game>): Int {
+    override suspend fun solve2(input: List<Game>): Int {
         val array = IntArray(input.size) { 1 }
         input.forEachIndexed { index, game ->
             for (i in index + 1..index + game.winnerCount) {

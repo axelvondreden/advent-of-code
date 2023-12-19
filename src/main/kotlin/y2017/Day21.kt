@@ -4,7 +4,7 @@ import Day
 
 class Day21 : Day<List<Day21.Pattern>>(2017, 21) {
 
-    override fun List<String>.parse() = parsePatterns()
+    override suspend fun List<String>.parse() = parsePatterns()
 
     private val image = arrayOf(
         charArrayOf('.', '#', '.'),
@@ -12,13 +12,13 @@ class Day21 : Day<List<Day21.Pattern>>(2017, 21) {
         charArrayOf('#', '#', '#')
     )
 
-    override fun solve1(input: List<Pattern>): Int {
+    override suspend fun solve1(input: List<Pattern>): Int {
         var copy = image.copyOf()
         repeat(5) { copy = copy.step(input) }
         return copy.sumOf { chars -> chars.count { it == '#' } }
     }
 
-    override fun solve2(input: List<Pattern>): Int {
+    override suspend fun solve2(input: List<Pattern>): Int {
         var copy = image.copyOf()
         repeat(18) { copy = copy.step(input) }
         return copy.sumOf { chars -> chars.count { it == '#' } }

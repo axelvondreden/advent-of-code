@@ -5,15 +5,15 @@ import Day
 
 class Day10 : Day<String>(2015, 10) {
 
-    override fun List<String>.parse() = this[0]
+    override suspend fun List<String>.parse() = this[0]
 
-    override fun solve1(input: String): Int {
+    override suspend fun solve1(input: String): Int {
         var value = input
         repeat(40) { value = value.lookAndSay() }
         return value.length
     }
 
-    override fun solve2(input: String): Int {
+    override suspend fun solve2(input: String): Int {
         var value = input
         repeat(50) { value = value.lookAndSay() }
         return value.length

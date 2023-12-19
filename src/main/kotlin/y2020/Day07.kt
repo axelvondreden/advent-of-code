@@ -4,7 +4,7 @@ import Day
 
 class Day07 : Day<Map<String, Map<String, Int>>>(2020, 7) {
 
-    override fun List<String>.parse(): Map<String, Map<String, Int>> {
+    override suspend fun List<String>.parse(): Map<String, Map<String, Int>> {
         val map = mutableMapOf<String, Map<String, Int>>()
         forEach { line ->
             val split = line.split(" bags contain ")
@@ -21,9 +21,9 @@ class Day07 : Day<Map<String, Map<String, Int>>>(2020, 7) {
         return map
     }
 
-    override fun solve1(input: Map<String, Map<String, Int>>) = input.keys.count { it.canHoldColor("shiny gold", input) }
+    override suspend fun solve1(input: Map<String, Map<String, Int>>) = input.keys.count { it.canHoldColor("shiny gold", input) }
 
-    override fun solve2(input: Map<String, Map<String, Int>>) = "shiny gold".countNestedBags(input)
+    override suspend fun solve2(input: Map<String, Map<String, Int>>) = "shiny gold".countNestedBags(input)
 
     private fun String.canHoldColor(color: String, input: Map<String, Map<String, Int>>): Boolean =
         if (input[this]!!.contains(color)) true

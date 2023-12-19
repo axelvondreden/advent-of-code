@@ -5,9 +5,9 @@ import utils.Point
 
 class Day06 : Day<List<Point>>(2018, 6) {
 
-    override fun List<String>.parse() = map { Point(it, ", ") }
+    override suspend fun List<String>.parse() = map { Point(it, ", ") }
 
-    override fun solve1(input: List<Point>): Int {
+    override suspend fun solve1(input: List<Point>): Int {
         val xValues = input.map { it.x }
         val yValues = input.map { it.y }
         val xRange = xValues.minOrNull()!!..xValues.maxOrNull()!!
@@ -24,7 +24,7 @@ class Day06 : Day<List<Point>>(2018, 6) {
         }.filterNot { it in infinite }.groupingBy { it }.eachCount().maxByOrNull { it.value }!!.value
     }
 
-    override fun solve2(input: List<Point>): Int {
+    override suspend fun solve2(input: List<Point>): Int {
         val xValues = input.map { it.x }
         val yValues = input.map { it.y }
         val xRange = xValues.minOrNull()!!..xValues.maxOrNull()!!

@@ -4,7 +4,7 @@ import Day
 
 class Day07 : Day<List<String>>(2022, 7) {
 
-    override fun List<String>.parse() = this.also { lines ->
+    override suspend fun List<String>.parse() = this.also { lines ->
         var cmds = lines.drop(2)
         val rootContents = cmds.takeWhile { !it.startsWith("$") }
         rootContents.forEach {
@@ -40,9 +40,9 @@ class Day07 : Day<List<String>>(2022, 7) {
 
     private val rootDir: Directory = Directory("/", null)
 
-    override fun solve1(input: List<String>) = rootDir.getAll().filter { it.size <= 100000 }.sumOf { it.size }
+    override suspend fun solve1(input: List<String>) = rootDir.getAll().filter { it.size <= 100000 }.sumOf { it.size }
 
-    override fun solve2(input: List<String>) = rootDir.getAll().filter { 70000000 - rootDir.size + it.size >= 30000000 }.minByOrNull { it.size }!!.size
+    override suspend fun solve2(input: List<String>) = rootDir.getAll().filter { 70000000 - rootDir.size + it.size >= 30000000 }.minByOrNull { it.size }!!.size
 
     private class Directory(val name: String, val parent: Directory?) {
         val files = mutableListOf<File>()

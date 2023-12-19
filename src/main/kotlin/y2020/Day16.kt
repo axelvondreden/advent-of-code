@@ -5,9 +5,9 @@ import Day
 
 class Day16 : Day<List<String>>(2020, 16) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>): Int {
+    override suspend fun solve1(input: List<String>): Int {
         val rules = input.takeWhile { it.isNotBlank() }.map { line ->
             val lineSplit = line.split(": ")
             Rule(lineSplit[0], lineSplit[1].split(" or ").map {
@@ -20,7 +20,7 @@ class Day16 : Day<List<String>>(2020, 16) {
         return nearbyTickets.flatten().filter { nr -> rules.none { it.isValid(nr) } }.sum()
     }
 
-    override fun solve2(input: List<String>): Long {
+    override suspend fun solve2(input: List<String>): Long {
         val rules = input.takeWhile { it.isNotBlank() }.map { line ->
             val lineSplit = line.split(": ")
             Rule(lineSplit[0], lineSplit[1].split(" or ").map {

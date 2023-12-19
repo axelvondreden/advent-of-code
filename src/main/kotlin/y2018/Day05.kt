@@ -4,11 +4,11 @@ import Day
 
 class Day05 : Day<String>(2018, 5) {
 
-    override fun List<String>.parse() = first()
+    override suspend fun List<String>.parse() = first()
 
-    override fun solve1(input: String) = input.fullReact().length
+    override suspend fun solve1(input: String) = input.fullReact().length
 
-    override fun solve2(input: String) = ('a'..'z').minOf { input.replace(it.toString(), "", ignoreCase = true).fullReact().length }
+    override suspend fun solve2(input: String) = ('a'..'z').minOf { input.replace(it.toString(), "", ignoreCase = true).fullReact().length }
 
     private fun String.fullReact(): String {
         var poly = this

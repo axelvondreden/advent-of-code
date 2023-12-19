@@ -4,9 +4,9 @@ import Day
 
 class Day23 : Day<List<String>>(2017, 23) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>): Int {
+    override suspend fun solve1(input: List<String>): Int {
         val register = ('a'..'h').associateWith { 0L }.toMutableMap()
         var index = 0
         var mulCounter = 0
@@ -19,7 +19,7 @@ class Day23 : Day<List<String>>(2017, 23) {
         return mulCounter
     }
 
-    override fun solve2(input: List<String>): Int {
+    override suspend fun solve2(input: List<String>): Int {
         val b = input[0].split(" ")[2].toInt() * 100 + 100000
         return (b..b + 17000 step 17).count { !it.toBigInteger().isProbablePrime(2) }
     }

@@ -5,15 +5,15 @@ import Day
 
 class Day19 : Day<List<String>>(2020, 19) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>): Int {
+    override suspend fun solve1(input: List<String>): Int {
         val rules = input.takeWhile { it.isNotBlank() }.associate(::parseRules).toSortedMap()
         val messages = input.subList(input.indexOf("") + 1, input.size)
         return messages.count { str -> str.verify(rules, listOf(0)) }
     }
 
-    override fun solve2(input: List<String>): Int {
+    override suspend fun solve2(input: List<String>): Int {
         val rules = input.takeWhile { it.isNotBlank() }.associate(::parseRules).toSortedMap()
         val messages = input.subList(input.indexOf("") + 1, input.size)
         rules.replace(8, Rule.Choice(listOf(listOf(42), listOf(42, 8))))

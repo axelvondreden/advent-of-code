@@ -4,11 +4,11 @@ import Day
 
 class Day13 : Day<List<String>>(2017, 13) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>) = input.toLayers().filter { it.caughtAtTime(0) }.sumOf { it.severity }
+    override suspend fun solve1(input: List<String>) = input.toLayers().filter { it.caughtAtTime(0) }.sumOf { it.severity }
 
-    override fun solve2(input: List<String>): Int {
+    override suspend fun solve2(input: List<String>): Int {
         val layers = input.toLayers()
         return generateSequence(0, Int::inc).filter { time -> layers.none { it.caughtAtTime(time) } }.first()
     }

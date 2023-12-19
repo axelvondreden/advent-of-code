@@ -4,9 +4,9 @@ import Day
 
 class Day04 : Day<List<String>>(2021, 4) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>): Int {
+    override suspend fun solve1(input: List<String>): Int {
         val numbers = input[0].split(",").map { it.toInt() }
         val maps = input.filter { it.isNotBlank() }.drop(1).chunked(5).map { list ->
             BingoField((0..4).map { row -> list[row].trim().split(Regex("\\W+")).map { it.toInt() } })
@@ -20,7 +20,7 @@ class Day04 : Day<List<String>>(2021, 4) {
         return 0
     }
 
-    override fun solve2(input: List<String>): Int {
+    override suspend fun solve2(input: List<String>): Int {
         val numbers = input[0].split(",").map { it.toInt() }
         val maps = input.filter { it.isNotBlank() }.drop(1).chunked(5).map { list ->
             BingoField((0..4).map { row -> list[row].trim().split(Regex("\\W+")).map { it.toInt() } })

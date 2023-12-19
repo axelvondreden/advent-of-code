@@ -6,13 +6,13 @@ class Day12 : Day<List<Day12.Row>>(2023, 12) {
 
     private val cache = hashMapOf<Pair<String, List<Int>>, Long>()
 
-    override fun List<String>.parse() = map { line -> line.split(" ").let { Row(it[0], it[1]) } }
+    override suspend fun List<String>.parse() = map { line -> line.split(" ").let { Row(it[0], it[1]) } }
 
-    override fun solve1(input: List<Row>) = input.sumOf { row ->
+    override suspend fun solve1(input: List<Row>) = input.sumOf { row ->
         count(row.springs, row.groups.split(",").map { it.toInt() })
     }
 
-    override fun solve2(input: List<Row>) = input.sumOf { row ->
+    override suspend fun solve2(input: List<Row>) = input.sumOf { row ->
         count("${row.springs}?".repeat(5).dropLast(1), "${row.groups},".repeat(5).dropLast(1).split(",").map { it.toInt() })
     }
 

@@ -6,14 +6,14 @@ import utils.toCharMatrix
 
 class Day22 : Day<Array<CharArray>>(2017, 22) {
 
-    override fun List<String>.parse() = toCharMatrix()
+    override suspend fun List<String>.parse() = toCharMatrix()
 
     private val weakNodes = mutableListOf<Point>()
     private val flaggedNodes = mutableListOf<Point>()
 
     private var infectionCounter = 0
 
-    override fun solve1(input: Array<CharArray>): Int {
+    override suspend fun solve1(input: Array<CharArray>): Int {
         infectionCounter = 0
         var current = Point((input.size / 2), (input[0].size / 2))
         val infectedNodes = input.flatMapIndexed { x, chars ->
@@ -29,7 +29,7 @@ class Day22 : Day<Array<CharArray>>(2017, 22) {
         return infectionCounter
     }
 
-    override fun solve2(input: Array<CharArray>): Int {
+    override suspend fun solve2(input: Array<CharArray>): Int {
         infectionCounter = 0
         var current = Point((input.size / 2), (input[0].size / 2))
         val infectedNodes = input.flatMapIndexed { x, chars ->

@@ -6,9 +6,9 @@ import utils.toLongArray
 
 class Day11 : Day<LongArray>(2019, 11) {
 
-    override fun List<String>.parse() = first().toLongArray()
+    override suspend fun List<String>.parse() = first().toLongArray()
 
-    override fun solve1(input: LongArray): Int {
+    override suspend fun solve1(input: LongArray): Int {
         val robot = HullRobot(input.copyOf())
         val panels = mutableMapOf<Point, Long>()
         try {
@@ -21,7 +21,7 @@ class Day11 : Day<LongArray>(2019, 11) {
         }
     }
 
-    override fun solve2(input: LongArray) {
+    override suspend fun solve2(input: LongArray) {
         var ret = "\n"
         val robot = HullRobot(input)
         val panels = mutableMapOf(Point(0, 0) to 1L)

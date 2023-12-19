@@ -5,16 +5,16 @@ import Day
 
 class Day13 : Day<List<String>>(2020, 13) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>): Int {
+    override suspend fun solve1(input: List<String>): Int {
         val earliest = input[0].toInt()
         val busses = input[1].split(",").filter { it != "x" }.map { it.toInt() }
         val earliestBus = busses.minByOrNull { it - (earliest % it) }!!
         return earliestBus * (earliestBus - (earliest % earliestBus))
     }
 
-    override fun solve2(input: List<String>): Long {
+    override suspend fun solve2(input: List<String>): Long {
         val busses = input[1].split(",").map { it.toIntOrNull() ?: 1 }
         var multiplier = busses[0].toLong()
         var time = busses[0].toLong()

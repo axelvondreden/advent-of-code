@@ -5,18 +5,18 @@ import kotlin.math.max
 
 class Day08 : Day<List<Day08.Instruction>>(2017, 8) {
 
-    override fun List<String>.parse() = map {
+    override suspend fun List<String>.parse() = map {
         val split = it.split(" ")
         Instruction(split[0], split[1], split[2].toInt(), Condition(split[4], split[5].toOp(), split[6].toInt()))
     }
 
-    override fun solve1(input: List<Instruction>): Int {
+    override suspend fun solve1(input: List<Instruction>): Int {
         val register = mutableMapOf<String, Int>()
         input.forEach { if (it.condition.verify(register)) it.execute(register) }
         return register.values.maxOrNull()!!
     }
 
-    override fun solve2(input: List<Instruction>): Int {
+    override suspend fun solve2(input: List<Instruction>): Int {
         val register = mutableMapOf<String, Int>()
         var max = 0
         input.forEach {

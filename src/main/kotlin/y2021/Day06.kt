@@ -4,11 +4,11 @@ import Day
 
 class Day06 : Day<List<Int>>(2021, 6) {
 
-    override fun List<String>.parse() = first().split(",").map { it.toInt() }
+    override suspend fun List<String>.parse() = first().split(",").map { it.toInt() }
 
-    override fun solve1(input: List<Int>) = input.calculateSize(80)
+    override suspend fun solve1(input: List<Int>) = input.calculateSize(80)
 
-    override fun solve2(input: List<Int>) = input.calculateSize(256)
+    override suspend fun solve2(input: List<Int>) = input.calculateSize(256)
 
     private fun List<Int>.calculateSize(days: Int): Long {
         var array = LongArray(9)

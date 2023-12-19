@@ -6,14 +6,14 @@ class Day14 : Day<List<String>>(2021, 14) {
 
     private lateinit var insertions: Map<String, String>
 
-    override fun List<String>.parse() = this.also { list ->
+    override suspend fun List<String>.parse() = this.also { list ->
         insertions = list.subList(2, list.size).associate {
             val split = it.split(" -> ")
             split[0] to split[0][0] + split[1]
         }
     }
 
-    override fun solve1(input: List<String>): Int {
+    override suspend fun solve1(input: List<String>): Int {
         var template = input[0]
         repeat(10) {
             template = template.doInsertions()
@@ -22,7 +22,7 @@ class Day14 : Day<List<String>>(2021, 14) {
         return grouped.values.max() - grouped.values.min()
     }
 
-    override fun solve2(input: List<String>): Int {
+    override suspend fun solve2(input: List<String>): Int {
         var template = input[0]
         repeat(40) {
             println(it)

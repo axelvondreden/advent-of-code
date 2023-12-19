@@ -4,7 +4,7 @@ import Day
 
 class Day01 : Day<List<String>>(2023, 1) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
     private val digits = mapOf(
         "one" to 1,
@@ -18,9 +18,9 @@ class Day01 : Day<List<String>>(2023, 1) {
         "nine" to 9
     )
 
-    override fun solve1(input: List<String>) = input.calc()
+    override suspend fun solve1(input: List<String>) = input.calc()
 
-    override fun solve2(input: List<String>) = input.sumOf { line ->
+    override suspend fun solve2(input: List<String>) = input.sumOf { line ->
         (line.firstDigit().toString() + line.lastDigit().toString()).toInt()
     }
 

@@ -5,13 +5,13 @@ import utils.toLongArray
 
 class Day19 : Day<LongArray>(2019, 19) {
 
-    override fun List<String>.parse() = first().toLongArray()
+    override suspend fun List<String>.parse() = first().toLongArray()
 
-    override fun solve1(input: LongArray) = (0L..49).sumOf { y ->
+    override suspend fun solve1(input: LongArray) = (0L..49).sumOf { y ->
         (0L..49).filter { IntCodeComputer(input.copyOf()).addInput(it).addInput(y).run().value == 1L }.size
     }
 
-    override fun solve2(input: LongArray): Long {
+    override suspend fun solve2(input: LongArray): Long {
         val list = mutableListOf<Pair<Long, Long>>()
         var i = 0L
         while (true) {

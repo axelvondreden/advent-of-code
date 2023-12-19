@@ -6,9 +6,9 @@ import java.util.*
 
 class Day19 : Day<Int>(2016, 19) {
 
-    override fun List<String>.parse() = first().toInt()
+    override suspend fun List<String>.parse() = first().toInt()
 
-    override fun solve1(input: Int): Int {
+    override suspend fun solve1(input: Int): Int {
         val elves = BitSet(input)
         elves.set(0, input)
         var position = 0
@@ -21,7 +21,7 @@ class Day19 : Day<Int>(2016, 19) {
         return (position + 1)
     }
 
-    override fun solve2(input: Int): Int {
+    override suspend fun solve2(input: Int): Int {
         val elves = LinkedList((1..input).toList())
         var target = elves.listIterator(input / 2)
         target.next()

@@ -5,11 +5,11 @@ import kotlin.math.abs
 
 class Day11 : Day<List<String>>(2016, 11) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>): String = input.collectState().calculateState().toString()
+    override suspend fun solve1(input: List<String>): String = input.collectState().calculateState().toString()
 
-    override fun solve2(input: List<String>): String = input.mapIndexed { i, s ->
+    override suspend fun solve2(input: List<String>): String = input.mapIndexed { i, s ->
         when (i) {
             0 -> "$s An elerium generator. An elerium-compatible microchip. A dilithium generator. A dilithium-compatible microchip."
             else -> s

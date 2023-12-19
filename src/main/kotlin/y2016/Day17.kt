@@ -7,13 +7,13 @@ import utils.md5
 
 class Day17 : Day<String>(2016, 17) {
 
-    override fun List<String>.parse() = first()
+    override suspend fun List<String>.parse() = first()
 
-    override fun solve1(input: String) = mutableSetOf<String>().also {
+    override suspend fun solve1(input: String) = mutableSetOf<String>().also {
         testWalk(input, Point(0, 0), "", it)
     }.minByOrNull { it.length }!!
 
-    override fun solve2(input: String) = mutableSetOf<String>().also {
+    override suspend fun solve2(input: String) = mutableSetOf<String>().also {
         testWalk(input, Point(0, 0), "", it)
     }.maxByOrNull { it.length }!!.length
 

@@ -5,11 +5,11 @@ import Day
 @ExperimentalUnsignedTypes
 class Day07 : Day<List<List<String>>>(2015, 7) {
 
-    override fun List<String>.parse() = map { it.split(" -> ") }
+    override suspend fun List<String>.parse() = map { it.split(" -> ") }
 
-    override fun solve1(input: List<List<String>>) = input.firstA()
+    override suspend fun solve1(input: List<List<String>>) = input.firstA()
 
-    override fun solve2(input: List<List<String>>): UShort {
+    override suspend fun solve2(input: List<List<String>>): UShort {
         val firstA = input.firstA()
         return buildWires(input).apply { get("b")!!.a = Value(firstA) }.getValue("a").get()
     }

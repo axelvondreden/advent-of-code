@@ -4,9 +4,9 @@ import Day
 
 class Day03 : Day<List<String>>(2021, 3) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>): Int {
+    override suspend fun solve1(input: List<String>): Int {
         val length = input[0].length
         val gamma = (0 until length).map { i -> if (input.count { it[i] == '1' } > input.size / 2) '1' else '0' }
             .joinToString("")
@@ -15,7 +15,7 @@ class Day03 : Day<List<String>>(2021, 3) {
         return gamma.toInt(2) * epsilon.toInt(2)
     }
 
-    override fun solve2(input: List<String>): Int {
+    override suspend fun solve2(input: List<String>): Int {
         val oxygenGeneratorRating = calcRating(input, true, '1').toInt(2)
         val co2ScrubberRating = calcRating(input, false, '0').toInt(2)
         return oxygenGeneratorRating * co2ScrubberRating

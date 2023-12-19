@@ -7,11 +7,11 @@ import kotlin.math.max
 
 class Day16 : Day<Array<CharArray>>(2023, 16) {
 
-    override fun List<String>.parse() = toCharMatrix()
+    override suspend fun List<String>.parse() = toCharMatrix()
 
-    override fun solve1(input: Array<CharArray>) = input.sendLaser(0, 0, Dir.RIGHT)
+    override suspend fun solve1(input: Array<CharArray>) = input.sendLaser(0, 0, Dir.RIGHT)
 
-    override fun solve2(input: Array<CharArray>): Int {
+    override suspend fun solve2(input: Array<CharArray>): Int {
         val hMax = input.indices.maxOf { with(input) { max(sendLaser(it, 0, Dir.DOWN), sendLaser(it, input[0].lastIndex, Dir.UP)) } }
         val vMax = input[0].indices.maxOf { with(input) { max(sendLaser(0, it, Dir.RIGHT), sendLaser(input.lastIndex, it, Dir.LEFT)) } }
         return max(hMax, vMax)

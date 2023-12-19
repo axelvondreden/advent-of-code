@@ -4,11 +4,11 @@ import Day
 
 class Day05 : Day<List<String>>(2020, 5) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>) = input.maxOf { it.getSeatId() }
+    override suspend fun solve1(input: List<String>) = input.maxOf { it.getSeatId() }
 
-    override fun solve2(input: List<String>): Int {
+    override suspend fun solve2(input: List<String>): Int {
         val ids = input.map { it.getSeatId() }.sorted()
         var last = ids.first()
         (1 until ids.size).forEach { i ->

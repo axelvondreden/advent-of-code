@@ -4,16 +4,16 @@ import Day
 
 class Day18 : Day<CharArray>(2015, 18) {
 
-    override fun List<String>.parse() = joinToString("").toCharArray()
+    override suspend fun List<String>.parse() = joinToString("").toCharArray()
 
-    override fun solve1(input: CharArray): Int {
+    override suspend fun solve1(input: CharArray): Int {
         Grid(100, 100, input.clone()).let { grid ->
             repeat(100) { grid.tick() }
             return grid.onCells()
         }
     }
 
-    override fun solve2(input: CharArray): Int {
+    override suspend fun solve2(input: CharArray): Int {
         input[0] = '#'
         input[100 - 1] = '#'
         input[100 * 100 - 100] = '#'

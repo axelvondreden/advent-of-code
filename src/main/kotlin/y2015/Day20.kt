@@ -5,9 +5,9 @@ import utils.getAllDivisors
 
 class Day20 : Day<Int>(2015, 20) {
 
-    override fun List<String>.parse() = this[0].toInt()
+    override suspend fun List<String>.parse() = this[0].toInt()
 
-    override fun solve1(input: Int): Int {
+    override suspend fun solve1(input: Int): Int {
         var houseNumber = 1
         val divisors: MutableSet<Int> = HashSet()
         do {
@@ -18,7 +18,7 @@ class Day20 : Day<Int>(2015, 20) {
         return houseNumber
     }
 
-    override fun solve2(input: Int): Int {
+    override suspend fun solve2(input: Int): Int {
         val presentCounter = HashMap<Int, Int>()
         var houseNumber = 0
         val divisors = HashSet<Int>()

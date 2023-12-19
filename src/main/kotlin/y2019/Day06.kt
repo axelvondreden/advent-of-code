@@ -4,16 +4,16 @@ import Day
 
 class Day06 : Day<List<List<String>>>(2019, 6) {
 
-    override fun List<String>.parse() = map { it.split(")") }
+    override suspend fun List<String>.parse() = map { it.split(")") }
 
     private val map = mutableMapOf<String, ArrayList<String>>()
 
-    override fun solve1(input: List<List<String>>): Int {
+    override suspend fun solve1(input: List<List<String>>): Int {
         input.forEach { line -> map[line[0]] = map.getOrDefault(line[0], ArrayList()).apply { add(line[1]) } }
         return countOrbits()
     }
 
-    override fun solve2(input: List<List<String>>) = getDistanceToSanta()
+    override suspend fun solve2(input: List<List<String>>) = getDistanceToSanta()
 
     private fun countOrbits(): Int {
         val distinct = map.values.flatten()

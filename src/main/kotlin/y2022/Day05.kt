@@ -5,9 +5,9 @@ import java.util.*
 
 class Day05 : Day<List<String>>(2022, 5) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>): String {
+    override suspend fun solve1(input: List<String>): String {
         val stackLines = input.takeWhile { it.isNotEmpty() }
         val instructions = input.dropWhile { it.isNotEmpty() }.drop(1).map {
             val s = it.split(" ")
@@ -18,7 +18,7 @@ class Day05 : Day<List<String>>(2022, 5) {
         return stacks.getTopChars()
     }
 
-    override fun solve2(input: List<String>): String {
+    override suspend fun solve2(input: List<String>): String {
         val stackLines = input.takeWhile { it.isNotEmpty() }
         val instructions = input.dropWhile { it.isNotEmpty() }.drop(1).map {
             val s = it.split(" ")

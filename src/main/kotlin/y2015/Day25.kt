@@ -4,11 +4,11 @@ import Day
 
 class Day25 : Day<Pair<Int, Int>>(2015, 25) {
 
-    override fun List<String>.parse() = with(this[0].split("at row ")[1].split(" ")) {
+    override suspend fun List<String>.parse() = with(this[0].split("at row ")[1].split(" ")) {
         get(0).dropLast(1).toInt() to get(2).dropLast(1).toInt()
     }
 
-    override fun solve1(input: Pair<Int, Int>): Long {
+    override suspend fun solve1(input: Pair<Int, Int>): Long {
         var current = 20151125L
         (1..7000).forEach { i ->
             var y = i
@@ -23,5 +23,5 @@ class Day25 : Day<Pair<Int, Int>>(2015, 25) {
         return 0
     }
 
-    override fun solve2(input: Pair<Int, Int>) = 0
+    override suspend fun solve2(input: Pair<Int, Int>) = 0
 }

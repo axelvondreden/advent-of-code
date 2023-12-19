@@ -4,9 +4,9 @@ import Day
 
 class Day16 : Day<List<String>>(2018, 16) {
 
-    override fun List<String>.parse() = filter { it.isNotBlank() }
+    override suspend fun List<String>.parse() = filter { it.isNotBlank() }
 
-    override fun solve1(input: List<String>): Int {
+    override suspend fun solve1(input: List<String>): Int {
         val samples = mutableListOf<Sample>()
         var index = 0
         while (input[index].startsWith("Before")) {
@@ -19,7 +19,7 @@ class Day16 : Day<List<String>>(2018, 16) {
         return samples.count { it.getSuccessfulOps().size >= 3 }
     }
 
-    override fun solve2(input: List<String>): Int {
+    override suspend fun solve2(input: List<String>): Int {
         val samples = mutableListOf<Sample>()
         var index = 0
         while (input[index].startsWith("Before")) {

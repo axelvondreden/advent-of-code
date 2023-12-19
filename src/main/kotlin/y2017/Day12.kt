@@ -4,15 +4,15 @@ import Day
 
 class Day12 : Day<Set<Day12.Program>>(2017, 12) {
 
-    override fun List<String>.parse() = toPrograms()
+    override suspend fun List<String>.parse() = toPrograms()
 
-    override fun solve1(input: Set<Program>): Int {
+    override suspend fun solve1(input: Set<Program>): Int {
         val output = mutableSetOf<Program>()
         input.first { it.id == 0 }.getConnectionCount(output)
         return output.size
     }
 
-    override fun solve2(input: Set<Program>): Int {
+    override suspend fun solve2(input: Set<Program>): Int {
         val groups = mutableSetOf<Set<Program>>()
         input.forEach {
             val output = mutableSetOf<Program>()

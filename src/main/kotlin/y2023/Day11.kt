@@ -7,9 +7,9 @@ import kotlin.math.min
 
 class Day11 : Day<Array<CharArray>>(2023, 11) {
 
-    override fun List<String>.parse() = toCharMatrix()
+    override suspend fun List<String>.parse() = toCharMatrix()
 
-    override fun solve1(input: Array<CharArray>): Long {
+    override suspend fun solve1(input: Array<CharArray>): Long {
         val emptyColumns = input.indices.filter { x -> input[x].all { it == '.' } }
         val emptyRows = input[0].indices.filter { y -> input.indices.all { x -> input[x][y] == '.' } }
         val pairs = input.findPoints('#').getAllPairs()
@@ -24,7 +24,7 @@ class Day11 : Day<Array<CharArray>>(2023, 11) {
         }
     }
 
-    override fun solve2(input: Array<CharArray>): Long {
+    override suspend fun solve2(input: Array<CharArray>): Long {
         val emptyColumns = input.indices.filter { x -> input[x].all { it == '.' } }
         val emptyRows = input[0].indices.filter { y -> input.indices.all { x -> input[x][y] == '.' } }
         val pairs = input.findPoints('#').getAllPairs()

@@ -4,9 +4,9 @@ import Day
 
 class Day02 : Day<List<Pair<Char, Char>>>(2022, 2) {
 
-    override fun List<String>.parse() = map { it[0] to it[2] }
+    override suspend fun List<String>.parse() = map { it[0] to it[2] }
 
-    override fun solve1(input: List<Pair<Char, Char>>) = input.sumOf {
+    override suspend fun solve1(input: List<Pair<Char, Char>>) = input.sumOf {
         val move = when (it.second) {
             'X' -> 1
             'Y' -> 2
@@ -19,7 +19,7 @@ class Day02 : Day<List<Pair<Char, Char>>>(2022, 2) {
         }
     }
 
-    override fun solve2(input: List<Pair<Char, Char>>) = input.sumOf {
+    override suspend fun solve2(input: List<Pair<Char, Char>>) = input.sumOf {
         when (it.second) {
             'X' -> when (it.first) {
                 'A' -> 3

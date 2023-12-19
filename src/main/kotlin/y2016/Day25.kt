@@ -5,9 +5,9 @@ import Day
 
 class Day25 : Day<List<String>>(2016, 25) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>): Int {
+    override suspend fun solve1(input: List<String>): Int {
         val regex = Regex("^(!?01)+")
         var output = ""
         var value = -1
@@ -22,5 +22,5 @@ class Day25 : Day<List<String>>(2016, 25) {
         return value
     }
 
-    override fun solve2(input: List<String>) = 0
+    override suspend fun solve2(input: List<String>) = 0
 }

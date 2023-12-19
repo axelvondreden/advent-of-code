@@ -6,9 +6,9 @@ import kotlin.math.min
 
 class Day21 : Day<Triple<Int, Int, Int>>(2015, 21) {
 
-    override fun List<String>.parse() = with(map { it.split(": ")[1].toInt() }) { Triple(get(0), get(1), get(2)) }
+    override suspend fun List<String>.parse() = with(map { it.split(": ")[1].toInt() }) { Triple(get(0), get(1), get(2)) }
 
-    override fun solve1(input: Triple<Int, Int, Int>): Int {
+    override suspend fun solve1(input: Triple<Int, Int, Int>): Int {
         var minGold = Integer.MAX_VALUE
         weapons.forEach { weapon ->
             if (simulate(You(weapon, null, emptySet()), Boss(input.first, input.second, input.third))) {
@@ -37,7 +37,7 @@ class Day21 : Day<Triple<Int, Int, Int>>(2015, 21) {
         return minGold
     }
 
-    override fun solve2(input: Triple<Int, Int, Int>): Int {
+    override suspend fun solve2(input: Triple<Int, Int, Int>): Int {
         var maxGold = 0
         weapons.filterNot { simulate(You(it, null, emptySet()), Boss(input.first, input.second, input.third)) }
             .forEach { weapon ->

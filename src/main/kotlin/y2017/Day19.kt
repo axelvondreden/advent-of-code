@@ -6,9 +6,9 @@ import utils.toCharMatrix
 
 class Day19 : Day<Array<CharArray>>(2017, 19) {
 
-    override fun List<String>.parse() = toCharMatrix()
+    override suspend fun List<String>.parse() = toCharMatrix()
 
-    override fun solve1(input: Array<CharArray>): String {
+    override suspend fun solve1(input: Array<CharArray>): String {
         val startX = input.mapIndexed { index, chars -> index to chars[0] }.first { it.second == '|' }.first
         var point = Point(startX.toLong(), 0)
         val letters = mutableListOf<Char>()
@@ -21,7 +21,7 @@ class Day19 : Day<Array<CharArray>>(2017, 19) {
         return letters.joinToString("")
     }
 
-    override fun solve2(input: Array<CharArray>): Int {
+    override suspend fun solve2(input: Array<CharArray>): Int {
         val startX = input.mapIndexed { index, chars -> index to chars[0] }.first { it.second == '|' }.first
         var point = Point(startX.toLong(), 0)
         val letters = mutableListOf<Char>()

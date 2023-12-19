@@ -4,11 +4,11 @@ import Day
 
 class Day08 : Day<List<Day08.Instruction>>(2020, 8) {
 
-    override fun List<String>.parse() = toInstructions()
+    override suspend fun List<String>.parse() = toInstructions()
 
-    override fun solve1(input: List<Instruction>) = Accumulator().apply { runWithoutLoop(input) }.acc
+    override suspend fun solve1(input: List<Instruction>) = Accumulator().apply { runWithoutLoop(input) }.acc
 
-    override fun solve2(input: List<Instruction>): Int {
+    override suspend fun solve2(input: List<Instruction>): Int {
         val switchMax = input.count { it.cmd == "nop" || it.cmd == "jmp" }
         var switchIndex = 0
         while (switchIndex < switchMax) {

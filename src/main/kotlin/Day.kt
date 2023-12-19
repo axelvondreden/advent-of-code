@@ -3,11 +3,11 @@ import runner.compose.Viz
 
 abstract class Day<T>(val year: Int, val day: Int) {
 
-    abstract fun List<String>.parse(): T
+    abstract suspend fun List<String>.parse(): T
 
-    abstract fun solve1(input: T): Any
+    abstract suspend fun solve1(input: T): Any
 
-    abstract fun solve2(input: T): Any
+    abstract suspend fun solve2(input: T): Any
 
     suspend fun visualize1(input: T, onProgress: (Viz) -> Unit, awaitSignal: suspend () -> Unit): Any {
         return coroutineScope {

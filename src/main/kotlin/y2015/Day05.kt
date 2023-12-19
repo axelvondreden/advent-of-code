@@ -4,11 +4,11 @@ import Day
 
 class Day05 : Day<List<String>>(2015, 5) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>) = input.count { it.hasMinVowels(3) && it.hasDoubleLetter() && it.hasNoBadWords() }
+    override suspend fun solve1(input: List<String>) = input.count { it.hasMinVowels(3) && it.hasDoubleLetter() && it.hasNoBadWords() }
 
-    override fun solve2(input: List<String>) = input.count { it.hasLetterPair() && it.hasDoubleWithOffset() }
+    override suspend fun solve2(input: List<String>) = input.count { it.hasLetterPair() && it.hasDoubleWithOffset() }
 
     private fun String.hasMinVowels(vowels: Int) = count { "aeiou".contains(it) } >= vowels
 

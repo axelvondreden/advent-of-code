@@ -6,11 +6,11 @@ import runner.compose.Viz
 
 class Day01 : Day<String>(2015, 1) {
 
-    override fun List<String>.parse() = this[0]
+    override suspend fun List<String>.parse() = this[0]
 
-    override fun solve1(input: String) = input.count { it == '(' } - input.count { it == ')' }
+    override suspend fun solve1(input: String) = input.count { it == '(' } - input.count { it == ')' }
 
-    override fun solve2(input: String): Int {
+    override suspend fun solve2(input: String): Int {
         var floor = 0
         for ((index, c) in input.withIndex()) {
             when (c) {

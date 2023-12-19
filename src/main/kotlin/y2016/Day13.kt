@@ -8,9 +8,9 @@ import kotlin.math.abs
 
 class Day13 : Day<Int>(2016, 13) {
 
-    override fun List<String>.parse() = first().toInt()
+    override suspend fun List<String>.parse() = first().toInt()
 
-    override fun solve1(input: Int): Int {
+    override suspend fun solve1(input: Int): Int {
         val map = Array(mapSize) { x ->
             CharArray(mapSize) { y ->
                 if (((x * x) + (3 * x) + (2 * x * y) + y + (y * y) + input).countOneBits() % 2 == 0) '.' else '#'
@@ -21,7 +21,7 @@ class Day13 : Day<Int>(2016, 13) {
         return path.size + 1
     }
 
-    override fun solve2(input: Int): Int {
+    override suspend fun solve2(input: Int): Int {
         val map = Array(mapSize) { x ->
             CharArray(mapSize) { y ->
                 if (((x * x) + (3 * x) + (2 * x * y) + y + (y * y) + input).countOneBits() % 2 == 0) '.' else '#'

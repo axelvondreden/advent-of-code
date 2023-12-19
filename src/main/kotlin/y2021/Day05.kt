@@ -7,11 +7,11 @@ import kotlin.math.max
 
 class Day05 : Day<List<Line>>(2021, 5) {
 
-    override fun List<String>.parse() = map { with(it.split(" -> ")) { Line(Point(this[0]), Point(this[1])) } }
+    override suspend fun List<String>.parse() = map { with(it.split(" -> ")) { Line(Point(this[0]), Point(this[1])) } }
 
-    override fun solve1(input: List<Line>) = input.filter { it.isStraight() }.calculateDangerZones()
+    override suspend fun solve1(input: List<Line>) = input.filter { it.isStraight() }.calculateDangerZones()
 
-    override fun solve2(input: List<Line>) = input.calculateDangerZones()
+    override suspend fun solve2(input: List<Line>) = input.calculateDangerZones()
 
     private fun List<Line>.calculateDangerZones(): Int {
         val max = maxOf { line -> line.getPoints().maxOf { max(it.x, it.y) } }.toInt()

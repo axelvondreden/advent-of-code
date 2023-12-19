@@ -5,11 +5,11 @@ import java.math.BigInteger
 
 class Day14 : Day<List<String>>(2017, 14) {
 
-    override fun List<String>.parse() = first().toBinaryStrings()
+    override suspend fun List<String>.parse() = first().toBinaryStrings()
 
-    override fun solve1(input: List<String>) = input.sumOf { binaryString -> binaryString.count { it == '1' } }
+    override suspend fun solve1(input: List<String>) = input.sumOf { binaryString -> binaryString.count { it == '1' } }
 
-    override fun solve2(input: List<String>): Int {
+    override suspend fun solve2(input: List<String>): Int {
         var groups = 0
         val grid = stringsToGrid(input)
         grid.forEachIndexed { x, row ->

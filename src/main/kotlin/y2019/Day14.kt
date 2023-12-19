@@ -4,9 +4,9 @@ import Day
 
 class Day14 : Day<List<List<String>>>(2019, 14) {
 
-    override fun List<String>.parse() = map { it.split(" => ") }
+    override suspend fun List<String>.parse() = map { it.split(" => ") }
 
-    override fun solve1(input: List<List<String>>): Int {
+    override suspend fun solve1(input: List<List<String>>): Int {
         val reactions = input.map { list ->
             val output = Pair(list[1].split(" ")[1], list[1].split(" ")[0].toLong())
             val inputs = list[0].split(", ").associate { it.split(" ")[1] to it.split(" ")[0].toLong() }
@@ -15,7 +15,7 @@ class Day14 : Day<List<List<String>>>(2019, 14) {
         return getOreCount(reactions, Pair("FUEL", 1), mutableMapOf())
     }
 
-    override fun solve2(input: List<List<String>>): Long {
+    override suspend fun solve2(input: List<List<String>>): Long {
         val reactions = input.map { list ->
             val output = Pair(list[1].split(" ")[1], list[1].split(" ")[0].toLong())
             val inputs = list[0].split(", ").associate { it.split(" ")[1] to it.split(" ")[0].toLong() }

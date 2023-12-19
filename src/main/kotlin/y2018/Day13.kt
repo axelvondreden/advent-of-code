@@ -8,9 +8,9 @@ import utils.toCharMatrix
 
 class Day13 : Day<Array<CharArray>>(2018, 13) {
 
-    override fun List<String>.parse() = toCharMatrix()
+    override suspend fun List<String>.parse() = toCharMatrix()
 
-    override fun solve1(input: Array<CharArray>): String {
+    override suspend fun solve1(input: Array<CharArray>): String {
         val map = input.getMap()
         val carts = createCarts(input, map)
         while (true) {
@@ -25,7 +25,7 @@ class Day13 : Day<Array<CharArray>>(2018, 13) {
         }
     }
 
-    override fun solve2(input: Array<CharArray>): String {
+    override suspend fun solve2(input: Array<CharArray>): String {
         val map = input.getMap()
         val carts = createCarts(input, map)
         while (true) {

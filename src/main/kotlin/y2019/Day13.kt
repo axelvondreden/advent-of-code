@@ -5,9 +5,9 @@ import utils.toLongArray
 
 class Day13 : Day<LongArray>(2019, 13) {
 
-    override fun List<String>.parse() = first().toLongArray()
+    override suspend fun List<String>.parse() = first().toLongArray()
 
-    override fun solve1(input: LongArray): Int {
+    override suspend fun solve1(input: LongArray): Int {
         val comp = IntCodeComputer(input.copyOf())
         val set = emptySet<Triple<Long, Long, Long>>().toMutableSet()
         while (true) {
@@ -20,7 +20,7 @@ class Day13 : Day<LongArray>(2019, 13) {
         return set.count { it.third == 2L }
     }
 
-    override fun solve2(input: LongArray): Long {
+    override suspend fun solve2(input: LongArray): Long {
         var ballX = 0L
         var paddleX = 0L
         val comp2 = IntCodeComputer(input).withInputFunction { input(ballX, paddleX) }

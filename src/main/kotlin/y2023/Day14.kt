@@ -9,13 +9,13 @@ import utils.toCharMatrix
 
 class Day14 : Day<Array<CharArray>>(2023, 14) {
 
-    override fun List<String>.parse() = toCharMatrix()
+    override suspend fun List<String>.parse() = toCharMatrix()
 
-    override fun solve1(input: Array<CharArray>) = input.tiltNorth().sumOf { col ->
+    override suspend fun solve1(input: Array<CharArray>) = input.tiltNorth().sumOf { col ->
         col.withIndex().sumOf { c -> if (c.value == 'O') col.size - c.index else 0 }
     }
 
-    override fun solve2(input: Array<CharArray>): Int {
+    override suspend fun solve2(input: Array<CharArray>): Int {
         var step = 0
         var skip = true
         val seen = hashMapOf<String, Int>()

@@ -4,11 +4,11 @@ import Day
 
 class Day23 : Day<List<String>>(2015, 23) {
 
-    override fun List<String>.parse() = map { it.replace(",", "") }
+    override suspend fun List<String>.parse() = map { it.replace(",", "") }
 
     var index = 0
 
-    override fun solve1(input: List<String>): Long {
+    override suspend fun solve1(input: List<String>): Long {
         index = 0
         val register = mutableMapOf("a" to 0L, "b" to 0L)
         while (index in input.indices) {
@@ -17,7 +17,7 @@ class Day23 : Day<List<String>>(2015, 23) {
         return register["b"]!!
     }
 
-    override fun solve2(input: List<String>): Long {
+    override suspend fun solve2(input: List<String>): Long {
         index = 0
         val register = mutableMapOf("a" to 1L, "b" to 0L)
         while (index in input.indices) {

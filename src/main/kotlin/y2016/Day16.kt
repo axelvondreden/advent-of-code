@@ -5,9 +5,9 @@ import Day
 
 class Day16 : Day<String>(2016, 16) {
 
-    override fun List<String>.parse() = first()
+    override suspend fun List<String>.parse() = first()
 
-    override fun solve1(input: String): String {
+    override suspend fun solve1(input: String): String {
         var string = input
         while (string.length < maxLength1) {
             string = string.dragonCurve()
@@ -15,7 +15,7 @@ class Day16 : Day<String>(2016, 16) {
         return string.substring(0, maxLength1).checksum()
     }
 
-    override fun solve2(input: String): String {
+    override suspend fun solve2(input: String): String {
         var string = input
         while (string.length < maxLength2) {
             string = string.dragonCurve()

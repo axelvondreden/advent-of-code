@@ -4,11 +4,11 @@ import Day
 
 class Day09 : Day<List<List<Long>>>(2023, 9) {
 
-    override fun List<String>.parse() = map { line -> line.split(" ").map { it.toLong() } }
+    override suspend fun List<String>.parse() = map { line -> line.split(" ").map { it.toLong() } }
 
-    override fun solve1(input: List<List<Long>>) = input.sumOf { it.extrapolateNextValue() }
+    override suspend fun solve1(input: List<List<Long>>) = input.sumOf { it.extrapolateNextValue() }
 
-    override fun solve2(input: List<List<Long>>) = input.sumOf { it.extrapolatePreviousValue() }
+    override suspend fun solve2(input: List<List<Long>>) = input.sumOf { it.extrapolatePreviousValue() }
 
     private fun List<Long>.extrapolateNextValue(): Long {
         val histories =getHistories()

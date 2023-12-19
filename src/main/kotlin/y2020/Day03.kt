@@ -6,11 +6,11 @@ import utils.toCharMatrix
 
 class Day03 : Day<Array<CharArray>>(2020, 3) {
 
-    override fun List<String>.parse() = toCharMatrix()
+    override suspend fun List<String>.parse() = toCharMatrix()
 
-    override fun solve1(input: Array<CharArray>) = input.countTrees(3, 1)
+    override suspend fun solve1(input: Array<CharArray>) = input.countTrees(3, 1)
 
-    override fun solve2(input: Array<CharArray>) = input.countTrees(1, 1) *
+    override suspend fun solve2(input: Array<CharArray>) = input.countTrees(1, 1) *
             input.countTrees(3, 1) * input.countTrees(5, 1) *
             input.countTrees(7, 1) * input.countTrees(1, 2)
 

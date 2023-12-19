@@ -8,7 +8,7 @@ class Day09 : Day<List<List<String>>>(2015, 9) {
     private val locations = mutableListOf<Location>()
     private val distances = mutableListOf<Distance>()
 
-    override fun List<String>.parse() = map { line ->
+    override suspend fun List<String>.parse() = map { line ->
         line.split(" ").also { split ->
             distances += Distance(
                 Location(split[0]).also { locations += it },
@@ -18,14 +18,14 @@ class Day09 : Day<List<List<String>>>(2015, 9) {
         }
     }
 
-    override fun solve1(input: List<List<String>>): Int {
+    override suspend fun solve1(input: List<List<String>>): Int {
         val nav = Navigation(distances)
         val allRoutes = locations.distinct().permute()
         return nav.getLength(allRoutes.filter { nav.isPathPossible(it.toTypedArray()) }
             .minByOrNull { nav.getLength(it.toTypedArray()) }!!.toTypedArray())
 
     }
-    override fun solve2(input: List<List<String>>): Int {
+    override suspend fun solve2(input: List<List<String>>): Int {
         val nav = Navigation(distances)
         val allRoutes = locations.distinct().permute()
         return nav.getLength(allRoutes.filter { nav.isPathPossible(it.toTypedArray()) }

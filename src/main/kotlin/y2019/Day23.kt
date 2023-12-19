@@ -5,13 +5,13 @@ import utils.toLongArray
 
 class Day23 : Day<LongArray>(2019, 23) {
 
-    override fun List<String>.parse() = first().toLongArray()
+    override suspend fun List<String>.parse() = first().toLongArray()
 
     private val comps = mutableMapOf<Int, IntCodeComputer>()
     private val inputBuffer = mutableMapOf<Int, MutableList<Long>>()
     private val outputBuffer = mutableMapOf<Int, MutableList<Long>>()
 
-    override fun solve1(input: LongArray): Int {
+    override suspend fun solve1(input: LongArray): Int {
         initNetwork(input)
         while (true) {
             (0 until 50).forEach { i ->
@@ -29,7 +29,7 @@ class Day23 : Day<LongArray>(2019, 23) {
         }
     }
 
-    override fun solve2(input: LongArray): Int {
+    override suspend fun solve2(input: LongArray): Int {
         initNetwork(input)
         var lastNatY = -1L
         var natMemory = Pair(0L, 0L)

@@ -7,14 +7,14 @@ class Day08 : Day<Boolean>(2016, 8) {
 
     private val screen = Array(50) { BooleanArray(6) }
 
-    override fun List<String>.parse(): Boolean {
+    override suspend fun List<String>.parse(): Boolean {
         forEach { it.split(" ").evaluate() }
         return true
     }
 
-    override fun solve1(input: Boolean) = screen.sumOf { booleans -> booleans.count { it } }
+    override suspend fun solve1(input: Boolean) = screen.sumOf { booleans -> booleans.count { it } }
 
-    override fun solve2(input: Boolean) = if (printScreen() == control) "RURUCEOEIL" else ""
+    override suspend fun solve2(input: Boolean) = if (printScreen() == control) "RURUCEOEIL" else ""
 
     private fun List<String>.evaluate() {
         val old = screen.copy()

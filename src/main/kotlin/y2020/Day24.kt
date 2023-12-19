@@ -6,7 +6,7 @@ import kotlin.math.absoluteValue
 
 class Day24 : Day<MutableList<List<Day24.HexDir>>>(2020, 24) {
 
-    override fun List<String>.parse(): MutableList<List<HexDir>> {
+    override suspend fun List<String>.parse(): MutableList<List<HexDir>> {
         val paths = mutableListOf<List<HexDir>>()
         forEach {
             var index = 0
@@ -31,7 +31,7 @@ class Day24 : Day<MutableList<List<Day24.HexDir>>>(2020, 24) {
 
     private val tiles = mutableMapOf<Pair<Int, Int>, Boolean>()
 
-    override fun solve1(input: MutableList<List<HexDir>>): Int {
+    override suspend fun solve1(input: MutableList<List<HexDir>>): Int {
         input.forEach { path ->
             val tile = path.fold(0 to 0) { current, dir -> current.move(dir) }
             tiles[tile] = if (tile !in tiles) false else !(tiles[tile]!!)
@@ -39,7 +39,7 @@ class Day24 : Day<MutableList<List<Day24.HexDir>>>(2020, 24) {
         return tiles.values.count { !it }
     }
 
-    override fun solve2(input: MutableList<List<HexDir>>): Int {
+    override suspend fun solve2(input: MutableList<List<HexDir>>): Int {
         var tiles = this.tiles.toMap()
         repeat(100) {
             tiles = tiles.flip()

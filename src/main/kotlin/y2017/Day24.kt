@@ -5,14 +5,14 @@ import kotlin.math.max
 
 class Day24 : Day<Set<Day24.Component>>(2017, 24) {
 
-    override fun List<String>.parse() = map {
+    override suspend fun List<String>.parse() = map {
         val split = it.split("/")
         Component(split[0].toInt(), split[1].toInt())
     }.toSet()
 
-    override fun solve1(input: Set<Component>) = findAllBridges(input, emptyList(), 0).maxOf { bridge -> bridge.sumOf { it.port1 + it.port2 } }
+    override suspend fun solve1(input: Set<Component>) = findAllBridges(input, emptyList(), 0).maxOf { bridge -> bridge.sumOf { it.port1 + it.port2 } }
 
-    override fun solve2(input: Set<Component>): Int {
+    override suspend fun solve2(input: Set<Component>): Int {
         val bridges = findAllBridges(input, emptyList(), 0)
         val maxSize = bridges.maxOf { it.size }
         return bridges.filter { it.size == maxSize }.maxOf { bridge -> bridge.sumOf { it.port1 + it.port2 } }

@@ -4,9 +4,9 @@ import Day
 
 class Day14 : Day<Int>(2018, 14) {
 
-    override fun List<String>.parse() = first().toInt()
+    override suspend fun List<String>.parse() = first().toInt()
 
-    override fun solve1(input: Int): String {
+    override suspend fun solve1(input: Int): String {
         val scores = mutableListOf(3, 7)
         var index1 = 0
         var index2 = 1
@@ -22,7 +22,7 @@ class Day14 : Day<Int>(2018, 14) {
         return scores.takeLast(10).joinToString("")
     }
 
-    override fun solve2(input: Int): Int {
+    override suspend fun solve2(input: Int): Int {
         val scores = mutableListOf(3, 7)
         var index1 = 0
         var index2 = 1

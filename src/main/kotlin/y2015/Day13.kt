@@ -5,11 +5,11 @@ import utils.permute
 
 class Day13 : Day<Map<Pair<String, String>, Int>>(2015, 13) {
 
-    override fun List<String>.parse() = asSequence().parse()
+    override suspend fun List<String>.parse() = asSequence().parse()
 
-    override fun solve1(input: Map<Pair<String, String>, Int>) = input.maxHappiness()
+    override suspend fun solve1(input: Map<Pair<String, String>, Int>) = input.maxHappiness()
 
-    override fun solve2(input: Map<Pair<String, String>, Int>) = input.maxHappinessWithGap()
+    override suspend fun solve2(input: Map<Pair<String, String>, Int>) = input.maxHappinessWithGap()
 
     private fun Sequence<String>.parse(): Map<Pair<String, String>, Int> = fold(hashMapOf()) { map, line ->
         val tokens = line.split(" ")

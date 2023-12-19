@@ -7,7 +7,7 @@ import java.math.BigInteger
 
 class Day08 : Day<Day08.RLMap>(2023, 8) {
 
-    override fun List<String>.parse(): RLMap {
+    override suspend fun List<String>.parse(): RLMap {
         val path = first()
         val nodes = drop(2).associate {
             val s = it.split(" = ")
@@ -17,9 +17,9 @@ class Day08 : Day<Day08.RLMap>(2023, 8) {
         return RLMap(path, nodes)
     }
 
-    override fun solve1(input: RLMap) = input.countSteps()
+    override suspend fun solve1(input: RLMap) = input.countSteps()
 
-    override fun solve2(input: RLMap): BigInteger = input.countGhostSteps()
+    override suspend fun solve2(input: RLMap): BigInteger = input.countGhostSteps()
 
     data class RLMap(val path: String, val nodes: Map<String, Pair<String, String>>) {
 

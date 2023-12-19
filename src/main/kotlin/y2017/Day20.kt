@@ -5,11 +5,11 @@ import utils.Point3D
 
 class Day20 : Day<Set<Day20.Particle>>(2017, 20) {
 
-    override fun List<String>.parse() = parseParticles()
+    override suspend fun List<String>.parse() = parseParticles()
 
-    override fun solve1(input: Set<Particle>) = input.minByOrNull { it.acc.abs() }!!.id
+    override suspend fun solve1(input: Set<Particle>) = input.minByOrNull { it.acc.abs() }!!.id
 
-    override fun solve2(input: Set<Particle>): Int {
+    override suspend fun solve2(input: Set<Particle>): Int {
         var copy = input
         var lastCollision = 0
         while (lastCollision < 100) {

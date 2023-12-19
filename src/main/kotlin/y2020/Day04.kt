@@ -4,11 +4,11 @@ import Day
 
 class Day04 : Day<List<String>>(2020, 4) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>) = input.parsePassports().size
+    override suspend fun solve1(input: List<String>) = input.parsePassports().size
 
-    override fun solve2(input: List<String>) = input.parsePassports().count { it.hasValidValues() }
+    override suspend fun solve2(input: List<String>) = input.parsePassports().count { it.hasValidValues() }
 
     private fun List<String>.parsePassportStrings(): MutableSet<String> {
         var lineNr = 0

@@ -4,12 +4,12 @@ import Day
 
 class Day02 : Day<List<String>>(2018, 2) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>) = input.count { id -> id.groupBy { it }.any { it.value.size == 2 } } *
+    override suspend fun solve1(input: List<String>) = input.count { id -> id.groupBy { it }.any { it.value.size == 2 } } *
             input.count { id -> id.groupBy { it }.any { it.value.size == 3 } }
 
-    override fun solve2(input: List<String>): String {
+    override suspend fun solve2(input: List<String>): String {
         val similarIDs = input.findSimilarIDs()
         return similarIDs.first.indices
             .filter { similarIDs.first[it] == similarIDs.second[it] }

@@ -5,11 +5,11 @@ import kotlin.math.absoluteValue
 
 class Day07 : Day<Day07.Program>(2017, 7) {
 
-    override fun List<String>.parse() = this.toMainProgram()
+    override suspend fun List<String>.parse() = this.toMainProgram()
 
-    override fun solve1(input: Program) = input.name
+    override suspend fun solve1(input: Program) = input.name
 
-    override fun solve2(input: Program) = input.findWrongWeight()
+    override suspend fun solve2(input: Program) = input.findWrongWeight()
 
     private fun List<String>.toMainProgram(): Program {
         val left = toMutableList()

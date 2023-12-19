@@ -4,9 +4,9 @@ import Day
 
 class Day06 : Day<List<Int>>(2017, 6) {
 
-    override fun List<String>.parse() = first().split(Regex("\\s+")).map { it.toInt() }
+    override suspend fun List<String>.parse() = first().split(Regex("\\s+")).map { it.toInt() }
 
-    override fun solve1(input: List<Int>): Int {
+    override suspend fun solve1(input: List<Int>): Int {
         val states = mutableSetOf<String>()
         var steps = 0
         var banks = input.toIntArray()
@@ -18,7 +18,7 @@ class Day06 : Day<List<Int>>(2017, 6) {
         return steps
     }
 
-    override fun solve2(input: List<Int>): Int {
+    override suspend fun solve2(input: List<Int>): Int {
         val states = mutableListOf<String>()
         var banks = input.toIntArray()
         while (!states.contains(banks.joinToString("|"))) {

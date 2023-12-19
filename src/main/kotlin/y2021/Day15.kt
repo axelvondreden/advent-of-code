@@ -6,13 +6,13 @@ import kotlin.math.min
 
 class Day15 : Day<Array<IntArray>>(2021, 15) {
 
-    override fun List<String>.parse() = toCharMatrix().map { chars -> chars.map { it.digitToInt() }.toIntArray() }.toTypedArray()
+    override suspend fun List<String>.parse() = toCharMatrix().map { chars -> chars.map { it.digitToInt() }.toIntArray() }.toTypedArray()
 
-    override fun solve1(input: Array<IntArray>): Int {
+    override suspend fun solve1(input: Array<IntArray>): Int {
         return minPathCost(input)
     }
 
-    override fun solve2(input: Array<IntArray>): Int {
+    override suspend fun solve2(input: Array<IntArray>): Int {
         val expandedMap = Array(input.size * 5) { x ->
             IntArray(input[0].size * 5) { y ->
                 val xAdd = x / input.size

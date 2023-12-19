@@ -4,11 +4,11 @@ import Day
 
 class Day04 : Day<IntRange>(2019, 4) {
 
-    override fun List<String>.parse() = with(first().split("-").map { it.toInt() }) { get(0)..get(1) }
+    override suspend fun List<String>.parse() = with(first().split("-").map { it.toInt() }) { get(0)..get(1) }
 
-    override fun solve1(input: IntRange) = input.count { it.toString().checkDouble() && it.toString().checkIncreasing() }
+    override suspend fun solve1(input: IntRange) = input.count { it.toString().checkDouble() && it.toString().checkIncreasing() }
 
-    override fun solve2(input: IntRange) = input.count { it.toString().checkIncreasing() && it.toString().checkDoubleStrict() }
+    override suspend fun solve2(input: IntRange) = input.count { it.toString().checkIncreasing() && it.toString().checkDoubleStrict() }
 
     private fun String.checkDouble() = (1 until length).any { get(it - 1) == get(it) }
 

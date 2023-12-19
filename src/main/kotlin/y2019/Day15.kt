@@ -11,7 +11,7 @@ class Day15 : Day<IntCodeComputer>(2019, 15) {
     private var pathLength = 0
     private var oxyCounter = 0L
 
-    override fun List<String>.parse() = IntCodeComputer(first().toLongArray()).also { pc ->
+    override suspend fun List<String>.parse() = IntCodeComputer(first().toLongArray()).also { pc ->
         var location = Pair(0L, 0L)
         var triedLocation: Pair<Long, Long>
         var previousMove: Long
@@ -56,9 +56,9 @@ class Day15 : Day<IntCodeComputer>(2019, 15) {
         }
     }
 
-    override fun solve1(input: IntCodeComputer) = pathLength
+    override suspend fun solve1(input: IntCodeComputer) = pathLength
 
-    override fun solve2(input: IntCodeComputer) = oxyCounter
+    override suspend fun solve2(input: IntCodeComputer) = oxyCounter
 
     private fun reconstructPath(cameFrom: Map<Pair<Long, Long>, Pair<Long, Long>>, to: Pair<Long, Long>): List<Pair<Long, Long>> {
         var current = to

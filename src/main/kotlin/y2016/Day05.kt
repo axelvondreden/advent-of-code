@@ -5,9 +5,9 @@ import utils.md5
 
 class Day05 : Day<String>(2016, 5) {
 
-    override fun List<String>.parse() = first()
+    override suspend fun List<String>.parse() = first()
 
-    override fun solve1(input: String): String {
+    override suspend fun solve1(input: String): String {
         var password = ""
         var i = 0
         while (password.length < 8) {
@@ -18,7 +18,7 @@ class Day05 : Day<String>(2016, 5) {
         return password
     }
 
-    override fun solve2(input: String): String {
+    override suspend fun solve2(input: String): String {
         val password = CharArray(8) { ' ' }
         var i = 0
         while (password.contains(' ')) {

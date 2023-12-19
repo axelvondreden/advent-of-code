@@ -4,7 +4,7 @@ import Day
 
 class Day02 : Day<List<Day02.Game>>(2023, 2) {
 
-    override fun List<String>.parse() = map { game ->
+    override suspend fun List<String>.parse() = map { game ->
         val s1 = game.split(": ")
         val id = s1[0].removePrefix("Game ").toInt()
         val s2 = s1[1].split("; ")
@@ -18,9 +18,9 @@ class Day02 : Day<List<Day02.Game>>(2023, 2) {
         Game(id, rounds)
     }
 
-    override fun solve1(input: List<Game>) = input.filter { it.isPossible(12, 13, 14) }.sumOf { it.id }
+    override suspend fun solve1(input: List<Game>) = input.filter { it.isPossible(12, 13, 14) }.sumOf { it.id }
 
-    override fun solve2(input: List<Game>) = input.sumOf { it.getLowestProduct() }
+    override suspend fun solve2(input: List<Game>) = input.sumOf { it.getLowestProduct() }
 
     data class Game(val id: Int, val rounds: List<Gameround>) {
 

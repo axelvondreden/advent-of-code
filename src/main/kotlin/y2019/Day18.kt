@@ -10,7 +10,7 @@ class Day18: Day<Array<CharArray>>(2019, 18) {
     private lateinit var cache1: Map<String, Edge>
     private lateinit var cache2: Map<String, Edge>
 
-    override fun List<String>.parse() = toCharMatrix().also {  matrix ->
+    override suspend fun List<String>.parse() = toCharMatrix().also {  matrix ->
         keys = ('a'..'z').mapNotNull { matrix.find(it)?.let { node -> Key(it, node) } }
         doors = ('A'..'Z').mapNotNull { matrix.find(it)?.let { node -> Door(it, node) } }
 
@@ -48,13 +48,13 @@ class Day18: Day<Array<CharArray>>(2019, 18) {
         return map
     }
 
-    override fun solve1(input: Array<CharArray>): Int {
+    override suspend fun solve1(input: Array<CharArray>): Int {
         val min = intArrayOf(Int.MAX_VALUE)
         getShortestPath('@', keys.map { it.c }, doors.map { it.c }, 0, min, "")
         return min[0]
     }
 
-    override fun solve2(input: Array<CharArray>): Int {
+    override suspend fun solve2(input: Array<CharArray>): Int {
         val min = intArrayOf(Int.MAX_VALUE)
         getShortestPath(listOf('1', '2', '3', '4'), keys.map { it.c }, doors.map { it.c }, 0, min, "")
         return min[0]

@@ -6,9 +6,9 @@ import utils.toCharMatrix
 
 class Day11 : Day<Array<CharArray>>(2020, 11) {
 
-    override fun List<String>.parse() = toCharMatrix()
+    override suspend fun List<String>.parse() = toCharMatrix()
 
-    override fun solve1(input: Array<CharArray>): Int {
+    override suspend fun solve1(input: Array<CharArray>): Int {
         var last = input
         var current = last.step()
         while (!current.deepEquals(last)) {
@@ -18,7 +18,7 @@ class Day11 : Day<Array<CharArray>>(2020, 11) {
         return current.sumOf { it.count { seat -> seat == '#' } }
     }
 
-    override fun solve2(input: Array<CharArray>): Int {
+    override suspend fun solve2(input: Array<CharArray>): Int {
         var last = input
         var current = last.step2()
         while (!current.deepEquals(last)) {

@@ -9,13 +9,13 @@ import kotlin.math.atan2
 
 class Day10 : Day<Array<CharArray>>(2019, 10) {
 
-    override fun List<String>.parse() = toCharMatrix()
+    override suspend fun List<String>.parse() = toCharMatrix()
 
     private var station = Point(0, 0)
 
     private val asteroids = mutableListOf<Point>()
 
-    override fun solve1(input: Array<CharArray>): Int {
+    override suspend fun solve1(input: Array<CharArray>): Int {
         var maxAsteroids = 0
         station = Point(0, 0)
         asteroids.clear()
@@ -50,7 +50,7 @@ class Day10 : Day<Array<CharArray>>(2019, 10) {
         return maxAsteroids
     }
 
-    override fun solve2(input: Array<CharArray>): Long {
+    override suspend fun solve2(input: Array<CharArray>): Long {
         val distances = mutableListOf<Point>()
         asteroids.filter { it != station }.forEach {
             distances += Point(station.x - it.x, station.y - it.y)

@@ -9,13 +9,13 @@ import java.util.*
 
 class Day17 : Day<Array<IntArray>>(2023, 17) {
 
-    override fun List<String>.parse() = toIntMatrix()
+    override suspend fun List<String>.parse() = toIntMatrix()
 
-    override fun solve1(input: Array<IntArray>): Int {
+    override suspend fun solve1(input: Array<IntArray>): Int {
         return input.solve(minRepeat = 1, maxRepeat = 3)
     }
 
-    override fun solve2(input: Array<IntArray>): Int = input.solve(minRepeat = 4, maxRepeat = 10)
+    override suspend fun solve2(input: Array<IntArray>): Int = input.solve(minRepeat = 4, maxRepeat = 10)
 
     private fun Array<IntArray>.solve(minRepeat: Int, maxRepeat: Int): Int {
         val finish = Point(lastIndex, this[0].lastIndex)

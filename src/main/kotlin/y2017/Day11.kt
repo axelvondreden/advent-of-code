@@ -5,11 +5,11 @@ import kotlin.math.absoluteValue
 
 class Day11 : Day<List<String>>(2017, 11) {
 
-    override fun List<String>.parse() = first().split(",")
+    override suspend fun List<String>.parse() = first().split(",")
 
-    override fun solve1(input: List<String>) = input.fold(Hex(0, 0, 0)) { spot, dir -> spot.move(dir.toHexDir()) }.distance(Hex(0, 0, 0))
+    override suspend fun solve1(input: List<String>) = input.fold(Hex(0, 0, 0)) { spot, dir -> spot.move(dir.toHexDir()) }.distance(Hex(0, 0, 0))
 
-    override fun solve2(input: List<String>) = input.fold(listOf(Hex(0, 0, 0))) { path, dir ->
+    override suspend fun solve2(input: List<String>) = input.fold(listOf(Hex(0, 0, 0))) { path, dir ->
         path + (path.last().move(dir.toHexDir()))
     }.maxOf { it.distance(Hex(0, 0, 0)) }
 

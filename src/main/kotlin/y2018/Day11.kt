@@ -6,12 +6,12 @@ import utils.Point3D
 
 class Day11 : Day<Int>(2018, 11) {
 
-    override fun List<String>.parse() = first().toInt()
+    override suspend fun List<String>.parse() = first().toInt()
     private val cache = mutableMapOf<String, Int>()
 
-    override fun solve1(input: Int) = highest3x3Chunk(input)
+    override suspend fun solve1(input: Int) = highest3x3Chunk(input)
 
-    override fun solve2(input: Int) = highestNxNChunk(input)
+    override suspend fun solve2(input: Int) = highestNxNChunk(input)
 
     private fun highest3x3Chunk(input: Int): String {
         var best = Point(0, 0)

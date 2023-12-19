@@ -4,9 +4,9 @@ import Day
 
 class Day04 : Day<List<List<String>>>(2016, 4) {
 
-    override fun List<String>.parse() = map { it.dropLast(1).split("[") }
+    override suspend fun List<String>.parse() = map { it.dropLast(1).split("[") }
 
-    override fun solve1(input: List<List<String>>): Int {
+    override suspend fun solve1(input: List<List<String>>): Int {
         val rooms = input.map {
             val checksum = it[1]
             val split = it[0].lastIndexOf('-')
@@ -17,7 +17,7 @@ class Day04 : Day<List<List<String>>>(2016, 4) {
         return rooms.filter { it.check() }.sumOf { it.sector }
     }
 
-    override fun solve2(input: List<List<String>>): Int {
+    override suspend fun solve2(input: List<List<String>>): Int {
         val rooms = input.map {
             val checksum = it[1]
             val split = it[0].lastIndexOf('-')

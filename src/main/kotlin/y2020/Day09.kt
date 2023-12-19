@@ -4,13 +4,13 @@ import Day
 
 class Day09 : Day<List<Long>>(2020, 9) {
 
-    override fun List<String>.parse() = map { it.toLong() }
+    override suspend fun List<String>.parse() = map { it.toLong() }
 
     private var wrongNumber = 0L
 
-    override fun solve1(input: List<Long>) = getFirstWrongNumber(input, 25).also { wrongNumber = it }
+    override suspend fun solve1(input: List<Long>) = getFirstWrongNumber(input, 25).also { wrongNumber = it }
 
-    override fun solve2(input: List<Long>): Long {
+    override suspend fun solve2(input: List<Long>): Long {
         val subList = input.indices.map { input.findSubListToSum(it, wrongNumber) }.first { it.isNotEmpty() }
         return subList.minOrNull()!! + subList.maxOrNull()!!
     }

@@ -4,11 +4,11 @@ import Day
 
 class Day15 : Day<List<String>>(2023, 15) {
 
-    override fun List<String>.parse() = first().split(",")
+    override suspend fun List<String>.parse() = first().split(",")
 
-    override fun solve1(input: List<String>) = input.sumOf { it.hash() }
+    override suspend fun solve1(input: List<String>) = input.sumOf { it.hash() }
 
-    override fun solve2(input: List<String>): Int {
+    override suspend fun solve2(input: List<String>): Int {
         val instructions = input.parseInstructions()
         val boxes = Array(256) { Box(it) }
         instructions.forEach { inst ->

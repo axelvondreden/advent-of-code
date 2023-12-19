@@ -6,16 +6,16 @@ import kotlin.math.abs
 
 class Day18 : Day<List<String>>(2023, 18) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>) = input.calculateArea { line ->
+    override suspend fun solve1(input: List<String>) = input.calculateArea { line ->
         line.split(' ').let { parts ->
             directionsMap.getValue(parts[0].first()) to parts[1].toInt()
         }
     }
 
     @OptIn(ExperimentalStdlibApi::class)
-    override fun solve2(input: List<String>) = input.calculateArea { line ->
+    override suspend fun solve2(input: List<String>) = input.calculateArea { line ->
         colorRegex.find(line)
             ?.let { it.groupValues[2].toInt() to it.groupValues[1].hexToInt() }
             ?: error("Big fail")

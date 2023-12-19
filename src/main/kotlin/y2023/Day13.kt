@@ -7,7 +7,7 @@ import kotlin.math.min
 
 class Day13 : Day<List<Array<CharArray>>>(2023, 13) {
 
-    override fun List<String>.parse(): List<Array<CharArray>> {
+    override suspend fun List<String>.parse(): List<Array<CharArray>> {
         val list = mutableListOf<Array<CharArray>>()
         val lines = mutableListOf<String>()
         forEach {
@@ -23,9 +23,9 @@ class Day13 : Day<List<Array<CharArray>>>(2023, 13) {
     }
 
 
-    override fun solve1(input: List<Array<CharArray>>) = input.sumOf { it.getSplitValue() }
+    override suspend fun solve1(input: List<Array<CharArray>>) = input.sumOf { it.getSplitValue() }
 
-    override fun solve2(input: List<Array<CharArray>>) = input.sumOf { it.getSecondSplitValue() }
+    override suspend fun solve2(input: List<Array<CharArray>>) = input.sumOf { it.getSecondSplitValue() }
 
     private fun Array<CharArray>.getSplitValue() = findVerticalSplits().firstOrNull() ?: (findHorizontalSplits().first() * 100)
 

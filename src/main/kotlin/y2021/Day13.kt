@@ -6,15 +6,15 @@ import utils.toMapString
 
 class Day13 : Day<List<String>>(2021, 13) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>): Int {
+    override suspend fun solve1(input: List<String>): Int {
         val dots = input.takeWhile { it.isNotBlank() }.map { Point(it) }.toSet()
         val folds = input.dropWhile { it.isNotBlank() }.drop(1).map { it.split(" ")[2] }
         return dots.fold(folds[0]).size
     }
 
-    override fun solve2(input: List<String>): String {
+    override suspend fun solve2(input: List<String>): String {
         val dots = input.takeWhile { it.isNotBlank() }.map { Point(it) }.toSet()
         val folds = input.dropWhile { it.isNotBlank() }.drop(1).map { it.split(" ")[2] }
         var d = dots.toSet()

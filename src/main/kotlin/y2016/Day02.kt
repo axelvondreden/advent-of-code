@@ -4,9 +4,9 @@ import Day
 
 class Day02 : Day<List<String>>(2016, 2) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>): String {
+    override suspend fun solve1(input: List<String>): String {
         var code = ""
         input.forEach { inp ->
             var nr = 5
@@ -24,7 +24,7 @@ class Day02 : Day<List<String>>(2016, 2) {
         return code
     }
 
-    override fun solve2(input: List<String>): String {
+    override suspend fun solve2(input: List<String>): String {
         var code = ""
         input.forEach { inp ->
             var nr = 5

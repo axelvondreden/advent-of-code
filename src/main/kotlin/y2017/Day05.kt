@@ -4,9 +4,9 @@ import Day
 
 class Day05 : Day<List<Int>>(2017, 5) {
 
-    override fun List<String>.parse() = this.map { it.toInt() }
+    override suspend fun List<String>.parse() = this.map { it.toInt() }
 
-    override fun solve1(input: List<Int>): Int {
+    override suspend fun solve1(input: List<Int>): Int {
         val instructions = input.toIntArray()
         var index = 0
         var count = 0
@@ -19,7 +19,7 @@ class Day05 : Day<List<Int>>(2017, 5) {
         return count
     }
 
-    override fun solve2(input: List<Int>): Int {
+    override suspend fun solve2(input: List<Int>): Int {
         val instructions = input.toIntArray()
         var index = 0
         var count = 0

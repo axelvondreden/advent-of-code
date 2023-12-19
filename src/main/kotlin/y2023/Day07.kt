@@ -4,11 +4,11 @@ import Day
 
 class Day07 : Day<List<String>>(2023, 7) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>) = solve("AKQJT98765432", input)
+    override suspend fun solve1(input: List<String>) = solve("AKQJT98765432", input)
 
-    override fun solve2(input: List<String>) = solve("AKQT98765432J", input)
+    override suspend fun solve2(input: List<String>) = solve("AKQT98765432J", input)
 
     private fun solve(deck: String, input: List<String>): Long {
         val hands = input

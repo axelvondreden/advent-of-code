@@ -8,7 +8,7 @@ import utils.set
 
 class Day17 : Day<List<Day17.Vein>>(2018, 17) {
 
-    override fun List<String>.parse(): List<Vein> = map {
+    override suspend fun List<String>.parse(): List<Vein> = map {
         val s = it.split(", ")
         val s1 = s[0].split("=")
         val s2 = s[1].split("=")
@@ -22,7 +22,7 @@ class Day17 : Day<List<Day17.Vein>>(2018, 17) {
 
     private val springLocation = Point(500, 0)
 
-    override fun solve1(input: List<Vein>): Int {
+    override suspend fun solve1(input: List<Vein>): Int {
         val resultScanRange = input.minOf { it.y.first }..input.maxOf { it.y.last }
         val map = input.toMap()
         map[springLocation.x.toInt()][springLocation.y.toInt()] = '|'
@@ -30,7 +30,7 @@ class Day17 : Day<List<Day17.Vein>>(2018, 17) {
         return map.findPoints('~', '|').filter { it.y in resultScanRange }.size
     }
 
-    override fun solve2(input: List<Vein>): Any {
+    override suspend fun solve2(input: List<Vein>): Any {
         val resultScanRange = input.minOf { it.y.first }..input.maxOf { it.y.last }
         val map = input.toMap()
         map[springLocation.x.toInt()][springLocation.y.toInt()] = '|'

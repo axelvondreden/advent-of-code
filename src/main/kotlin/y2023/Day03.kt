@@ -6,14 +6,14 @@ import utils.toCharMatrix
 
 class Day03 : Day<Array<CharArray>>(2023, 3) {
 
-    override fun List<String>.parse() = toCharMatrix()
+    override suspend fun List<String>.parse() = toCharMatrix()
 
-    override fun solve1(input: Array<CharArray>): Int {
+    override suspend fun solve1(input: Array<CharArray>): Int {
         val nrs = input.getPartNumbers()
         return nrs.filter { it.adjacent }.sumOf { it.nr }
     }
 
-    override fun solve2(input: Array<CharArray>): Int {
+    override suspend fun solve2(input: Array<CharArray>): Int {
         val nrs = input.getPartNumbers()
         val gears = input.findPoints('*')
         return gears.map { nrs.getAdjacentPartNumbers(it.x.toInt(), it.y.toInt()) }.filter { it.size == 2 }.sumOf { it[0].nr * it[1].nr  }

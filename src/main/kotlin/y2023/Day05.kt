@@ -8,7 +8,7 @@ class Day05 : Day<Unit>(2023, 5) {
 
     private val hashingMap = hashMapOf<String, Pair<String, Set<HashingRange>>>()
 
-    override fun List<String>.parse() = with(joinToString("\n")) {
+    override suspend fun List<String>.parse() = with(joinToString("\n")) {
         val blocks = split("\n\n")
         seeds = blocks.first().split(": ")[1].split(" ").map(String::toLong)
 
@@ -27,9 +27,9 @@ class Day05 : Day<Unit>(2023, 5) {
         }
     }
 
-    override fun solve1(input: Unit) = seeds.minOf { it.hash() }
+    override suspend fun solve1(input: Unit) = seeds.minOf { it.hash() }
 
-    override fun solve2(input: Unit): Long {
+    override suspend fun solve2(input: Unit): Long {
         var seed = 1
         val chunked = seeds.chunked(2)
         return chunked.minOf { (source, range) ->

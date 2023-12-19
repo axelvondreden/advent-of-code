@@ -5,11 +5,11 @@ import Day
 
 class Day15 : Day<List<String>>(2016,  15) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>) = simulate(parseDisks(input))
+    override suspend fun solve1(input: List<String>) = simulate(parseDisks(input))
 
-    override fun solve2(input: List<String>) = simulate(parseDisks(input).plus(Disc(11, 0)))
+    override suspend fun solve2(input: List<String>) = simulate(parseDisks(input).plus(Disc(11, 0)))
 
     private fun parseDisks(input: List<String>) = input.map {
         val split = it.split(" ")

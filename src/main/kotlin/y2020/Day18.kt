@@ -5,11 +5,11 @@ import Day
 
 class Day18 : Day<List<String>>(2020, 18) {
 
-    override fun List<String>.parse() = map { it.replace(" ", "") }
+    override suspend fun List<String>.parse() = map { it.replace(" ", "") }
 
-    override fun solve1(input: List<String>) = input.sumOf { eval1(it.iterator()) }
+    override suspend fun solve1(input: List<String>) = input.sumOf { eval1(it.iterator()) }
 
-    override fun solve2(input: List<String>) = input.sumOf { eval2(it.iterator()) }
+    override suspend fun solve2(input: List<String>) = input.sumOf { eval2(it.iterator()) }
 
     private fun eval1(equation: CharIterator): Long {
         val numbers = mutableListOf<Long>()

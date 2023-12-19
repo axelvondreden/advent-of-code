@@ -5,11 +5,11 @@ import utils.md5
 
 class Day14 : Day<String>(2016, 14) {
 
-    override fun List<String>.parse() = first()
+    override suspend fun List<String>.parse() = first()
 
     private val cache = mutableMapOf<Int, String>()
 
-    override fun solve1(input: String): Int {
+    override suspend fun solve1(input: String): Int {
         cache.clear()
         var index = 0
         val keys = mutableSetOf<Int>()
@@ -24,7 +24,7 @@ class Day14 : Day<String>(2016, 14) {
         return keys.maxOrNull()!!
     }
 
-    override fun solve2(input: String): Int {
+    override suspend fun solve2(input: String): Int {
         cache.clear()
         var index = 0
         val keys = mutableSetOf<Int>()

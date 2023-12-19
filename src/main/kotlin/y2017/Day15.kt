@@ -4,9 +4,9 @@ import Day
 
 class Day15 : Day<List<String>>(2017, 15) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>): Int {
+    override suspend fun solve1(input: List<String>): Int {
         val genA = Generator(input[0].split(" ")[4].toLong(), genAFactor)
         val genB = Generator(input[1].split(" ")[4].toLong(), genBFactor)
         return (0 until 40_000_000).count {
@@ -16,7 +16,7 @@ class Day15 : Day<List<String>>(2017, 15) {
         }
     }
 
-    override fun solve2(input: List<String>): Int {
+    override suspend fun solve2(input: List<String>): Int {
         val genA = Generator(input[0].split(" ")[4].toLong(), genAFactor) { it % 4 == 0L }
         val genB = Generator(input[1].split(" ")[4].toLong(), genBFactor) { it % 8 == 0L }
         return (0 until 5_000_000).count {

@@ -6,11 +6,11 @@ import kotlin.math.abs
 
 class Day22 : Day<List<String>>(2019, 22) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>) = solve(input, 2019, 10007, 1)
+    override suspend fun solve1(input: List<String>) = solve(input, 2019, 10007, 1)
 
-    override fun solve2(input: List<String>) = solve(input, 2020, 119315717514047, -101741582076661)
+    override suspend fun solve2(input: List<String>) = solve(input, 2020, 119315717514047, -101741582076661)
 
     private fun solve(input: List<String>, x: Long, n: Long, k: Long): Long {
         var a = BigInteger.ONE

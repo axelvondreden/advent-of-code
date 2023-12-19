@@ -7,9 +7,9 @@ import kotlin.math.min
 
 class Day24 : Day<Array<CharArray>>(2016, 24) {
 
-    override fun List<String>.parse() = toCharMatrix()
+    override suspend fun List<String>.parse() = toCharMatrix()
 
-    override fun solve1(input: Array<CharArray>): Int {
+    override suspend fun solve1(input: Array<CharArray>): Int {
         val pf = Pathfinder(input.toPathfindingMap(), input.size, input[0].size)
         val points = input.flatMapIndexed { x, chars ->
             chars.mapIndexed { y, c -> if (c.isDigit() && c != '0') Point(x, y) else null }
@@ -30,7 +30,7 @@ class Day24 : Day<Array<CharArray>>(2016, 24) {
         return minLength
     }
 
-    override fun solve2(input: Array<CharArray>): Int {
+    override suspend fun solve2(input: Array<CharArray>): Int {
         val pf = Pathfinder(input.toPathfindingMap(), input.size, input[0].size)
         val points = input.flatMapIndexed { x, chars ->
             chars.mapIndexed { y, c -> if (c.isDigit() && c != '0') Point(x, y) else null }

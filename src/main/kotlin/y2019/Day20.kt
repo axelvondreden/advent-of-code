@@ -10,7 +10,7 @@ class Day20 : Day<Array<CharArray>>(2019, 20) {
 
     private lateinit var portals: Set<Portal>
 
-    override fun List<String>.parse() = toCharMatrix().also { matrix ->
+    override suspend fun List<String>.parse() = toCharMatrix().also { matrix ->
         var key = 'a'
         val storage = mutableMapOf<String, LvlNode>()
         val tempPortals = mutableSetOf<Portal>()
@@ -78,12 +78,12 @@ class Day20 : Day<Array<CharArray>>(2019, 20) {
         return set
     }
 
-    override fun solve1(input: Array<CharArray>): Int {
+    override suspend fun solve1(input: Array<CharArray>): Int {
         val walls = ('A'..'Z').toMutableSet().apply { addAll(listOf('#', ' ')) }
         return Pathfinder(input.toPathfindingMap(walls), input.size, input[0].size, ::neighborsWithPortal).searchBFS(Point(start.x, start.y), Point(end.x, end.y)).size + 1
     }
 
-    override fun solve2(input: Array<CharArray>): Int {
+    override suspend fun solve2(input: Array<CharArray>): Int {
         val walls = ('A'..'Z').toMutableSet().apply { addAll(listOf('#', ' ')) }
         return Pathfinder(input.toPathfindingMap(walls), input.size, input[0].size, ::neighborsWithLvlPortal).searchBFS(start, end).size + 1
     }

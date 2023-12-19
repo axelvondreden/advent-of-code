@@ -5,9 +5,9 @@ import Day
 
 class Day21 : Day<List<Day21.Operation>>(2016, 21) {
 
-    override fun List<String>.parse() = toOperations()
+    override suspend fun List<String>.parse() = toOperations()
 
-    override fun solve1(input: List<Operation>): String {
+    override suspend fun solve1(input: List<Operation>): String {
         var str = "abcdefgh"
         input.forEach {
             str = it.scramble(str)
@@ -15,7 +15,7 @@ class Day21 : Day<List<Day21.Operation>>(2016, 21) {
         return str
     }
 
-    override fun solve2(input: List<Operation>): String {
+    override suspend fun solve2(input: List<Operation>): String {
         var str = "fbgdceah"
         input.reversed().forEach {
             str = it.unscramble(str)

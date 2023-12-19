@@ -4,16 +4,16 @@ import Day
 
 class Day12 : Day<List<String>>(2021, 12) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>): Int {
+    override suspend fun solve1(input: List<String>): Int {
         val caves = input.map { it.split("-") }
             .flatMap { listOf(it.first() to it.last(), it.last() to it.first()) }
             .groupBy({ it.first }, { it.second })
         return caves.travel(cond = { n, p -> n.isUpperCase() || n !in p }).size
     }
 
-    override fun solve2(input: List<String>): Int {
+    override suspend fun solve2(input: List<String>): Int {
         val caves = input.map { it.split("-") }
             .flatMap { listOf(it.first() to it.last(), it.last() to it.first()) }
             .groupBy({ it.first }, { it.second })

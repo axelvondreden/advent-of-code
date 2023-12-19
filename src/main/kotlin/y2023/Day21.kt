@@ -4,9 +4,9 @@ import Day
 
 class Day21 : Day<List<String>>(2023, 21) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>) = 0
+    override suspend fun solve1(input: List<String>) = 0
 
-    override fun solve2(input: List<String>) = 0
+    override suspend fun solve2(input: List<String>) = 0
 }

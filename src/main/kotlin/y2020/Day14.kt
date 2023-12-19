@@ -6,9 +6,9 @@ import kotlin.math.pow
 
 class Day14 : Day<List<String>>(2020, 14) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>): Long {
+    override suspend fun solve1(input: List<String>): Long {
         var currentMask = ""
         val memory = mutableMapOf<Int, Long>()
         input.forEach {
@@ -24,7 +24,7 @@ class Day14 : Day<List<String>>(2020, 14) {
         return memory.values.sum()
     }
 
-    override fun solve2(input: List<String>): Long {
+    override suspend fun solve2(input: List<String>): Long {
         var currentMask = ""
         val memory = mutableMapOf<Long, Long>()
         input.forEach {

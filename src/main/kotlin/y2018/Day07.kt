@@ -4,16 +4,16 @@ import Day
 
 class Day07 : Day<Set<Day07.Rule>>(2018, 7) {
 
-    override fun List<String>.parse() = map {
+    override suspend fun List<String>.parse() = map {
         val split = it.split(" ")
         Rule(split[7][0], split[1][0])
     }.toSet()
 
     private var minutesPassed = 0
 
-    override fun solve1(input: Set<Rule>) = simulateWork(input)
+    override suspend fun solve1(input: Set<Rule>) = simulateWork(input)
 
-    override fun solve2(input: Set<Rule>): Int {
+    override suspend fun solve2(input: Set<Rule>): Int {
         minutesPassed = 0
         simulateWork(input, 5)
         return minutesPassed

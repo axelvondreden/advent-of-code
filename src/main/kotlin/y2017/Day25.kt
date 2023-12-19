@@ -4,14 +4,14 @@ import Day
 
 class Day25 : Day<List<String>>(2017, 25) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
     private val tape = mutableMapOf<Int, Boolean>()
     private var cursor = 0
 
     private lateinit var states: Map<Char, State>
 
-    override fun solve1(input: List<String>): Int {
+    override suspend fun solve1(input: List<String>): Int {
         val start = input[0].split(" ")[3][0]
         val steps = input[1].split(" ")[5].toInt()
         var count = 0
@@ -24,7 +24,7 @@ class Day25 : Day<List<String>>(2017, 25) {
         return tape.values.count { it }
     }
 
-    override fun solve2(input: List<String>) = 0
+    override suspend fun solve2(input: List<String>) = 0
 
     private fun List<String>.parseStates(): Map<Char, State> = drop(3).chunked(10).associate { chunk ->
         val c = chunk[0].split(" ")[2][0]

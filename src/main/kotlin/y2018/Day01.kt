@@ -4,11 +4,11 @@ import Day
 
 class Day01 : Day<List<Int>>(2018, 1) {
 
-    override fun List<String>.parse() = map { it.toInt() }
+    override suspend fun List<String>.parse() = map { it.toInt() }
 
-    override fun solve1(input: List<Int>) = input.fold(0) { sum, frq -> sum + frq }
+    override suspend fun solve1(input: List<Int>) = input.fold(0) { sum, frq -> sum + frq }
 
-    override fun solve2(input: List<Int>): Int {
+    override suspend fun solve2(input: List<Int>): Int {
         val frequencies = mutableSetOf(0)
         var current = 0
         var index = 0

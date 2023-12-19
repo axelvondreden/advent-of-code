@@ -5,11 +5,11 @@ import kotlin.math.max
 
 class Day08 : Day<Array<IntArray>>(2022, 8) {
 
-    override fun List<String>.parse() = map { line -> line.map { it.digitToInt() }.toIntArray() }.toTypedArray()
+    override suspend fun List<String>.parse() = map { line -> line.map { it.digitToInt() }.toIntArray() }.toTypedArray()
 
-    override fun solve1(input: Array<IntArray>) = input.indices.sumOf { x -> input[x].indices.count { y -> input.isVisible(x, y) } }
+    override suspend fun solve1(input: Array<IntArray>) = input.indices.sumOf { x -> input[x].indices.count { y -> input.isVisible(x, y) } }
 
-    override fun solve2(input: Array<IntArray>): Int {
+    override suspend fun solve2(input: Array<IntArray>): Int {
         var max = 0
         for (x in input.indices) {
             for (y in input[0].indices) {

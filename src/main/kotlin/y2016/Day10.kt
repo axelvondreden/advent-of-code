@@ -4,9 +4,9 @@ import Day
 
 class Day10 : Day<List<String>>(2016, 10) {
 
-    override fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = this
 
-    override fun solve1(input: List<String>): Int {
+    override suspend fun solve1(input: List<String>): Int {
         val outputs = parseOutputs(input)
         val bots = parseBots(input)
         linkBots(input, bots, outputs)
@@ -14,7 +14,7 @@ class Day10 : Day<List<String>>(2016, 10) {
         return part1BotNr!!
     }
 
-    override fun solve2(input: List<String>): Int {
+    override suspend fun solve2(input: List<String>): Int {
         val outputs = parseOutputs(input)
         val bots = parseBots(input)
         linkBots(input, bots, outputs)

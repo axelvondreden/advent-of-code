@@ -4,11 +4,11 @@ import Day
 
 class Day09 : Day<List<String>>(2018, 9) {
 
-    override fun List<String>.parse() = first().split(" ")
+    override suspend fun List<String>.parse() = first().split(" ")
 
-    override fun solve1(input: List<String>) = getMaxScore(input[0].toInt(), input[6].toInt())
+    override suspend fun solve1(input: List<String>) = getMaxScore(input[0].toInt(), input[6].toInt())
 
-    override fun solve2(input: List<String>): Long {
+    override suspend fun solve2(input: List<String>): Long {
         return getMaxScore(input[0].toInt(), input[6].toInt() * 100)
     }
 

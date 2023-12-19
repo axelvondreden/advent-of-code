@@ -6,15 +6,15 @@ import java.time.format.DateTimeFormatter
 
 class Day04 : Day<Set<Day04.Guard>>(2018, 4) {
 
-    override fun List<String>.parse() = sorted().parseGuards()
+    override suspend fun List<String>.parse() = sorted().parseGuards()
 
-    override fun solve1(input: Set<Guard>): Int {
+    override suspend fun solve1(input: Set<Guard>): Int {
         val guard = input.maxByOrNull { guard -> guard.sleepRanges.sumOf { it.minutes.count() } }
         val minute = guard!!.sleepRanges.flatMap { it.minutes }.groupBy { it }.maxByOrNull { it.value.size }!!.key
         return guard.id * minute
     }
 
-    override fun solve2(input: Set<Guard>): Int {
+    override suspend fun solve2(input: Set<Guard>): Int {
         var result = 0
         var maxSleepyMinutes = 0
         (0..59).forEach { minute ->

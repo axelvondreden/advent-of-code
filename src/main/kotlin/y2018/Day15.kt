@@ -4,13 +4,13 @@ import Day
 
 class Day15 : Day<String>(2018, 15) {
 
-    override fun List<String>.parse() = first()
+    override suspend fun List<String>.parse() = first()
 
-    override fun solve1(input: String): String {
+    override suspend fun solve1(input: String): String {
         return ""
     }
 
-    override fun solve2(input: String): Int {
+    override suspend fun solve2(input: String): Int {
         return 0
     }
 }

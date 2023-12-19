@@ -4,11 +4,11 @@ import Day
 
 class Day09 : Day<String>(2017, 9) {
 
-    override fun List<String>.parse() = first()
+    override suspend fun List<String>.parse() = first()
 
-    override fun solve1(input: String) = input.filterGarbage().calcGroupScore()
+    override suspend fun solve1(input: String) = input.filterGarbage().calcGroupScore()
 
-    override fun solve2(input: String) = input.countGarbage()
+    override suspend fun solve2(input: String) = input.countGarbage()
 
     private fun String.filterGarbage(): String {
         var new = ""

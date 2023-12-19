@@ -6,9 +6,9 @@ import utils.*
 
 class Day10 : Day<Array<CharArray>>(2023, 10) {
 
-    override fun List<String>.parse() = toCharMatrix()
+    override suspend fun List<String>.parse() = toCharMatrix()
 
-    override fun solve1(input: Array<CharArray>): Int {
+    override suspend fun solve1(input: Array<CharArray>): Int {
         val start = input.findPoints('S').first()
         var lastPos = start
         var currentPos = input.findNextFromStart(start)
@@ -22,7 +22,7 @@ class Day10 : Day<Array<CharArray>>(2023, 10) {
         return steps / 2
     }
 
-    override fun solve2(input: Array<CharArray>): Int {
+    override suspend fun solve2(input: Array<CharArray>): Int {
         val padded = input.pad('.', 1)
         val start = padded.find('S')!!
         val pipeLocations = mutableSetOf(start)

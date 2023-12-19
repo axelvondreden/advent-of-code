@@ -5,9 +5,9 @@ import utils.toCharMatrix
 
 class Day17 : Day<Array<CharArray>>(2020, 17) {
 
-    override fun List<String>.parse() = toCharMatrix()
+    override suspend fun List<String>.parse() = toCharMatrix()
 
-    override fun solve1(input: Array<CharArray>): Int {
+    override suspend fun solve1(input: Array<CharArray>): Int {
         var cubes = parseCubes(input)
         repeat(6) {
             cubes = cubes.step()
@@ -15,7 +15,7 @@ class Day17 : Day<Array<CharArray>>(2020, 17) {
         return cubes.size
     }
 
-    override fun solve2(input: Array<CharArray>): Int {
+    override suspend fun solve2(input: Array<CharArray>): Int {
         var cubes = parseHyperCubes(input)
         repeat(6) {
             cubes = cubes.step()

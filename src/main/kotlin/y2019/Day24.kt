@@ -7,9 +7,9 @@ import kotlin.math.pow
 
 class Day24 : Day<Array<CharArray>>(2019, 24) {
 
-    override fun List<String>.parse() = toCharMatrix()
+    override suspend fun List<String>.parse() = toCharMatrix()
 
-    override fun solve1(input: Array<CharArray>): Int {
+    override suspend fun solve1(input: Array<CharArray>): Int {
         val states = mutableSetOf(input.toFlatString())
         var new = step(input.copy())
         while (!states.contains(new.toFlatString())) {
@@ -19,7 +19,7 @@ class Day24 : Day<Array<CharArray>>(2019, 24) {
         return new.toFlatString().mapIndexed { i, c -> if (c == '#') 2.toDouble().pow(i).toInt() else 0 }.sum()
     }
 
-    override fun solve2(input: Array<CharArray>): Int {
+    override suspend fun solve2(input: Array<CharArray>): Int {
         var map = mutableMapOf<Int, Array<CharArray>>()
         (-200..200).forEach { map[it] = Array(5) { CharArray(5) { '.' } } }
         map[0] = input.copy()
