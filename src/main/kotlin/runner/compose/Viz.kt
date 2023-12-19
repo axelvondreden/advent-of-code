@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.unit.dp
 
 class Viz(val progress: Double? = null, val width: Int = 30, val height: Int = 10) {
 
@@ -22,14 +21,23 @@ class Viz(val progress: Double? = null, val width: Int = 30, val height: Int = 1
         }
     }
 
-    fun borderColor(x: Int, y: Int, color: Color) {
+    fun border(x: Int, y: Int, color: Color, shape: Shape = RectangleShape) {
         map[x][y].borderColor = color
+        map[x][y].borderShape = { shape }
     }
 
-    fun borderColor(from: Pair<Int, Int>, to: Pair<Int, Int>, color: Color) {
+    fun border(from: Pair<Int, Int>, to: Pair<Int, Int>, color: Color, shape: Shape = RectangleShape) {
         for (x in from.first..to.first) {
             for (y in from.second..to.second) {
-                borderColor(x, y, color)
+                border(x, y, color, shape)
+            }
+        }
+    }
+
+    fun grid(x: Int, y: Int, grid: Array<Array<Tile>>) {
+        for (localX in grid.indices) {
+            for (localY in grid[localX].indices) {
+                map[x + localX][y + localY] = grid[localX][localY]
             }
         }
     }

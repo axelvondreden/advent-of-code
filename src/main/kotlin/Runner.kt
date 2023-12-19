@@ -85,45 +85,47 @@ fun runDayCmdSingle(year: Int, day: Int, runSamples: Boolean) {
     val samples = IO.readSamples(year, day)
 
     if (runSamples) {
-        t.print("Samples Part 1:")
-        if (samples?.part1.isNullOrEmpty()) {
-            t.println(" ${(black on brightRed)("NO DATA")}")
-        } else {
+        runBlocking {
+            t.print("Samples Part 1:")
+            if (samples?.part1.isNullOrEmpty()) {
+                t.println(" ${(black on brightRed)("NO DATA")}")
+            } else {
+                t.println()
+            }
+            samples?.part1?.forEachIndexed { index, sample ->
+                t.print("\t${index + 1}/${samples.part1.size}:\t")
+                val startTime = System.nanoTime()
+                val init = runInit(d, sample.input.lines())
+                val result = runPart(d, 1, init, sample.solution)
+                val time = (System.nanoTime() - startTime) / 1000000000.0
+                t.println(
+                    "${time.coloredTime()}\tResult: ${
+                        if (result.correct) (black on brightGreen)("CORRECT") else (black on brightRed)("FAILED")
+                    } ${(black on white)(result.result)}"
+                )
+            }
             t.println()
-        }
-        samples?.part1?.forEachIndexed { index, sample ->
-            t.print("\t${index + 1}/${samples.part1.size}:\t")
-            val startTime = System.nanoTime()
-            val init = runInit(d, sample.input.lines())
-            val result = runPart(d, 1, init, sample.solution)
-            val time = (System.nanoTime() - startTime) / 1000000000.0
-            t.println(
-                "${time.coloredTime()}\tResult: ${
-                    if (result.correct) (black on brightGreen)("CORRECT") else (black on brightRed)("FAILED")
-                } ${(black on white)(result.result)}"
-            )
-        }
-        t.println()
 
-        t.print("Samples Part 2:")
-        if (samples?.part2.isNullOrEmpty()) {
-            t.println(" ${(black on brightRed)("NO DATA")}")
-        } else {
+            t.print("Samples Part 2:")
+            if (samples?.part2.isNullOrEmpty()) {
+                t.println(" ${(black on brightRed)("NO DATA")}")
+            } else {
+                t.println()
+            }
+            samples?.part2?.forEachIndexed { index, sample ->
+                t.print("\t${index + 1}/${samples.part1.size}:\t")
+                val startTime = System.nanoTime()
+                val init = runInit(d, sample.input.lines())
+                val result = runPart(d, 2, init, sample.solution)
+                val time = (System.nanoTime() - startTime) / 1000000000.0
+                t.println(
+                    "${time.coloredTime()}\tResult: ${
+                        if (result.correct) (black on brightGreen)("CORRECT") else (black on brightRed)("FAILED")
+                    } ${(black on white)(result.result)}"
+                )
+            }
             t.println()
         }
-        samples?.part2?.forEachIndexed { index, sample ->
-            t.print("\t${index + 1}/${samples.part1.size}:\t")
-            val startTime = System.nanoTime()
-            val init = runInit(d, sample.input.lines())
-            val result = runPart(d, 2, init, sample.solution)
-            val time = (System.nanoTime() - startTime) / 1000000000.0
-            t.println(
-                "${time.coloredTime()}\tResult: ${
-                    if (result.correct) (black on brightGreen)("CORRECT") else (black on brightRed)("FAILED")
-                } ${(black on white)(result.result)}"
-            )
-        }
-        t.println()
     }
 
     val rawInput = IO.readStrings(d.year, d.day)
@@ -187,13 +189,13 @@ fun runDayCmdSingle(year: Int, day: Int, runSamples: Boolean) {
     }
 }
 
-fun runPart(day: Day<Any>, part: Int, input: Any, expected: String?): ResultState {
+suspend fun runPart(day: Day<Any>, part: Int, input: Any, expected: String?): ResultState {
     val result = (if (part == 1) day.solve1(input) else day.solve2(input)).toString()
     val isCorrect = !expected.isNullOrEmpty() && expected == result
     return ResultState(result, isCorrect)
 }
 
-fun runInit(day: Day<Any>, input: List<String>) = with(day) { return@with input.parse() }
+suspend fun runInit(day: Day<Any>, input: List<String>) = with(day) { return@with input.parse() }
 
 fun parseExpected() = getExpectedLines().associate { line ->
     val split = line.split(":")

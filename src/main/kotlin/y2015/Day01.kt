@@ -24,14 +24,14 @@ class Day01 : Day<String>(2015, 1) {
 
     override fun initViz1(input: String) = Viz().apply {
         text(0, 0, "Level:0", borderColor = Color.White)
-        borderColor(0, 5, Color.Yellow)
+        border(0, 5, Color.Yellow)
         text(1, 5, input.take(29))
     }
 
     override fun initViz2(input: String) = Viz().apply {
         text(0, 0, "Level:0", borderColor = Color.White)
         text(0, 1, "Position:0", borderColor = Color.White)
-        borderColor(0, 5, Color.Yellow)
+        border(0, 5, Color.Yellow)
         text(1, 5, input.take(29))
     }
 

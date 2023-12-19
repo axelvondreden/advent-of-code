@@ -582,7 +582,7 @@ private fun InitLayoutCompact(time: Double?, active: Boolean) = Row(
     TimeValue(time ?: 0.0)
 }
 
-private fun runSingleDay(
+private suspend fun runSingleDay(
     day: Day<Any>,
     samples: Samples?,
     onInitStart: (Long) -> Unit,
@@ -625,7 +625,7 @@ private fun runSingleDay(
     }
 }
 
-private fun runDays(
+private suspend fun runDays(
     days: List<Day<Any>>,
     onInitStart: (Int, Long) -> Unit,
     onInitEnd: (Int, Long) -> Unit,
