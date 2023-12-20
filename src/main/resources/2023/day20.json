@@ -1,6 +1,13 @@
 {
   "part1": [
-
+    {
+      "input": "broadcaster -> a, b, c\n%a -> b\n%b -> c\n%c -> inv\n&inv -> a",
+      "solution": ""
+    },
+    {
+      "input": "broadcaster -> a\n%a -> inv, con\n&inv -> b\n%b -> con\n&con -> output",
+      "solution": ""
+    }
   ],
   "part2": [
 
