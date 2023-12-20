@@ -37,6 +37,10 @@ fun Long.gcd(other: Long): Long {
     return n1
 }
 
+fun lcm(a: Long, b: Long): Long = (a * b) / gcd2(a, b)
+
+fun gcd2(a: Long, b: Long): Long = if (a == 0L) b else gcd2(b % a, a)
+
 inline fun <T> Iterable<T>.sumByLong(selector: (T) -> Long): Long {
     var sum = 0L
     for (element in this) {
