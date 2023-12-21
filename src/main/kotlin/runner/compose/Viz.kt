@@ -9,6 +9,8 @@ class Viz(val progress: Double? = null, val width: Int = 30, val height: Int = 1
 
     val map: Array<Array<Tile>> = Array(width) { Array(height) { Tile() } }
 
+    val info = mutableMapOf<String, String>()
+
     fun backgroundColor(x: Int, y: Int, color: Color) {
         map[x][y].backgroundColor = color
     }
@@ -83,7 +85,6 @@ class Viz(val progress: Double? = null, val width: Int = 30, val height: Int = 1
             }
         }
     }
-
 }
 
 data class Tile(

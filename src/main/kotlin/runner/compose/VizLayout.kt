@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -91,7 +92,22 @@ fun VizLayout(
 
         val vizVal = viz.value
         if (vizVal != null) {
+            VizInfoRow(vizVal)
             VizGrid(vizVal)
+        }
+    }
+}
+
+@Composable
+private fun VizInfoRow(viz: Viz) {
+    Row(modifier = Modifier.fillMaxWidth().border(1.dp, Color.Gray), verticalAlignment = Alignment.CenterVertically) {
+        Label("Size:")
+        TextValue("${viz.width}x${viz.height}")
+        Spacer(Modifier.width(8.dp))
+        viz.info.forEach { (key, value) ->
+            Label("$key:")
+            TextValue(value)
+            Spacer(Modifier.width(8.dp))
         }
     }
 }
