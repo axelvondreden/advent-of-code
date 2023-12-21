@@ -13,26 +13,6 @@ import utils.IO
 
 val years = 2015..2023
 
-val skips = setOf(
-    2015 to 22 to 1,
-    2016 to 5 to 2,
-    2016 to 19 to 2,
-    2016 to 23 to 2,
-    2019 to 3 to 1,
-    2019 to 3 to 2,
-    2019 to 7 to 2,
-    2019 to 11 to 1,
-    2019 to 11 to 2,
-    2019 to 12 to 2,
-    2019 to 14 to 2,
-    2019 to 18 to 1,
-    2019 to 18 to 2,
-    2019 to 19 to 2,
-    2019 to 25 to 1
-)
-
-const val skipLongRunning = true
-
 val expected = parseExpected()
 
 val t = Terminal()
