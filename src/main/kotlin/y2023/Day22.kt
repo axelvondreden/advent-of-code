@@ -7,7 +7,7 @@ import kotlin.math.min
 
 class Day22 : Day<List<Day22.Brick>>(2023, 22) {
 
-    override suspend fun List<String>.parse() = map { line ->
+    override suspend fun List<String>.parse() = mapIndexed { index, line ->
         val split = line.split("~")
         val p1 = Point3D(split[0])
         val p2 = Point3D(split[1])
@@ -15,6 +15,7 @@ class Day22 : Day<List<Day22.Brick>>(2023, 22) {
         val yRange = min(p1.y, p2.y)..max(p1.y, p2.y)
         val zRange = min(p1.z, p2.z)..max(p1.z, p2.z)
         Brick(
+            index,
             xRange.first.toInt(), xRange.last.toInt(),
             yRange.first.toInt(), yRange.last.toInt(),
             zRange.first.toInt(), zRange.last.toInt()
@@ -23,9 +24,7 @@ class Day22 : Day<List<Day22.Brick>>(2023, 22) {
 
     override suspend fun solve1(input: List<Brick>): Int {
         val settled = input.settle()
-        println("Settled")
-        return settled.withIndex().count { (index, brick) ->
-            println("Testing $index / ${settled.size}")
+        return settled.count { brick ->
             val withoutBrick = settled.filterNot { it == brick }
             !withoutBrick.isNotSame(withoutBrick.settleOnce())
         }
@@ -33,9 +32,7 @@ class Day22 : Day<List<Day22.Brick>>(2023, 22) {
 
     override suspend fun solve2(input: List<Brick>): Int {
         val settled = input.settle()
-        println("Settled")
-        return settled.withIndex().sumOf { (index, brick) ->
-            println("Testing $index / ${settled.size}")
+        return settled.sumOf { brick ->
             val withoutBrick = settled.filterNot { it == brick }
             val settledWithoutBrick = withoutBrick.settleOnce()
             settledWithoutBrick.count { it !in withoutBrick }
@@ -70,7 +67,7 @@ class Day22 : Day<List<Day22.Brick>>(2023, 22) {
         return new
     }
 
-    data class Brick(val x1: Int, val x2: Int, val y1: Int, val y2: Int, val z1: Int, val z2: Int) {
+    data class Brick(val nr: Int, val x1: Int, val x2: Int, val y1: Int, val y2: Int, val z1: Int, val z2: Int) {
 
         fun moveDown() = copy(z1 = z1 - 1, z2 = z2 - 1)
 

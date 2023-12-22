@@ -17,9 +17,15 @@ enum class Dir {
             LEFT -> UP
             RIGHT -> DOWN
         }
+        Turn.AROUND -> when (this) {
+            UP -> DOWN
+            DOWN -> UP
+            LEFT -> RIGHT
+            RIGHT -> LEFT
+        }
     }
 }
 
 enum class Turn {
-    LEFT, STRAIGHT, RIGHT
+    LEFT, STRAIGHT, RIGHT, AROUND
 }

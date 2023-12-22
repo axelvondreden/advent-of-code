@@ -100,6 +100,7 @@ class Day13 : Day<Array<CharArray>>(2018, 13) {
                         Turn.LEFT -> Turn.STRAIGHT
                         Turn.STRAIGHT -> Turn.RIGHT
                         Turn.RIGHT -> Turn.LEFT
+                        else -> error("big fail")
                     }
                     newDir
                 }

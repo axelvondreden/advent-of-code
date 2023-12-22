@@ -26,6 +26,8 @@ class Point(x: Long, y: Long): PFNode(x, y) {
 
     operator fun minus(pair: Pair<Int, Int>) = Point(x - pair.first, y - pair.second)
 
+    operator fun times(i: Int) = Point(this.x * i, this.y * i)
+
     infix fun left(steps: Int) = Point(x - steps, y)
     infix fun right(steps: Int) = Point(x + steps, y)
     infix fun up(steps: Int) = Point(x, y - steps)

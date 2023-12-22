@@ -75,3 +75,9 @@ fun <T> List<T>.getAllPairs(): List<Pair<T, T>> {
     }
     return list
 }
+
+operator fun List<List<Char>>.get(point: Point): Char = this[point.x.toInt()][point.y.toInt()]
+
+operator fun List<MutableList<Char>>.set(point: Point, value: Char) {
+    this[point.x.toInt()][point.y.toInt()] = value
+}

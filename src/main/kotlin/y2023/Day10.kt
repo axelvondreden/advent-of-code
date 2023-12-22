@@ -1,76 +1,78 @@
 package y2023
 
 import Day
-import utils.Pathfinder
 import utils.*
 
-class Day10 : Day<Array<CharArray>>(2023, 10) {
+class Day10 : Day<List<String>>(2023, 10) {
 
-    override suspend fun List<String>.parse() = toCharMatrix()
+    private val edges = mapOf(
+        '|' to setOf(Dir.UP, Dir.DOWN),
+        '-' to setOf(Dir.LEFT, Dir.RIGHT),
+        'L' to setOf(Dir.UP, Dir.RIGHT),
+        'J' to setOf(Dir.UP, Dir.LEFT),
+        '7' to setOf(Dir.DOWN, Dir.LEFT),
+        'F' to setOf(Dir.DOWN, Dir.RIGHT),
+        '.' to emptySet(),
+        'S' to setOf(Dir.UP, Dir.DOWN, Dir.LEFT, Dir.RIGHT)
+    )
 
-    override suspend fun solve1(input: Array<CharArray>): Int {
-        val start = input.findPoints('S').first()
-        var lastPos = start
-        var currentPos = input.findNextFromStart(start)
-        var steps = 1
-        while (currentPos != start) {
-            val tempLast = lastPos
-            lastPos = currentPos
-            currentPos = input.findNextFromLast(currentPos, tempLast)
-            steps++
+    override suspend fun List<String>.parse() = this
+
+    override suspend fun solve1(input: List<String>): Int {
+        val grid = input.flatMapIndexed { y, line ->
+            line.mapIndexed { x, ch -> Point(x, y) to ch }
+        }.toMap()
+
+        val start = grid.filterValues { it == 'S' }.keys.first()
+
+        val direction = Dir.entries.first { it.turn(Turn.AROUND) in grid[start + it]!!.let(edges::getValue) }
+
+        val seq = generateSequence(Pair(start, direction)) { (pos, dir) ->
+            val newPos = pos + dir
+            val newDir = grid[newPos]!!.let(edges::getValue).first { it != dir.turn(Turn.AROUND) }
+            newPos to newDir
         }
-        return steps / 2
+
+
+        val result = seq.drop(1).indexOfFirst { grid[it.first] == 'S' }
+
+        return (result + 1) / 2
     }
 
-    override suspend fun solve2(input: Array<CharArray>): Int {
-        val padded = input.pad('.', 1)
-        val start = padded.find('S')!!
-        val pipeLocations = mutableSetOf(start)
-        var lastPos = start
-        var currentPos = padded.findNextFromStart(start)
-        while (currentPos != start) {
-            pipeLocations += currentPos
-            val tempLast = lastPos
-            lastPos = currentPos
-            currentPos = padded.findNextFromLast(currentPos, tempLast)
+    override suspend fun solve2(input: List<String>): Int {
+        val grid = input.flatMapIndexed { y, line ->
+            line.mapIndexed { x, ch -> Point(x, y) to ch }
+        }.toMap()
+
+        val startPosition = grid.filterValues { it == 'S' }.keys.first()
+        val connections = Dir.entries.filter { dir -> dir.turn(Turn.AROUND) in (grid[startPosition + dir]?.let { edges[it] } ?: emptyList()) }.toSet()
+        val seq = generateSequence(Pair(startPosition, connections.first())) { (pos, dir) ->
+            val newPos = pos + dir
+            val newDir = edges[grid[newPos]!!]!!.first { it != dir.turn(Turn.AROUND) }
+            newPos to newDir
         }
-        val map = Array(padded.size) { x ->
-            CharArray(padded[0].size) { y -> if (Point(x, y) in pipeLocations) '#' else '.' }
-        }.toPathfindingMap()
-        val pf = Pathfinder(map, padded.size, padded[0].size)
-        return padded.indices.sumOf { x ->
-            padded[x].indices.count { y ->
-                val p = Point(x, y)
-                if (p in pipeLocations) {
-                    false
-                } else {
-                    val path = pf.searchBFS(p, Point(0, 0))
-                    if (p !in pipeLocations && p.distance(Point(0, 0)) > 1 && path.isEmpty()) {
-                        println(p)
-                        true
-                    } else {
-                        false
-                    }
-                }
+        val pipes = seq.drop(1).takeWhile { grid[it.first] != 'S' }.map { it.first }.toSet()
+        val startSymbol = edges.entries.first { it.value == connections }.key
+        val pipeMap = grid.filterKeys { it in pipes } + (startPosition to startSymbol)
+        val pipeCrossing = edges.filterValues { Dir.DOWN in it }.keys.joinToString("")
+
+        return pipeMap.toGrid().flatMap { row ->
+            row.scan(Pair(true, false)) { (_, isInside), ch ->
+                Pair(ch == ' ', if (ch in pipeCrossing) !isInside else isInside)
+            }
+        }.count { (isOpenSpace, isInside) -> isOpenSpace && isInside }
+    }
+
+    private fun Map<Point, Char>.yBounds() = (keys.minOf { it.y })..(keys.maxOf { it.y })
+
+    private fun Map<Point, Char>.xBounds() = (keys.minOf { it.x })..(keys.maxOf { it.x })
+
+    private fun Map<Point, Char>.toGrid(): List<List<Char>> {
+        val xs = xBounds()
+        return yBounds().map { y ->
+            xs.map { x ->
+                getOrDefault(Point(x, y), ' ')
             }
         }
-    }
-
-    private fun Array<CharArray>.findNextFromStart(start: Point) = when {
-        start.x > 0 && this[start left 1] in listOf('-', 'L', 'F') -> start left 1
-        start.x < lastIndex && this[start right 1] in listOf('-', 'J', '7') -> start right 1
-        start.y > 0 && this[start up 1] in listOf('|', 'F', '7') -> start up 1
-        start.y < this[0].lastIndex && this[start down 1] in listOf('|', 'L', 'J') -> start down 1
-        else -> error("Big Fail")
-    }
-
-    private fun Array<CharArray>.findNextFromLast(current: Point, last: Point) = when (this[current]) {
-        '-' -> if (last == current left 1) current right 1 else current left 1
-        '|' -> if (last == current up 1) current down 1 else current up 1
-        'J' -> if (last == current left 1) current up 1 else current left 1
-        'L' -> if (last == current right 1) current up 1 else current right 1
-        '7' -> if (last == current left 1) current down 1 else current left 1
-        'F' -> if (last == current right 1) current down 1 else current right 1
-        else -> error("Big Fail: ${this[current]}")
     }
 }
