@@ -14,15 +14,11 @@ class Day22 : Day<List<Day22.Brick>>(2023, 22) {
         val xRange = min(p1.x, p2.x)..max(p1.x, p2.x)
         val yRange = min(p1.y, p2.y)..max(p1.y, p2.y)
         val zRange = min(p1.z, p2.z)..max(p1.z, p2.z)
-        val points = mutableSetOf<Point3D>()
-        xRange.forEach { x ->
-            yRange.forEach { y ->
-                zRange.forEach { z ->
-                    points += Point3D(x, y, z)
-                }
-            }
-        }
-        Brick(points)
+        Brick(
+            xRange.first.toInt(), xRange.last.toInt(),
+            yRange.first.toInt(), yRange.last.toInt(),
+            zRange.first.toInt(), zRange.last.toInt()
+        )
     }
 
     override suspend fun solve1(input: List<Brick>): Int {
@@ -58,13 +54,13 @@ class Day22 : Day<List<Day22.Brick>>(2023, 22) {
 
     private fun List<Brick>.settleOnce(): List<Brick> {
         val new = mutableListOf<Brick>()
-        sortedBy { it.lowestZ }.forEach { brick ->
-            new += if (brick.lowestZ == 1L) {
+        sortedBy { it.z1 }.forEach { brick ->
+            new += if (brick.z1 == 1) {
                 brick
             } else {
                 var newBrick = brick
                 var movedDown = brick.moveDown()
-                while (movedDown.lowestZ >= 1 && new.none { it.intersects(movedDown) }) {
+                while (movedDown.z1 >= 1 && new.none { it.intersects(movedDown) }) {
                     newBrick = movedDown
                     movedDown = movedDown.moveDown()
                 }
@@ -74,14 +70,16 @@ class Day22 : Day<List<Day22.Brick>>(2023, 22) {
         return new
     }
 
-    data class Brick(val points: Set<Point3D>) {
+    data class Brick(val x1: Int, val x2: Int, val y1: Int, val y2: Int, val z1: Int, val z2: Int) {
 
-        val lowestZ by lazy { points.minOf { it.z } }
+        fun moveDown() = copy(z1 = z1 - 1, z2 = z2 - 1)
 
-        fun moveDown() = Brick(points.map { it.copy(z = it.z - 1) }.toSet())
-
-        fun intersects(brick: Brick) = points.any { it in brick.points }
+        fun intersects(brick: Brick) =
+            x1 <= brick.x2 && x2 >= brick.x1
+                && y1 <= brick.y2 && y2 >= brick.y1
+                && z1 <= brick.z2 && z2 >= brick.z1
     }
 
-    private fun List<Brick>.isNotSame(list: List<Brick>) = size != list.size || any { it !in list } || list.any { it !in this }
+    private fun List<Brick>.isNotSame(list: List<Brick>) =
+        size != list.size || any { it !in list } || list.any { it !in this }
 }
