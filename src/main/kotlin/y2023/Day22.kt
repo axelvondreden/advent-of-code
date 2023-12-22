@@ -31,16 +31,25 @@ class Day22 : Day<List<Day22.Brick>>(2023, 22) {
         return settled.withIndex().count { (index, brick) ->
             println("Testing $index / ${settled.size}")
             val withoutBrick = settled.filterNot { it == brick }
-            withoutBrick.isSame(withoutBrick.settleOnce())
+            !withoutBrick.isNotSame(withoutBrick.settleOnce())
         }
     }
 
-    override suspend fun solve2(input: List<Brick>) = 0
+    override suspend fun solve2(input: List<Brick>): Int {
+        val settled = input.settle()
+        println("Settled")
+        return settled.withIndex().sumOf { (index, brick) ->
+            println("Testing $index / ${settled.size}")
+            val withoutBrick = settled.filterNot { it == brick }
+            val settledWithoutBrick = withoutBrick.settleOnce()
+            settledWithoutBrick.count { it !in withoutBrick }
+        }
+    }
 
     private fun List<Brick>.settle(): List<Brick> {
         var last = this
         var next = last.settleOnce()
-        while (!next.isSame(last)) {
+        while (next.isNotSame(last)) {
             last = next
             next = last.settleOnce()
         }
@@ -53,12 +62,13 @@ class Day22 : Day<List<Day22.Brick>>(2023, 22) {
             new += if (brick.lowestZ == 1L) {
                 brick
             } else {
-                val movedDown = brick.moveDown()
-                if (new.none { it.intersects(movedDown) }) {
-                    movedDown
-                } else {
-                    brick
+                var newBrick = brick
+                var movedDown = brick.moveDown()
+                while (movedDown.lowestZ >= 1 && new.none { it.intersects(movedDown) }) {
+                    newBrick = movedDown
+                    movedDown = movedDown.moveDown()
                 }
+                newBrick
             }
         }
         return new
@@ -70,8 +80,8 @@ class Day22 : Day<List<Day22.Brick>>(2023, 22) {
 
         fun moveDown() = Brick(points.map { it.copy(z = it.z - 1) }.toSet())
 
-        fun intersects(brick: Brick) = points.intersect(brick.points).isNotEmpty()
+        fun intersects(brick: Brick) = points.any { it in brick.points }
     }
 
-    private fun List<Brick>.isSame(list: List<Brick>) = size == list.size && containsAll(list)
+    private fun List<Brick>.isNotSame(list: List<Brick>) = size != list.size || any { it !in list } || list.any { it !in this }
 }
