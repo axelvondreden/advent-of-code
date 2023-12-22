@@ -1,60 +1,50 @@
 package y2016
 
 import Day
+import utils.Dir
 import utils.Point
+import utils.Turn
 import kotlin.math.abs
 
-class Day01 : Day<List<String>>(2016, 1) {
+class Day01 : Day<List<Day01.Step>>(2016, 1) {
 
-    override suspend fun List<String>.parse() = first().split(", ")
-
-    override suspend fun solve1(input: List<String>): Int {
-        var x = 0
-        var y = 0
-        var dir = 0
-        input.forEach { inst ->
-            val d = inst[0]
-            val steps = inst.substring(1).toInt()
-            when (d) {
-                'L' -> dir--
-                'R' -> dir++
-            }
-            if (dir < 0) dir = 3
-            if (dir > 3) dir = 0
-            when (dir % 4) {
-                0 -> y -= steps
-                1 -> x += steps
-                2 -> y += steps
-                3 -> x -= steps
-            }
-        }
-        return abs(x) + abs(y)
+    override suspend fun List<String>.parse() = first().split(", ").map {
+        Step(if (it[0] == 'L') Turn.LEFT else Turn.RIGHT, it.drop(1).toInt())
     }
 
-    override suspend fun solve2(input: List<String>): Long {
-        var x = 0L
-        var y = 0L
-        var dir = 0
-        val visited = mutableSetOf<Point>()
-        input.forEach { inst ->
-            val d = inst[0]
-            val steps = inst.substring(1).toInt()
-            when (d) {
-                'L' -> dir--
-                'R' -> dir++
+    override suspend fun solve1(input: List<Step>): Long {
+        var point = Point(0, 0)
+        var dir = Dir.UP
+        input.forEach { step ->
+            dir = dir.turn(step.turn)
+            point = when (dir) {
+                Dir.LEFT -> point left step.amount
+                Dir.RIGHT -> point right step.amount
+                Dir.UP -> point up step.amount
+                Dir.DOWN -> point down step.amount
             }
-            if (dir < 0) dir = 3
-            if (dir > 3) dir = 0
-            repeat(steps) {
-                when (dir) {
-                    0 -> y--
-                    1 -> x++
-                    2 -> y++
-                    3 -> x--
+        }
+        return abs(point.x) + abs(point.y)
+    }
+
+    override suspend fun solve2(input: List<Step>): Long {
+        var point = Point(0, 0)
+        var dir = Dir.UP
+        val visited = mutableSetOf<Point>()
+        input.forEach { step ->
+            dir = dir.turn(step.turn)
+            repeat(step.amount) {
+                point = when (dir) {
+                    Dir.LEFT -> point left 1
+                    Dir.RIGHT -> point right 1
+                    Dir.UP -> point up 1
+                    Dir.DOWN -> point down 1
                 }
-                if (!visited.add(Point(x, y))) return abs(x) + abs(y)
+                if (!visited.add(Point(point.x, point.y))) return abs(point.x) + abs(point.y)
             }
         }
         return 0
     }
+
+    data class Step(val turn: Turn, val amount: Int)
 }

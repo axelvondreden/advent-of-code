@@ -35,6 +35,8 @@ class Point(x: Long, y: Long): PFNode(x, y) {
 
     fun copy(x: Long = this.x, y: Long = this.y) = Point(x, y)
 
+    fun neighbours() = listOf(left(1), up(1), right(1), down(1))
+
     override fun toString(): String {
         return "Point($x, $y)"
     }
