@@ -26,16 +26,12 @@ class Day03 : Day<List<Char>>(2015, 3) {
         }
     }
 
-    override fun initViz1(input: List<Char>) = Viz().apply {
-        text(0, 0, "Houses:0", borderColor = Color.White)
-        text(0, 1, input.take(width).joinToString(""))
-        border(0, 1, Color.Yellow)
+    override fun initViz1(input: List<Char>) = Viz(width = vizWidth).apply {
+        info["Houses"] = "0"
     }
 
-    override fun initViz2(input: List<Char>) = Viz().apply {
-        text(0, 0, "Houses:0", borderColor = Color.White)
-        text(0, 1, input.take(width).joinToString(""))
-        border(0, 1, Color.Yellow)
+    override fun initViz2(input: List<Char>) = Viz(width = vizWidth).apply {
+        info["Houses"] = "0"
     }
 
     override suspend fun solve1Visualized(input: List<Char>, onProgress: suspend (Viz) -> Unit): Int {
@@ -65,9 +61,7 @@ class Day03 : Day<List<Char>>(2015, 3) {
             put(point, getOrDefault(point, 0) + 1)
             if (onProgress != null) {
                 val viz = getMapViz((index + 1).toDouble() / steps.size.toDouble(), point, keys).apply {
-                    text(0, 0, "Houses:$size", borderColor = Color.White)
-                    text(0, 1, steps.joinToString("").substring(index).take(width))
-                    border(0, 1, Color.Yellow)
+                    info["Houses"] = size.toString()
                 }
                 onProgress(viz)
             }
@@ -82,20 +76,19 @@ class Day03 : Day<List<Char>>(2015, 3) {
         val dx = 0 - minX.toInt()
         val dy = 0 - minY.toInt()
         val width = max(vizWidth, maxX + dx + 1)
-        val height = max(vizHeight - 2, maxY + dy + 1)
+        val height = max(vizHeight, maxY + dy + 1)
         val map = Array(width) { Array(height) { Tile() } }
         points.forEach {
             with(map[it.x.toInt() + dx][it.y.toInt() + dy]) {
-                char = '#'
                 backgroundColor = Color.Gray
             }
         }
         map[location.x.toInt() + dx][location.y.toInt() + dy].borderColor = Color.Yellow
-        return Viz(progress, width, height + 2).apply {
-            grid(0, 2, map)
+        return Viz(progress, width, height).apply {
+            grid(0, 0, map)
         }
     }
 
-    override val vizDelay: Long
-        get() = 100
+    override val vizDelay: Long get() = 100
+    override val vizWidth: Int get() = 10
 }

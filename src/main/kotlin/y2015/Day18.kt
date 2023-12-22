@@ -27,12 +27,12 @@ class Day18 : Day<CharArray>(2015, 18) {
         }
     }
 
-    override fun initViz1(input: CharArray) = Viz(width = 100, height = 101).apply {
-        text(0, 0, "Lights:0", borderColor = Color.White)
+    override fun initViz1(input: CharArray) = Viz(width = 100, height = 100).apply {
+        info["Lights"] = "0"
     }
 
-    override fun initViz2(input: CharArray) = Viz(width = 100, height = 101).apply {
-        text(0, 0, "Lights:0", borderColor = Color.White)
+    override fun initViz2(input: CharArray) = Viz(width = 100, height = 100).apply {
+        info["Lights"] = "0"
     }
 
     override val vizDelay: Long
@@ -40,12 +40,12 @@ class Day18 : Day<CharArray>(2015, 18) {
 
     override suspend fun solve1Visualized(input: CharArray, onProgress: suspend (Viz) -> Unit): Int {
         Grid(100, 100, input.clone()).let { grid ->
-            var viz = Viz(0.0, 100, 101)
+            var viz = Viz(0.0, 100, 100)
             grid.paint(viz)
             onProgress(viz)
             repeat(100) {
                 grid.tick()
-                viz = Viz((it + 1).toDouble() / 100, 100, 101)
+                viz = Viz((it + 1).toDouble() / 100, 100, 100)
                 grid.paint(viz)
                 onProgress(viz)
             }
@@ -59,12 +59,12 @@ class Day18 : Day<CharArray>(2015, 18) {
         input[100 * 100 - 100] = '#'
         input[100 * 100 - 1] = '#'
         Grid(100, 100, input.clone()).let { grid ->
-            var viz = Viz(0.0, 100, 101)
+            var viz = Viz(0.0, 100, 100)
             grid.paint(viz)
             onProgress(viz)
             repeat(100) {
                 grid.tick(true)
-                viz = Viz((it + 1).toDouble() / 100, 100, 101)
+                viz = Viz((it + 1).toDouble() / 100, 100, 100)
                 grid.paint(viz)
                 onProgress(viz)
             }
@@ -114,8 +114,8 @@ class Day18 : Day<CharArray>(2015, 18) {
         }
 
         fun paint(viz: Viz) {
-            viz.text(0, 0, "Lights:${onCells()}", borderColor = Color.White)
-            viz.grid(0, 1, Array(100) { x -> Array(100) { y -> Tile(backgroundColor = if (isOn(x, y)) Color.White else Color(0xFF121212)) } })
+            viz.info["Lights"] = onCells().toString()
+            viz.grid(0, 0, Array(100) { x -> Array(100) { y -> Tile(backgroundColor = if (isOn(x, y)) Color.White else Color(0xFF121212)) } })
         }
 
         override fun equals(other: Any?): Boolean {

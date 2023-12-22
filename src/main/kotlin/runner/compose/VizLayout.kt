@@ -10,11 +10,10 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import expected
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -100,7 +99,7 @@ fun VizLayout(
 
 @Composable
 private fun VizInfoRow(viz: Viz) {
-    Row(modifier = Modifier.fillMaxWidth().border(1.dp, Color.Gray), verticalAlignment = Alignment.CenterVertically) {
+    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         Label("Size:")
         TextValue("${viz.width}x${viz.height}")
         Spacer(Modifier.width(8.dp))
@@ -140,7 +139,7 @@ private fun ColumnScope.Tile(tile: Tile) {
         Text(
             tile.char?.toString() ?: "",
             color = tile.color,
-            fontSize = w.value.sp / 1.3,
+            fontSize = TextUnit.Unspecified,
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Bold
         )
