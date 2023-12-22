@@ -25,12 +25,43 @@ class Day22 : Day<List<Day22.Brick>>(2023, 22) {
         Brick(points)
     }
 
-    override suspend fun solve1(input: List<Brick>) = 0
+    override suspend fun solve1(input: List<Brick>): Int {
+        val settled = input.settle()
+        println("Settled")
+        return settled.withIndex().count { (index, brick) ->
+            println("Testing $index / ${settled.size}")
+            val withoutBrick = settled.filterNot { it == brick }
+            withoutBrick.isSame(withoutBrick.settleOnce())
+        }
+    }
 
     override suspend fun solve2(input: List<Brick>) = 0
 
     private fun List<Brick>.settle(): List<Brick> {
+        var last = this
+        var next = last.settleOnce()
+        while (!next.isSame(last)) {
+            last = next
+            next = last.settleOnce()
+        }
+        return next
+    }
 
+    private fun List<Brick>.settleOnce(): List<Brick> {
+        val new = mutableListOf<Brick>()
+        sortedBy { it.lowestZ }.forEach { brick ->
+            new += if (brick.lowestZ == 1L) {
+                brick
+            } else {
+                val movedDown = brick.moveDown()
+                if (new.none { it.intersects(movedDown) }) {
+                    movedDown
+                } else {
+                    brick
+                }
+            }
+        }
+        return new
     }
 
     data class Brick(val points: Set<Point3D>) {
@@ -38,5 +69,9 @@ class Day22 : Day<List<Day22.Brick>>(2023, 22) {
         val lowestZ by lazy { points.minOf { it.z } }
 
         fun moveDown() = Brick(points.map { it.copy(z = it.z - 1) }.toSet())
+
+        fun intersects(brick: Brick) = points.intersect(brick.points).isNotEmpty()
     }
+
+    private fun List<Brick>.isSame(list: List<Brick>) = size == list.size && containsAll(list)
 }
