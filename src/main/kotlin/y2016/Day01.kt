@@ -1,12 +1,9 @@
 package y2016
 
-import Day
 import DayViz
 import androidx.compose.ui.graphics.Color
 import runner.compose.Tile
-import runner.compose.Viz
 import runner.compose.VizCanvas
-import runner.compose.VizGrid
 import utils.Dir
 import utils.Point
 import utils.Turn
@@ -103,7 +100,7 @@ class Day01 : DayViz<List<Day01.Step>, VizCanvas>(2016, 1) {
         return 0
     }
 
-    private fun getMapViz(progress: Double, location: Point, points: Set<Point>): VizGrid {
+    private fun getMapViz(progress: Double, location: Point, points: Set<Point>): VizCanvas {
         val minX = points.minOf { it.x }
         val minY = points.minOf { it.y }
         val maxX = points.maxOf { it.x }.toInt()
@@ -119,8 +116,8 @@ class Day01 : DayViz<List<Day01.Step>, VizCanvas>(2016, 1) {
             }
         }
         map[location.x.toInt() + dx][location.y.toInt() + dy].borderColor = Color.Yellow
-        return VizGrid(progress, width, height).apply {
-            grid(0, 0, map)
+        return VizCanvas(progress).apply {
+            //grid(0, 0, map)
         }
     }
 

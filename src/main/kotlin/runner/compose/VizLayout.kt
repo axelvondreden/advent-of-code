@@ -1,6 +1,6 @@
 package runner.compose
 
-import Day
+import DayViz
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -19,7 +19,7 @@ import runner.VizState
 
 @Composable
 fun VizLayout(
-    day: Day<Any>,
+    day: DayViz<Any, *>,
     state: VizState,
     viz: MutableState<Viz?>,
     delay: MutableState<Long>,
@@ -109,7 +109,7 @@ private fun VizInfoRow(viz: Viz) {
 }
 
 private suspend fun runPartVisualized(
-    day: Day<Any>,
+    day: DayViz<Any, *>,
     part: Int,
     input: Any,
     onProgress: (Viz) -> Unit,
@@ -125,7 +125,7 @@ private suspend fun runPartVisualized(
 }
 
 suspend fun runPart1WithVisualization(
-    day: Day<Any>,
+    day: DayViz<Any, *>,
     input: Any,
     expected: String?,
     onProgress: (Viz) -> Unit,
@@ -137,7 +137,7 @@ suspend fun runPart1WithVisualization(
 }
 
 suspend fun runPart2WithVisualization(
-    day: Day<Any>,
+    day: DayViz<Any, *>,
     input: Any,
     expected: String?,
     onProgress: (Viz) -> Unit,

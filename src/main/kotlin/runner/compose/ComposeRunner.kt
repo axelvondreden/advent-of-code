@@ -147,10 +147,10 @@ private fun DaySelect(
             Text("All", fontFamily = FontFamily.Monospace)
         }
         days.forEach { day ->
-            val viz1 =
-                day::class.memberFunctions.first { it.name == "solve1Visualized" }.javaMethod!!.declaringClass.name != "Day"
-            val viz2 =
-                day::class.memberFunctions.first { it.name == "solve2Visualized" }.javaMethod!!.declaringClass.name != "Day"
+            val viz1 = day is DayViz<Any, *> &&
+                day::class.memberFunctions.first { it.name == "solve1Visualized" }.javaMethod!!.declaringClass.name != "DayViz"
+            val viz2 = day is DayViz<Any, *> &&
+                day::class.memberFunctions.first { it.name == "solve2Visualized" }.javaMethod!!.declaringClass.name != "DayViz"
             Row(Modifier.wrapContentSize(), verticalAlignment = Alignment.CenterVertically) {
                 Button(
                     onClick = { if (day.day != selectedDay) onDaySelect(day) },
@@ -452,7 +452,7 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: 
                 PartLayout(2, state.part2Time.value / 1000000000.0, state.part2Result.value)
             }
             val vState = vizState.value
-            if (vState != null) {
+            if (vState != null && day is DayViz<Any, *>) {
                 VizLayout(
                     day = day,
                     state = vState,

@@ -1,11 +1,10 @@
 package y2015
 
-import Day
+import DayViz
 import androidx.compose.ui.graphics.Color
-import runner.compose.Viz
 import runner.compose.VizGrid
 
-class Day23 : Day<List<String>>(2015, 23) {
+class Day23 : DayViz<List<String>, VizGrid>(2015, 23) {
 
     override suspend fun List<String>.parse() = map { it.replace(",", "") }
 
@@ -57,7 +56,7 @@ class Day23 : Day<List<String>>(2015, 23) {
         backgroundColor(12 to 10, 23 to 10, Color.Gray)
     }
 
-    override suspend fun solve1Visualized(input: List<String>, onProgress: suspend (Viz) -> Unit): Long {
+    override suspend fun solve1Visualized(input: List<String>, onProgress: suspend (VizGrid) -> Unit): Long {
         index = 0
         val register = mutableMapOf("a" to 0L, "b" to 0L)
         while (index in input.indices) {
@@ -68,7 +67,7 @@ class Day23 : Day<List<String>>(2015, 23) {
         return register["b"]!!
     }
 
-    override suspend fun solve2Visualized(input: List<String>, onProgress: suspend (Viz) -> Unit): Long {
+    override suspend fun solve2Visualized(input: List<String>, onProgress: suspend (VizGrid) -> Unit): Long {
         index = 0
         val register = mutableMapOf("a" to 1L, "b" to 0L)
         while (index in input.indices) {

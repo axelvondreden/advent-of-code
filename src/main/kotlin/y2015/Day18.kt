@@ -1,12 +1,11 @@
 package y2015
 
-import Day
+import DayViz
 import androidx.compose.ui.graphics.Color
 import runner.compose.Tile
-import runner.compose.Viz
 import runner.compose.VizGrid
 
-class Day18 : Day<CharArray>(2015, 18) {
+class Day18 : DayViz<CharArray, VizGrid>(2015, 18) {
 
     override suspend fun List<String>.parse() = joinToString("").toCharArray()
 
@@ -39,7 +38,7 @@ class Day18 : Day<CharArray>(2015, 18) {
     override val vizDelay: Long
         get() = 80
 
-    override suspend fun solve1Visualized(input: CharArray, onProgress: suspend (Viz) -> Unit): Int {
+    override suspend fun solve1Visualized(input: CharArray, onProgress: suspend (VizGrid) -> Unit): Int {
         Grid(100, 100, input.clone()).let { grid ->
             var viz = VizGrid(0.0, 100, 100)
             grid.paint(viz)
@@ -54,7 +53,7 @@ class Day18 : Day<CharArray>(2015, 18) {
         }
     }
 
-    override suspend fun solve2Visualized(input: CharArray, onProgress: suspend (Viz) -> Unit): Int {
+    override suspend fun solve2Visualized(input: CharArray, onProgress: suspend (VizGrid) -> Unit): Int {
         input[0] = '#'
         input[100 - 1] = '#'
         input[100 * 100 - 100] = '#'
