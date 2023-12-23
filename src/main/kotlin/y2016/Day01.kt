@@ -106,12 +106,10 @@ class Day01 : DayViz<List<Day01.Step>, VizCanvas>(2016, 1) {
     }
 
     private fun getMapViz(progress: Double, points: List<Point>): VizCanvas {
-        val minX = points.minOf { it.x }
-        val minY = points.minOf { it.y }
         val maxX = points.maxOf { it.x }.toInt()
         val maxY = points.maxOf { it.y }.toInt()
-        val dx = 0 - minX.toInt()
-        val dy = 0 - minY.toInt()
+        val dx = 0 - points.minOf { it.x }.toInt()
+        val dy = 0 - points.minOf { it.y }.toInt()
         val width = max(4, maxX + dx + 1).toFloat()
         val height = max(4, maxY + dy + 1).toFloat()
         var last = points.first()
