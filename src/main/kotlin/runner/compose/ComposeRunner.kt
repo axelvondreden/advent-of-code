@@ -1,6 +1,7 @@
 package runner.compose
 
 import Day
+import DayViz
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -325,7 +326,7 @@ private fun DayLayoutCompact(
 
 @Composable
 private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: CoroutineScope) {
-    val delay = remember { mutableStateOf(day.vizDelay) }
+    val delay = remember { mutableStateOf((day as? DayViz<Any, *>)?.vizDelay ?: 0L) }
     var jobRunning by remember { mutableStateOf(false) }
     val vizState = remember(day) { mutableStateOf<VizState?>(null) }
     val viz = remember { mutableStateOf<Viz?>(null) }
@@ -349,7 +350,7 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: 
                             val start = System.nanoTime()
                             val input = runInit(day, rawInput)
                             val time = System.nanoTime() - start
-                            viz.value = day.initViz1(input)
+                            viz.value = (day as DayViz<Any, *>).initViz1(input)
                             vizState.value = VizState(
                                 part = 1,
                                 initTime = time,
@@ -359,7 +360,7 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: 
                         }
                     }
                 },
-                enabled = caller1.name != "Day" && !jobRunning
+                enabled = caller1.name != "DayViz" && !jobRunning
             ) {
                 Icon(Icons.Default.Star, "")
                 Text("Visualize Part 1")
@@ -372,7 +373,7 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: 
                             val start = System.nanoTime()
                             val input = runInit(day, rawInput)
                             val time = System.nanoTime() - start
-                            viz.value = day.initViz2(input)
+                            viz.value = (day as DayViz<Any, *>).initViz2(input)
                             vizState.value = VizState(
                                 part = 2,
                                 initTime = time,
@@ -382,7 +383,7 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: 
                         }
                     }
                 },
-                enabled = caller2.name != "Day" && !jobRunning
+                enabled = caller2.name != "DayViz" && !jobRunning
             ) {
                 Icon(Icons.Default.Star, "")
                 Text("Visualize Part 2")
