@@ -1,15 +1,29 @@
 package runner.compose
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
 
-class Viz(val progress: Double? = null, val width: Int = 30, val height: Int = 10) {
+abstract class Viz(val progress: Double?, val width: Int, val height: Int) {
+    val info = mutableMapOf<String, String>()
+
+    @Composable abstract fun draw()
+}
+
+class VizGrid(progress: Double? = null, width: Int = 30, height: Int = 10): Viz(progress, width, height) {
 
     val map: Array<Array<Tile>> = Array(width) { Array(height) { Tile() } }
-
-    val info = mutableMapOf<String, String>()
 
     fun backgroundColor(x: Int, y: Int, color: Color) {
         map[x][y].backgroundColor = color
@@ -84,6 +98,41 @@ class Viz(val progress: Double? = null, val width: Int = 30, val height: Int = 1
                 borderShape = { BorderRightTopBottomShape() }
             }
         }
+    }
+
+    @Composable
+    override fun draw() {
+        Row(Modifier.fillMaxSize().padding(6.dp)) {
+            for (x in 0 until width) {
+                Column(modifier = Modifier.fillMaxHeight().weight(1F)) {
+                    for (y in 0 until height) {
+                        val tile = map[x][y]
+                        Tile(tile)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ColumnScope.Tile(tile: Tile) {
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxWidth()
+            .weight(1F)
+            .border(1.dp, tile.borderColor, shape = tile.borderShape())
+            .background(tile.backgroundColor),
+        contentAlignment = Alignment.Center
+    ) {
+        val w = minWidth
+        Text(
+            tile.char?.toString() ?: "",
+            color = tile.color,
+            fontSize = TextUnit.Unspecified,
+            fontFamily = FontFamily.Monospace,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
 

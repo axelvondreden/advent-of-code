@@ -2,7 +2,7 @@ package y2015
 
 import Day
 import androidx.compose.ui.graphics.Color
-import runner.compose.Viz
+import runner.compose.VizGrid
 
 class Day01 : Day<String>(2015, 1) {
 
@@ -22,23 +22,23 @@ class Day01 : Day<String>(2015, 1) {
         return 0
     }
 
-    override fun initViz1(input: String) = Viz(width = 50, height = 10).apply {
+    override fun initViz1(input: String) = VizGrid(width = 50, height = 10).apply {
         info["Level"] = "0"
         border(0, 3, Color.Yellow)
         text(1, 3, input.take(49))
     }
 
-    override fun initViz2(input: String) = Viz(width = 50, height = 10).apply {
+    override fun initViz2(input: String) = VizGrid(width = 50, height = 10).apply {
         info["Level"] = "0"
         info["Position"] = "0"
         border(0, 3, Color.Yellow)
         text(1, 3, input.take(49))
     }
 
-    override suspend fun solve1Visualized(input: String, onProgress: suspend (Viz) -> Unit): Int {
+    override suspend fun solve1Visualized(input: String, onProgress: suspend (VizGrid) -> Unit): Int {
         var lvl = 0
         for ((index, c) in input.withIndex()) {
-            val viz = Viz((index + 1).toDouble() / input.length, width = 50, height = 10).apply {
+            val viz = VizGrid((index + 1).toDouble() / input.length, width = 50, height = 10).apply {
                 text(1, 3, input.substring(index + 1).take(49))
             }
 
@@ -56,10 +56,10 @@ class Day01 : Day<String>(2015, 1) {
         return lvl
     }
 
-    override suspend fun solve2Visualized(input: String, onProgress: suspend (Viz) -> Unit): Any {
+    override suspend fun solve2Visualized(input: String, onProgress: suspend (VizGrid) -> Unit): Any {
         var lvl = 0
         for ((index, c) in input.withIndex()) {
-            val viz = Viz((index + 1).toDouble() / input.length, width = 50, height = 10).apply {
+            val viz = VizGrid((index + 1).toDouble() / input.length, width = 50, height = 10).apply {
                 text(1, 3, input.substring(index + 1).take(49))
             }
             when (c) {

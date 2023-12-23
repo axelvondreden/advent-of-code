@@ -3,7 +3,7 @@ package y2016
 import Day
 import androidx.compose.ui.graphics.Color
 import runner.compose.Tile
-import runner.compose.Viz
+import runner.compose.VizGrid
 import utils.Dir
 import utils.Point
 import utils.Turn
@@ -50,15 +50,15 @@ class Day01 : Day<List<Day01.Step>>(2016, 1) {
         return 0
     }
 
-    override fun initViz1(input: List<Step>) = Viz(width = 10).apply {
+    override fun initViz1(input: List<Step>) = VizGrid(width = 10).apply {
         info["Distance"] = "0"
     }
 
-    override fun initViz2(input: List<Step>) = Viz(width = 10).apply {
+    override fun initViz2(input: List<Step>) = VizGrid(width = 10).apply {
         info["Distance"] = "0"
     }
 
-    override suspend fun solve1Visualized(input: List<Step>, onProgress: suspend (Viz) -> Unit): Long {
+    override suspend fun solve1Visualized(input: List<Step>, onProgress: suspend (VizGrid) -> Unit): Long {
         val points = mutableSetOf(Point(0, 0))
         var dir = Dir.UP
         input.forEachIndexed { index, step ->
@@ -77,7 +77,7 @@ class Day01 : Day<List<Day01.Step>>(2016, 1) {
         return abs(points.last().x) + abs(points.last().y)
     }
 
-    override suspend fun solve2Visualized(input: List<Step>, onProgress: suspend (Viz) -> Unit): Long {
+    override suspend fun solve2Visualized(input: List<Step>, onProgress: suspend (VizGrid) -> Unit): Long {
         var point = Point(0, 0)
         var dir = Dir.UP
         val visited = mutableSetOf<Point>()
@@ -100,7 +100,7 @@ class Day01 : Day<List<Day01.Step>>(2016, 1) {
         return 0
     }
 
-    private fun getMapViz(progress: Double, location: Point, points: Set<Point>): Viz {
+    private fun getMapViz(progress: Double, location: Point, points: Set<Point>): VizGrid {
         val minX = points.minOf { it.x }
         val minY = points.minOf { it.y }
         val maxX = points.maxOf { it.x }.toInt()
@@ -116,7 +116,7 @@ class Day01 : Day<List<Day01.Step>>(2016, 1) {
             }
         }
         map[location.x.toInt() + dx][location.y.toInt() + dy].borderColor = Color.Yellow
-        return Viz(progress, width, height).apply {
+        return VizGrid(progress, width, height).apply {
             grid(0, 0, map)
         }
     }

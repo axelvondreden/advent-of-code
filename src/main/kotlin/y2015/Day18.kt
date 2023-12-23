@@ -3,7 +3,7 @@ package y2015
 import Day
 import androidx.compose.ui.graphics.Color
 import runner.compose.Tile
-import runner.compose.Viz
+import runner.compose.VizGrid
 
 class Day18 : Day<CharArray>(2015, 18) {
 
@@ -27,25 +27,25 @@ class Day18 : Day<CharArray>(2015, 18) {
         }
     }
 
-    override fun initViz1(input: CharArray) = Viz(width = 100, height = 100).apply {
+    override fun initViz1(input: CharArray) = VizGrid(width = 100, height = 100).apply {
         info["Lights"] = "0"
     }
 
-    override fun initViz2(input: CharArray) = Viz(width = 100, height = 100).apply {
+    override fun initViz2(input: CharArray) = VizGrid(width = 100, height = 100).apply {
         info["Lights"] = "0"
     }
 
     override val vizDelay: Long
         get() = 80
 
-    override suspend fun solve1Visualized(input: CharArray, onProgress: suspend (Viz) -> Unit): Int {
+    override suspend fun solve1Visualized(input: CharArray, onProgress: suspend (VizGrid) -> Unit): Int {
         Grid(100, 100, input.clone()).let { grid ->
-            var viz = Viz(0.0, 100, 100)
+            var viz = VizGrid(0.0, 100, 100)
             grid.paint(viz)
             onProgress(viz)
             repeat(100) {
                 grid.tick()
-                viz = Viz((it + 1).toDouble() / 100, 100, 100)
+                viz = VizGrid((it + 1).toDouble() / 100, 100, 100)
                 grid.paint(viz)
                 onProgress(viz)
             }
@@ -53,18 +53,18 @@ class Day18 : Day<CharArray>(2015, 18) {
         }
     }
 
-    override suspend fun solve2Visualized(input: CharArray, onProgress: suspend (Viz) -> Unit): Int {
+    override suspend fun solve2Visualized(input: CharArray, onProgress: suspend (VizGrid) -> Unit): Int {
         input[0] = '#'
         input[100 - 1] = '#'
         input[100 * 100 - 100] = '#'
         input[100 * 100 - 1] = '#'
         Grid(100, 100, input.clone()).let { grid ->
-            var viz = Viz(0.0, 100, 100)
+            var viz = VizGrid(0.0, 100, 100)
             grid.paint(viz)
             onProgress(viz)
             repeat(100) {
                 grid.tick(true)
-                viz = Viz((it + 1).toDouble() / 100, 100, 100)
+                viz = VizGrid((it + 1).toDouble() / 100, 100, 100)
                 grid.paint(viz)
                 onProgress(viz)
             }
@@ -113,7 +113,7 @@ class Day18 : Day<CharArray>(2015, 18) {
             this.cells = cells
         }
 
-        fun paint(viz: Viz) {
+        fun paint(viz: VizGrid) {
             viz.info["Lights"] = onCells().toString()
             viz.grid(0, 0, Array(100) { x -> Array(100) { y -> Tile(backgroundColor = if (isOn(x, y)) Color.White else Color(0xFF121212)) } })
         }

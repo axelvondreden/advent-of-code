@@ -1,8 +1,6 @@
 package runner.compose
 
 import Day
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -10,9 +8,6 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import expected
 import kotlinx.coroutines.CoroutineScope
@@ -26,7 +21,7 @@ import runner.VizState
 fun VizLayout(
     day: Day<Any>,
     state: VizState,
-    viz: MutableState<Viz?>,
+    viz: MutableState<VizGrid?>,
     delay: MutableState<Long>,
     scope: CoroutineScope,
     onDelayChange: (Long) -> Unit,
@@ -92,13 +87,13 @@ fun VizLayout(
         val vizVal = viz.value
         if (vizVal != null) {
             VizInfoRow(vizVal)
-            VizGrid(vizVal)
+            vizVal.draw()
         }
     }
 }
 
 @Composable
-private fun VizInfoRow(viz: Viz) {
+private fun VizInfoRow(viz: VizGrid) {
     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         Label("Size:")
         TextValue("${viz.width}x${viz.height}")
@@ -111,46 +106,11 @@ private fun VizInfoRow(viz: Viz) {
     }
 }
 
-@Composable
-private fun VizGrid(viz: Viz) {
-    Row(Modifier.fillMaxSize().padding(6.dp)) {
-        for (x in 0 until viz.width) {
-            Column(modifier = Modifier.fillMaxHeight().weight(1F)) {
-                for (y in 0 until viz.height) {
-                    val tile = viz.map[x][y]
-                    Tile(tile)
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun ColumnScope.Tile(tile: Tile) {
-    BoxWithConstraints(
-        modifier = Modifier
-            .fillMaxWidth()
-            .weight(1F)
-            .border(1.dp, tile.borderColor, shape = tile.borderShape())
-            .background(tile.backgroundColor),
-        contentAlignment = Alignment.Center
-    ) {
-        val w = minWidth
-        Text(
-            tile.char?.toString() ?: "",
-            color = tile.color,
-            fontSize = TextUnit.Unspecified,
-            fontFamily = FontFamily.Monospace,
-            fontWeight = FontWeight.Bold
-        )
-    }
-}
-
 private suspend fun runPartVisualized(
     day: Day<Any>,
     part: Int,
     input: Any,
-    onProgress: (Viz) -> Unit,
+    onProgress: (VizGrid) -> Unit,
     onEnd: (ResultState) -> Unit,
     vizDelay: () -> Long
 ) {
@@ -166,7 +126,7 @@ suspend fun runPart1WithVisualization(
     day: Day<Any>,
     input: Any,
     expected: String?,
-    onProgress: (Viz) -> Unit,
+    onProgress: (VizGrid) -> Unit,
     delay: () -> Long
 ): ResultState {
     val result = day.visualize1(input, onProgress = onProgress, awaitSignal = { delay(delay()) }).toString()
@@ -178,7 +138,7 @@ suspend fun runPart2WithVisualization(
     day: Day<Any>,
     input: Any,
     expected: String?,
-    onProgress: (Viz) -> Unit,
+    onProgress: (VizGrid) -> Unit,
     delay: () -> Long
 ): ResultState {
     val result = day.visualize2(input, onProgress = onProgress, awaitSignal = { delay(delay()) }).toString()

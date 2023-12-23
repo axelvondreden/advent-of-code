@@ -3,7 +3,7 @@ package y2015
 import Day
 import androidx.compose.ui.graphics.Color
 import runner.compose.Tile
-import runner.compose.Viz
+import runner.compose.VizGrid
 import utils.Point
 import kotlin.math.max
 
@@ -26,22 +26,22 @@ class Day03 : Day<List<Char>>(2015, 3) {
         }
     }
 
-    override fun initViz1(input: List<Char>) = Viz(width = vizWidth).apply {
+    override fun initViz1(input: List<Char>) = VizGrid(width = vizWidth).apply {
         info["Houses"] = "0"
     }
 
-    override fun initViz2(input: List<Char>) = Viz(width = vizWidth).apply {
+    override fun initViz2(input: List<Char>) = VizGrid(width = vizWidth).apply {
         info["Houses"] = "0"
     }
 
-    override suspend fun solve1Visualized(input: List<Char>, onProgress: suspend (Viz) -> Unit): Int {
+    override suspend fun solve1Visualized(input: List<Char>, onProgress: suspend (VizGrid) -> Unit): Int {
         with(mutableMapOf(Point(0, 0) to 1)) {
             runSteps(input, onProgress)
             return size
         }
     }
 
-    override suspend fun solve2Visualized(input: List<Char>, onProgress: suspend (Viz) -> Unit): Int {
+    override suspend fun solve2Visualized(input: List<Char>, onProgress: suspend (VizGrid) -> Unit): Int {
         with(mutableMapOf(Point(0, 0) to 1)) {
             runSteps(input.filterIndexed { index, _ -> index % 2 == 0 }, onProgress)
             runSteps(input.filterIndexed { index, _ -> index % 2 == 1 }, onProgress)
@@ -49,7 +49,7 @@ class Day03 : Day<List<Char>>(2015, 3) {
         }
     }
 
-    private suspend fun MutableMap<Point, Int>.runSteps(steps: List<Char>, onProgress: (suspend (Viz) -> Unit)? = null) {
+    private suspend fun MutableMap<Point, Int>.runSteps(steps: List<Char>, onProgress: (suspend (VizGrid) -> Unit)? = null) {
         var point = Point(0, 0)
         steps.forEachIndexed { index, it ->
             when (it) {
@@ -68,7 +68,7 @@ class Day03 : Day<List<Char>>(2015, 3) {
         }
     }
 
-    private fun getMapViz(progress: Double, location: Point, points: Set<Point>): Viz {
+    private fun getMapViz(progress: Double, location: Point, points: Set<Point>): VizGrid {
         val minX = points.minOf { it.x }
         val minY = points.minOf { it.y }
         val maxX = points.maxOf { it.x }.toInt()
@@ -84,7 +84,7 @@ class Day03 : Day<List<Char>>(2015, 3) {
             }
         }
         map[location.x.toInt() + dx][location.y.toInt() + dy].borderColor = Color.Yellow
-        return Viz(progress, width, height).apply {
+        return VizGrid(progress, width, height).apply {
             grid(0, 0, map)
         }
     }
