@@ -2,9 +2,9 @@ package y2016
 
 import DayViz
 import androidx.compose.ui.graphics.Color
-import runner.compose.Tile
 import runner.compose.VizCanvas
 import utils.Dir
+import utils.FloatPoint
 import utils.Point
 import utils.Turn
 import kotlin.math.abs
@@ -59,20 +59,22 @@ class Day01 : DayViz<List<Day01.Step>, VizCanvas>(2016, 1) {
     }
 
     override suspend fun solve1Visualized(input: List<Step>, onProgress: suspend (VizCanvas) -> Unit): Long {
-        val points = mutableSetOf(Point(0, 0))
+        val points = mutableListOf(Point(0, 0))
         var dir = Dir.UP
         input.forEachIndexed { index, step ->
             dir = dir.turn(step.turn)
-            points += when (dir) {
-                Dir.LEFT -> points.last() left step.amount
-                Dir.RIGHT -> points.last() right step.amount
-                Dir.UP -> points.last() up step.amount
-                Dir.DOWN -> points.last() down step.amount
+            repeat(step.amount) {
+                points += when (dir) {
+                    Dir.LEFT -> points.last() left 1
+                    Dir.RIGHT -> points.last() right 1
+                    Dir.UP -> points.last() up 1
+                    Dir.DOWN -> points.last() down 1
+                }
+                val viz = getMapViz((index + 1).toDouble() / input.size, points).apply {
+                    info["Distance"] = points.first().distance(points.last()).toString()
+                }
+                onProgress(viz)
             }
-            val viz = getMapViz((index + 1).toDouble() / input.size, points.last(), points).apply {
-                info["Distance"] = points.first().distance(points.last()).toString()
-            }
-            onProgress(viz)
         }
         return abs(points.last().x) + abs(points.last().y)
     }
@@ -80,7 +82,7 @@ class Day01 : DayViz<List<Day01.Step>, VizCanvas>(2016, 1) {
     override suspend fun solve2Visualized(input: List<Step>, onProgress: suspend (VizCanvas) -> Unit): Long {
         var point = Point(0, 0)
         var dir = Dir.UP
-        val visited = mutableSetOf<Point>()
+        val visited = mutableListOf<Point>()
         input.forEachIndexed { index, step ->
             dir = dir.turn(step.turn)
             repeat(step.amount) {
@@ -90,37 +92,36 @@ class Day01 : DayViz<List<Day01.Step>, VizCanvas>(2016, 1) {
                     Dir.UP -> point up 1
                     Dir.DOWN -> point down 1
                 }
-                val viz = getMapViz((index + 1).toDouble() / input.size, point, visited).apply {
-                    info["Distance"] = visited.first().distance(visited.last()).toString()
+                if (visited.isNotEmpty()) {
+                    val viz = getMapViz((index + 1).toDouble() / input.size, visited).apply {
+                        info["Distance"] = visited.first().distance(visited.last()).toString()
+                    }
+                    onProgress(viz)
                 }
-                onProgress(viz)
-                if (!visited.add(Point(point.x, point.y))) return abs(point.x) + abs(point.y)
+                if (visited.contains(Point(point.x, point.y))) return abs(point.x) + abs(point.y)
+                else visited.add(Point(point.x, point.y))
             }
         }
         return 0
     }
 
-    private fun getMapViz(progress: Double, location: Point, points: Set<Point>): VizCanvas {
+    private fun getMapViz(progress: Double, points: List<Point>): VizCanvas {
         val minX = points.minOf { it.x }
         val minY = points.minOf { it.y }
         val maxX = points.maxOf { it.x }.toInt()
         val maxY = points.maxOf { it.y }.toInt()
         val dx = 0 - minX.toInt()
         val dy = 0 - minY.toInt()
-        val width = max(vizWidth, maxX + dx + 1)
-        val height = max(vizHeight, maxY + dy + 1)
-        val map = Array(width) { Array(height) { Tile() } }
-        points.forEach {
-            with(map[it.x.toInt() + dx][it.y.toInt() + dy]) {
-                backgroundColor = Color.Gray
+        val width = max(4, maxX + dx + 1).toFloat()
+        val height = max(4, maxY + dy + 1).toFloat()
+        var last = points.first()
+        return VizCanvas(progress).apply {
+            points.drop(1).forEach { point ->
+                line(Color.White, FloatPoint((last.x + dx) / width, (last.y + dy) / height), FloatPoint((point.x + dx) / width, (point.y + dy) / height))
+                last = point
             }
         }
-        map[location.x.toInt() + dx][location.y.toInt() + dy].borderColor = Color.Yellow
-        return VizCanvas(progress).apply {
-            //grid(0, 0, map)
-        }
     }
-
 
     data class Step(val turn: Turn, val amount: Int)
 }

@@ -69,3 +69,5 @@ data class Point3D(val x: Long, val y: Long, val z: Long) {
 
     operator fun plus(p: Point3D) = Point3D(this.x + p.x, this.y + p.y, this.z + p.z)
 }
+
+data class FloatPoint(val x: Float, val y: Float)
