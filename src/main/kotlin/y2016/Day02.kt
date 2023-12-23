@@ -50,49 +50,63 @@ class Day02 : DayViz<List<String>, VizGrid>(2016, 2) {
         return code
     }
 
-    override fun initViz1(input: List<String>) = getViz1(null, null)
+    override fun initViz1(input: List<String>) = getViz(true, null, 0, input.size, null, null)
 
-    override fun initViz2(input: List<String>) = getViz2(null, null)
+    override fun initViz2(input: List<String>) = getViz(false, null, 0, input.size, null, null)
 
     override suspend fun solve1Visualized(input: List<String>, onProgress: suspend (VizGrid) -> Unit): String {
         var code = ""
-        input.forEachIndexed { index, inp ->
+        input.forEachIndexed { inputLineIndex, inp ->
             var position = 5
-            onProgress(getViz1((index + 1).toDouble() / input.size, code).apply { mark1(position) })
-            inp.forEach { direction ->
-                position = when (direction) {
+            onProgress(getViz(true, 0.0, inputLineIndex + 1, input.size, code, inp.take(10)).apply { mark1(position) })
+            inp.forEachIndexed { index, dir ->
+                position = when (dir) {
                     'U' -> handleUp1(position)
                     'D' -> handleDown1(position)
                     'L' -> handleLeft1(position)
                     'R' -> handleRight1(position)
                     else -> position
                 }
-                onProgress(getViz1((index + 1).toDouble() / input.size, code).apply { mark1(position) })
+                onProgress(getViz(true, (index + 1).toDouble() / inp.length, inputLineIndex + 1, input.size, code, inp.drop(index).take(10)).apply { mark1(position) })
             }
             code += position
         }
+        onProgress(getViz(true, 1.0, input.lastIndex, input.size, code, ""))
         return code
     }
 
-    private fun getViz1(progress: Double?, code: String?) = VizGrid(progress, 10, 6).apply {
+    private fun getViz(
+        part1: Boolean,
+        progress: Double?,
+        currentLine: Int,
+        lineCount: Int,
+        code: String?,
+        nextCommands: String?
+    ) = VizGrid(progress, 10, if (part1) 6 else 8).apply {
+        info["Instruction:"] = "$currentLine / $lineCount"
+        fillInfo(code, nextCommands)
+        if (part1) {
+            text(4, 3, "1")
+            text(5, 3, "2")
+            text(6, 3, "3")
+            text(4, 4, "4")
+            text(5, 4, "5")
+            text(6, 4, "6")
+            text(4, 5, "7")
+            text(5, 5, "8")
+            text(6, 5, "9")
+        }
+    }
+
+    private fun VizGrid.fillInfo(code: String?, nextCommands: String?) {
         text(0, 0, "Code:")
         if (!code.isNullOrBlank()) {
             text(5, 0, code, borderColor = Color.Yellow)
         }
-        text(4, 3, "1")
-        text(5, 3, "2")
-        text(6, 3, "3")
-        text(4, 4, "4")
-        text(5, 4, "5")
-        text(6, 4, "6")
-        text(4, 5, "7")
-        text(5, 5, "8")
-        text(6, 5, "9")
-    }
-
-    private fun getViz2(progress: Double?, code: String?) = VizGrid(progress, 10, 7).apply {
-        text(0, 0, "Code:")
-        code?.let { text(5, 0, code, borderColor = Color.Yellow) }
+        if (!nextCommands.isNullOrBlank()) {
+            text(0, 1, nextCommands.take(10))
+            border(0, 1, Color.White)
+        }
     }
 
     private fun VizGrid.mark1(pos: Int) {

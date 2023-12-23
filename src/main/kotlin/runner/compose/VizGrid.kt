@@ -12,8 +12,8 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 class VizGrid(progress: Double? = null, val width: Int = 30, val height: Int = 10) : Viz(progress) {
 
@@ -122,7 +122,7 @@ private fun ColumnScope.Tile(tile: Tile) {
         Text(
             tile.char?.toString() ?: "",
             color = tile.color,
-            fontSize = TextUnit.Unspecified,
+            fontSize = maxWidth.value.sp / 3,
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Bold
         )
