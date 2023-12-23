@@ -50,7 +50,6 @@ class Day23 : Day<Array<CharArray>>(2023, 23) {
         val queue = ArrayDeque<Triple<Point, Long, Int>>().apply { add(Triple(start, 1L, 0)) }
         var maxDist = -1
 
-        // Using mask as path doubles the performance.
         val masks = nodes.withIndex().associate { (index, node) -> node to (1L shl index) }
 
         while (queue.isNotEmpty()) {
@@ -61,8 +60,7 @@ class Day23 : Day<Array<CharArray>>(2023, 23) {
                 continue
             }
 
-            graph
-                .filter { (from, till) -> node == from && (masks.getValue(till) and path) == 0L }
+            graph.filter { (from, till) -> node == from && (masks.getValue(till) and path) == 0L }
                 .forEach { (_, till, d) ->
                     queue.add(Triple(till, path or masks.getValue(till), dist + d))
                 }
