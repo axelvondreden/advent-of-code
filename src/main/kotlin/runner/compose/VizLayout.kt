@@ -21,7 +21,7 @@ import runner.VizState
 fun VizLayout(
     day: Day<Any>,
     state: VizState,
-    viz: MutableState<VizGrid?>,
+    viz: MutableState<Viz?>,
     delay: MutableState<Long>,
     scope: CoroutineScope,
     onDelayChange: (Long) -> Unit,
@@ -93,11 +93,13 @@ fun VizLayout(
 }
 
 @Composable
-private fun VizInfoRow(viz: VizGrid) {
+private fun VizInfoRow(viz: Viz) {
     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         Label("Size:")
-        TextValue("${viz.width}x${viz.height}")
-        Spacer(Modifier.width(8.dp))
+        if (viz is VizGrid) {
+            TextValue("${viz.width}x${viz.height}")
+            Spacer(Modifier.width(8.dp))
+        }
         viz.info.forEach { (key, value) ->
             Label("$key:")
             TextValue(value)
@@ -110,7 +112,7 @@ private suspend fun runPartVisualized(
     day: Day<Any>,
     part: Int,
     input: Any,
-    onProgress: (VizGrid) -> Unit,
+    onProgress: (Viz) -> Unit,
     onEnd: (ResultState) -> Unit,
     vizDelay: () -> Long
 ) {
@@ -126,7 +128,7 @@ suspend fun runPart1WithVisualization(
     day: Day<Any>,
     input: Any,
     expected: String?,
-    onProgress: (VizGrid) -> Unit,
+    onProgress: (Viz) -> Unit,
     delay: () -> Long
 ): ResultState {
     val result = day.visualize1(input, onProgress = onProgress, awaitSignal = { delay(delay()) }).toString()
@@ -138,7 +140,7 @@ suspend fun runPart2WithVisualization(
     day: Day<Any>,
     input: Any,
     expected: String?,
-    onProgress: (VizGrid) -> Unit,
+    onProgress: (Viz) -> Unit,
     delay: () -> Long
 ): ResultState {
     val result = day.visualize2(input, onProgress = onProgress, awaitSignal = { delay(delay()) }).toString()

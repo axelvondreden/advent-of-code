@@ -3,6 +3,7 @@ package y2016
 import Day
 import androidx.compose.ui.graphics.Color
 import runner.compose.Tile
+import runner.compose.Viz
 import runner.compose.VizGrid
 import utils.Dir
 import utils.Point
@@ -58,7 +59,7 @@ class Day01 : Day<List<Day01.Step>>(2016, 1) {
         info["Distance"] = "0"
     }
 
-    override suspend fun solve1Visualized(input: List<Step>, onProgress: suspend (VizGrid) -> Unit): Long {
+    override suspend fun solve1Visualized(input: List<Step>, onProgress: suspend (Viz) -> Unit): Long {
         val points = mutableSetOf(Point(0, 0))
         var dir = Dir.UP
         input.forEachIndexed { index, step ->
@@ -77,7 +78,7 @@ class Day01 : Day<List<Day01.Step>>(2016, 1) {
         return abs(points.last().x) + abs(points.last().y)
     }
 
-    override suspend fun solve2Visualized(input: List<Step>, onProgress: suspend (VizGrid) -> Unit): Long {
+    override suspend fun solve2Visualized(input: List<Step>, onProgress: suspend (Viz) -> Unit): Long {
         var point = Point(0, 0)
         var dir = Dir.UP
         val visited = mutableSetOf<Point>()

@@ -1,5 +1,6 @@
 package runner.compose
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -15,13 +16,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 
-abstract class Viz(val progress: Double?, val width: Int, val height: Int) {
+abstract class Viz(val progress: Double?) {
     val info = mutableMapOf<String, String>()
 
-    @Composable abstract fun draw()
+    @Composable
+    abstract fun draw()
 }
 
-class VizGrid(progress: Double? = null, width: Int = 30, height: Int = 10): Viz(progress, width, height) {
+class VizCanvas(progress: Double? = null) : Viz(progress) {
+
+    @Composable
+    override fun draw() {
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val canvasQuadrantSize = size / 2F
+            drawRect(
+                color = Color.Magenta,
+                size = canvasQuadrantSize
+            )
+        }
+    }
+}
+
+class VizGrid(progress: Double? = null, val width: Int = 30, val height: Int = 10) : Viz(progress) {
 
     val map: Array<Array<Tile>> = Array(width) { Array(height) { Tile() } }
 
@@ -125,7 +141,6 @@ private fun ColumnScope.Tile(tile: Tile) {
             .background(tile.backgroundColor),
         contentAlignment = Alignment.Center
     ) {
-        val w = minWidth
         Text(
             tile.char?.toString() ?: "",
             color = tile.color,

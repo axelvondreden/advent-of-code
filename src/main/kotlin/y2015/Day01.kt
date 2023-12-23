@@ -2,6 +2,7 @@ package y2015
 
 import Day
 import androidx.compose.ui.graphics.Color
+import runner.compose.Viz
 import runner.compose.VizGrid
 
 class Day01 : Day<String>(2015, 1) {
@@ -35,7 +36,7 @@ class Day01 : Day<String>(2015, 1) {
         text(1, 3, input.take(49))
     }
 
-    override suspend fun solve1Visualized(input: String, onProgress: suspend (VizGrid) -> Unit): Int {
+    override suspend fun solve1Visualized(input: String, onProgress: suspend (Viz) -> Unit): Int {
         var lvl = 0
         for ((index, c) in input.withIndex()) {
             val viz = VizGrid((index + 1).toDouble() / input.length, width = 50, height = 10).apply {
@@ -56,7 +57,7 @@ class Day01 : Day<String>(2015, 1) {
         return lvl
     }
 
-    override suspend fun solve2Visualized(input: String, onProgress: suspend (VizGrid) -> Unit): Any {
+    override suspend fun solve2Visualized(input: String, onProgress: suspend (Viz) -> Unit): Any {
         var lvl = 0
         for ((index, c) in input.withIndex()) {
             val viz = VizGrid((index + 1).toDouble() / input.length, width = 50, height = 10).apply {

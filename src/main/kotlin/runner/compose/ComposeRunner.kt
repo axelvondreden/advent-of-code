@@ -328,7 +328,7 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: 
     val delay = remember { mutableStateOf(day.vizDelay) }
     var jobRunning by remember { mutableStateOf(false) }
     val vizState = remember(day) { mutableStateOf<VizState?>(null) }
-    val viz = remember { mutableStateOf<VizGrid?>(null) }
+    val viz = remember { mutableStateOf<Viz?>(null) }
     Column(modifier = Modifier.fillMaxSize()) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             DaySingleButton(

@@ -1,4 +1,5 @@
 import kotlinx.coroutines.coroutineScope
+import runner.compose.Viz
 import runner.compose.VizGrid
 
 abstract class Day<T>(val year: Int, val day: Int) {
@@ -9,7 +10,7 @@ abstract class Day<T>(val year: Int, val day: Int) {
 
     abstract suspend fun solve2(input: T): Any
 
-    suspend fun visualize1(input: T, onProgress: (VizGrid) -> Unit, awaitSignal: suspend () -> Unit): Any {
+    suspend fun visualize1(input: T, onProgress: (Viz) -> Unit, awaitSignal: suspend () -> Unit): Any {
         return coroutineScope {
             solve1Visualized(input) { viz ->
                 onProgress(viz)
@@ -18,7 +19,7 @@ abstract class Day<T>(val year: Int, val day: Int) {
         }
     }
 
-    suspend fun visualize2(input: T, onProgress: (VizGrid) -> Unit, awaitSignal: suspend () -> Unit): Any {
+    suspend fun visualize2(input: T, onProgress: (Viz) -> Unit, awaitSignal: suspend () -> Unit): Any {
         return coroutineScope {
             solve2Visualized(input) { viz ->
                 onProgress(viz)
@@ -27,14 +28,14 @@ abstract class Day<T>(val year: Int, val day: Int) {
         }
     }
 
-    open fun initViz1(input: T): VizGrid = VizGrid()
-    open fun initViz2(input: T): VizGrid = VizGrid()
+    open fun initViz1(input: T): Viz = VizGrid()
+    open fun initViz2(input: T): Viz = VizGrid()
 
-    open suspend fun solve1Visualized(input: T, onProgress: suspend (VizGrid) -> Unit): Any {
+    open suspend fun solve1Visualized(input: T, onProgress: suspend (Viz) -> Unit): Any {
         return 0
     }
 
-    open suspend fun solve2Visualized(input: T, onProgress: suspend (VizGrid) -> Unit): Any {
+    open suspend fun solve2Visualized(input: T, onProgress: suspend (Viz) -> Unit): Any {
         return 0
     }
 
