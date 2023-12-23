@@ -87,7 +87,7 @@ fun VizLayout(
         val vizVal = viz.value
         if (vizVal != null) {
             VizInfoRow(vizVal)
-            vizVal.draw()
+            vizVal.drawViz()
         }
     }
 }

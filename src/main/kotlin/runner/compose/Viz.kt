@@ -20,13 +20,13 @@ abstract class Viz(val progress: Double?) {
     val info = mutableMapOf<String, String>()
 
     @Composable
-    abstract fun draw()
+    abstract fun drawViz()
 }
 
 class VizCanvas(progress: Double? = null) : Viz(progress) {
 
     @Composable
-    override fun draw() {
+    override fun drawViz() {
         Canvas(modifier = Modifier.fillMaxSize()) {
             val canvasQuadrantSize = size / 2F
             drawRect(
@@ -35,6 +35,8 @@ class VizCanvas(progress: Double? = null) : Viz(progress) {
             )
         }
     }
+
+
 }
 
 class VizGrid(progress: Double? = null, val width: Int = 30, val height: Int = 10) : Viz(progress) {
@@ -117,7 +119,7 @@ class VizGrid(progress: Double? = null, val width: Int = 30, val height: Int = 1
     }
 
     @Composable
-    override fun draw() {
+    override fun drawViz() {
         Row(Modifier.fillMaxSize().padding(6.dp)) {
             for (x in 0 until width) {
                 Column(modifier = Modifier.fillMaxHeight().weight(1F)) {
