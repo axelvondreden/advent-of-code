@@ -8,29 +8,26 @@ class Day02 : DayViz<List<String>, VizGrid>(2016, 2) {
 
     override suspend fun List<String>.parse() = this
 
-    override suspend fun solve1(input: List<String>) = input.joinToString("") { inp ->
-        var position = 5
-        inp.forEach { direction ->
-            position = when (direction) {
-                'U' -> handleUp1(position)
-                'D' -> handleDown1(position)
-                'L' -> handleLeft1(position)
-                'R' -> handleRight1(position)
-                else -> position
+    override suspend fun solve1(input: List<String>) = input.joinToString("") {
+        it.fold(5) { pos, dir ->
+            when (dir) {
+                'U' -> handleUp1(pos)
+                'D' -> handleDown1(pos)
+                'L' -> handleLeft1(pos)
+                'R' -> handleRight1(pos)
+                else -> pos
             }
-        }
-        position.toString()
+        }.toString()
     }
 
-    override suspend fun solve2(input: List<String>) = input.joinToString("") { inp ->
-        var position = 5
-        inp.forEach { direction ->
-            position = when (direction) {
-                'U' -> handleUp2(position)
-                'D' -> handleDown2(position)
-                'L' -> handleLeft2(position)
-                'R' -> handleRight2(position)
-                else -> position
+    override suspend fun solve2(input: List<String>) = input.joinToString("") {
+        val position = it.fold(5) { pos, dir ->
+            when (dir) {
+                'U' -> handleUp2(pos)
+                'D' -> handleDown2(pos)
+                'L' -> handleLeft2(pos)
+                'R' -> handleRight2(pos)
+                else -> pos
             }
         }
         when (position) {
@@ -59,7 +56,15 @@ class Day02 : DayViz<List<String>, VizGrid>(2016, 2) {
                     'R' -> handleRight1(position)
                     else -> position
                 }
-                onProgress(getViz(true, (index + 1).toDouble() / inp.length, inputLineIndex + 1, input.size, code, inp.drop(index).take(10)).apply { mark1(position) })
+                onProgress(
+                    getViz(
+                        true,
+                        (index + 1).toDouble() / inp.length,
+                        inputLineIndex + 1,
+                        input.size,
+                        code,
+                        inp.drop(index).take(10)
+                    ).apply { mark1(position) })
             }
             code += position
         }
@@ -80,7 +85,15 @@ class Day02 : DayViz<List<String>, VizGrid>(2016, 2) {
                     'R' -> handleRight2(position)
                     else -> position
                 }
-                onProgress(getViz(false, (index + 1).toDouble() / inp.length, inputLineIndex + 1, input.size, code, inp.drop(index).take(10)).apply { mark2(position) })
+                onProgress(
+                    getViz(
+                        false,
+                        (index + 1).toDouble() / inp.length,
+                        inputLineIndex + 1,
+                        input.size,
+                        code,
+                        inp.drop(index).take(10)
+                    ).apply { mark2(position) })
             }
             code += when (position) {
                 10 -> "A"
