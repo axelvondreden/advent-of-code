@@ -8,46 +8,38 @@ class Day02 : DayViz<List<String>, VizGrid>(2016, 2) {
 
     override suspend fun List<String>.parse() = this
 
-    override suspend fun solve1(input: List<String>): String {
-        var code = ""
-        input.forEach { inp ->
-            var position = 5
-            inp.forEach { direction ->
-                position = when (direction) {
-                    'U' -> handleUp1(position)
-                    'D' -> handleDown1(position)
-                    'L' -> handleLeft1(position)
-                    'R' -> handleRight1(position)
-                    else -> position
-                }
-            }
-            code += position
-        }
-        return code
-    }
-
-    override suspend fun solve2(input: List<String>): String {
-        var code = ""
-        input.forEach { inp ->
-            var position = 5
-            inp.forEach { direction ->
-                position = when (direction) {
-                    'U' -> handleUp2(position)
-                    'D' -> handleDown2(position)
-                    'L' -> handleLeft2(position)
-                    'R' -> handleRight2(position)
-                    else -> position
-                }
-            }
-            code += when (position) {
-                10 -> "A"
-                11 -> "B"
-                12 -> "C"
-                13 -> "D"
+    override suspend fun solve1(input: List<String>) = input.joinToString("") { inp ->
+        var position = 5
+        inp.forEach { direction ->
+            position = when (direction) {
+                'U' -> handleUp1(position)
+                'D' -> handleDown1(position)
+                'L' -> handleLeft1(position)
+                'R' -> handleRight1(position)
                 else -> position
             }
         }
-        return code
+        position.toString()
+    }
+
+    override suspend fun solve2(input: List<String>) = input.joinToString("") { inp ->
+        var position = 5
+        inp.forEach { direction ->
+            position = when (direction) {
+                'U' -> handleUp2(position)
+                'D' -> handleDown2(position)
+                'L' -> handleLeft2(position)
+                'R' -> handleRight2(position)
+                else -> position
+            }
+        }
+        when (position) {
+            10 -> "A"
+            11 -> "B"
+            12 -> "C"
+            13 -> "D"
+            else -> position.toString()
+        }
     }
 
     override fun initViz1(input: List<String>) = getViz(true, null, 0, input.size, null, null)
@@ -75,6 +67,33 @@ class Day02 : DayViz<List<String>, VizGrid>(2016, 2) {
         return code
     }
 
+    override suspend fun solve2Visualized(input: List<String>, onProgress: suspend (VizGrid) -> Unit): String {
+        var code = ""
+        input.forEachIndexed { inputLineIndex, inp ->
+            var position = 5
+            onProgress(getViz(false, 0.0, inputLineIndex + 1, input.size, code, inp.take(10)).apply { mark2(position) })
+            inp.forEachIndexed { index, dir ->
+                position = when (dir) {
+                    'U' -> handleUp2(position)
+                    'D' -> handleDown2(position)
+                    'L' -> handleLeft2(position)
+                    'R' -> handleRight2(position)
+                    else -> position
+                }
+                onProgress(getViz(false, (index + 1).toDouble() / inp.length, inputLineIndex + 1, input.size, code, inp.drop(index).take(10)).apply { mark2(position) })
+            }
+            code += when (position) {
+                10 -> "A"
+                11 -> "B"
+                12 -> "C"
+                13 -> "D"
+                else -> position
+            }
+        }
+        onProgress(getViz(false, 1.0, input.lastIndex, input.size, code, ""))
+        return code
+    }
+
     private fun getViz(
         part1: Boolean,
         progress: Double?,
@@ -95,6 +114,20 @@ class Day02 : DayViz<List<String>, VizGrid>(2016, 2) {
             text(4, 5, "7")
             text(5, 5, "8")
             text(6, 5, "9")
+        } else {
+            text(5, 3, "1")
+            text(4, 4, "2")
+            text(5, 4, "3")
+            text(6, 4, "4")
+            text(3, 5, "5")
+            text(4, 5, "6")
+            text(5, 5, "7")
+            text(6, 5, "8")
+            text(7, 5, "9")
+            text(4, 6, "A")
+            text(5, 6, "B")
+            text(6, 6, "C")
+            text(5, 7, "D")
         }
     }
 
@@ -120,6 +153,24 @@ class Day02 : DayViz<List<String>, VizGrid>(2016, 2) {
             7 -> backgroundColor(4, 5, Color.LightGray)
             8 -> backgroundColor(5, 5, Color.LightGray)
             9 -> backgroundColor(6, 5, Color.LightGray)
+        }
+    }
+
+    private fun VizGrid.mark2(pos: Int) {
+        when (pos) {
+            1 -> backgroundColor(5, 3, Color.LightGray)
+            2 -> backgroundColor(4, 4, Color.LightGray)
+            3 -> backgroundColor(5, 4, Color.LightGray)
+            4 -> backgroundColor(6, 4, Color.LightGray)
+            5 -> backgroundColor(3, 5, Color.LightGray)
+            6 -> backgroundColor(4, 5, Color.LightGray)
+            7 -> backgroundColor(5, 5, Color.LightGray)
+            8 -> backgroundColor(6, 5, Color.LightGray)
+            9 -> backgroundColor(7, 5, Color.LightGray)
+            10 -> backgroundColor(4, 6, Color.LightGray)
+            11 -> backgroundColor(5, 6, Color.LightGray)
+            12 -> backgroundColor(6, 6, Color.LightGray)
+            13 -> backgroundColor(5, 7, Color.LightGray)
         }
     }
 
