@@ -1,12 +1,13 @@
 package y2016
 
-import Day
+import DayViz
+import runner.compose.VizGrid
 import utils.Pathfinder
 import utils.Point
 import utils.toPathfindingMap
 import kotlin.math.abs
 
-class Day13 : Day<Int>(2016, 13) {
+class Day13 : DayViz<Int, VizGrid>(2016, 13) {
 
     override suspend fun List<String>.parse() = first().toInt()
 
@@ -44,6 +45,21 @@ class Day13 : Day<Int>(2016, 13) {
             }
         }
         return coords.size
+    }
+
+    override fun initViz1(input: Int): VizGrid {
+        return VizGrid(null, mapSize, mapSize)
+    }
+
+    override suspend fun solve1Visualized(input: Int, onProgress: suspend (VizGrid) -> Unit): Any {
+        val map = Array(mapSize) { x ->
+            CharArray(mapSize) { y ->
+                if (((x * x) + (3 * x) + (2 * x * y) + y + (y * y) + input).countOneBits() % 2 == 0) '.' else '#'
+            }
+        }
+        val pf = Pathfinder(map.toPathfindingMap(), mapSize, mapSize)
+        val path = pf.searchBFS(startNode, endNode, onProgress)
+        return path.size + 1
     }
 
     private companion object {

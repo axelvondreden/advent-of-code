@@ -1,5 +1,8 @@
 package utils
 
+import androidx.compose.ui.graphics.Color
+import runner.compose.Tile
+import runner.compose.VizGrid
 import java.util.*
 import java.util.ArrayDeque
 import kotlin.math.max
@@ -78,6 +81,52 @@ class Pathfinder(
             .takeWhile { cell -> cell != start }
             .toList()
             .ifEmpty { return emptyList() }.reversed()
+    }
+
+    suspend fun searchBFS(start: PFNode, end: PFNode, onProgress: suspend (VizGrid) -> Unit): List<PFNode> {
+        val previous = hashMapOf<PFNode, PFNode>()
+
+        val queue = ArrayDeque<PFNode>()
+        val visited = hashSetOf<PFNode>()
+
+        queue.offer(start)
+        visited.add(start)
+        while (!queue.isEmpty()) {
+            val cell = queue.poll()
+            if (cell == end) break
+
+            neighborFunction.invoke(cell).forEach { newCell ->
+                if (!bound(newCell) || blocked(newCell) || newCell in visited) return@forEach
+                previous[newCell] = cell
+                queue.offer(newCell)
+                visited.add(newCell)
+                onProgress(vizgrid(queue.size.toDouble() / (visited.size + queue.size), visited))
+            }
+        }
+        val path = generateSequence(previous[end]) { cell -> previous[cell] }
+            .takeWhile { cell -> cell != start }
+            .toList()
+            .ifEmpty { return emptyList() }.reversed()
+        onProgress(vizgrid(1.0, visited, path))
+        return path
+    }
+
+    fun vizgrid(progress: Double?, visited: Set<PFNode>, path: List<PFNode> = emptyList()): VizGrid {
+        val map = Array(width) { Array(height) { Tile() } }
+        (0 until height).forEach { y ->
+            (0 until width).forEach { x ->
+                val p = Point(x, y)
+                map[x][y].backgroundColor = when {
+                    blocked(p) -> Color.Gray
+                    p in path -> Color.Red
+                    p in visited -> Color.Yellow
+                    else -> Color.White
+                }
+            }
+        }
+        return VizGrid(progress, width, height).apply {
+            grid(0, 0, map)
+        }
     }
 
     private fun index(x: Long, y: Long) = (y * width + x).toInt()
