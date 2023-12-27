@@ -1,28 +1,43 @@
 package y2016
 
-import Day
+import DayViz
+import runner.compose.VizGrid
 
 
-class Day18 : Day<String>(2016, 18) {
+class Day18 : DayViz<String, VizGrid>(2016, 18) {
 
     override suspend fun List<String>.parse() = first()
 
-    override suspend fun solve1(input: String): Int {
-        var currentRow = input
-        val map = mutableListOf<String>()
-        repeat(40) {
-            map.add(currentRow)
-            currentRow = currentRow.nextRow()
-        }
-        return map.sumOf { row -> row.count { it == '.' } }
+    override suspend fun solve1(input: String) = input.count(40)
+
+    override suspend fun solve2(input: String) = input.count(400000)
+
+    override fun initViz1(input: String) = VizGrid(null, input.length, 20).apply {
+        text(0, 0, input) }
+
+    override fun initViz2(input: String) = VizGrid(null, input.length, 20).apply {
+        text(0, 0, input)
     }
 
-    override suspend fun solve2(input: String): Int {
-        var currentRow = input
+    override suspend fun solve1Visualized(input: String, onProgress: suspend (VizGrid) -> Unit) =
+        input.count(40, onProgress)
+
+    override suspend fun solve2Visualized(input: String, onProgress: suspend (VizGrid) -> Unit) =
+        input.count(400000, onProgress)
+
+    private suspend fun String.count(rows: Int, onProgress: (suspend (VizGrid) -> Unit)? = null): Int {
+        var currentRow = this
         val map = mutableListOf<String>()
-        repeat(400000) {
+        repeat(rows) {
             map.add(currentRow)
             currentRow = currentRow.nextRow()
+            if (onProgress != null) {
+                onProgress(VizGrid((it + 1).toDouble() / rows, length, 20).apply {
+                    map.takeLast(20).forEachIndexed { index, s ->
+                        text(0, index, s)
+                    }
+                })
+            }
         }
         return map.sumOf { row -> row.count { it == '.' } }
     }

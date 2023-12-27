@@ -51,7 +51,11 @@ class Day13 : DayViz<Int, VizGrid>(2016, 13) {
         return VizGrid(null, mapSize, mapSize)
     }
 
-    override suspend fun solve1Visualized(input: Int, onProgress: suspend (VizGrid) -> Unit): Any {
+    override fun initViz2(input: Int): VizGrid {
+        return VizGrid(null, mapSize, mapSize)
+    }
+
+    override suspend fun solve1Visualized(input: Int, onProgress: suspend (VizGrid) -> Unit): Int {
         val map = Array(mapSize) { x ->
             CharArray(mapSize) { y ->
                 if (((x * x) + (3 * x) + (2 * x * y) + y + (y * y) + input).countOneBits() % 2 == 0) '.' else '#'
@@ -60,6 +64,31 @@ class Day13 : DayViz<Int, VizGrid>(2016, 13) {
         val pf = Pathfinder(map.toPathfindingMap(), mapSize, mapSize)
         val path = pf.searchBFS(startNode, endNode, onProgress)
         return path.size + 1
+    }
+
+    override suspend fun solve2Visualized(input: Int, onProgress: suspend (VizGrid) -> Unit): Int {
+        val map = Array(mapSize) { x ->
+            CharArray(mapSize) { y ->
+                if (((x * x) + (3 * x) + (2 * x * y) + y + (y * y) + input).countOneBits() % 2 == 0) '.' else '#'
+            }
+        }
+        val coords = mutableSetOf(startNode)
+        val pf = Pathfinder(map.toPathfindingMap(), mapSize, mapSize)
+        (startNode.x - 50 until startNode.x + 51).forEach { x ->
+            (startNode.y - 50 until startNode.y + 51).forEach { y ->
+                if (x >= 0 && y >= 0 && map[x.toInt()][y.toInt()] == '.') {
+                    val endNode = Point(x, y)
+                    val path = pf.searchBFS(startNode, endNode, onProgress)
+                    if (path.isEmpty() && abs(x - startNode.x) + abs(y - startNode.y) <= 1) {
+                        coords.add(endNode)
+                    }
+                    if (path.size in 1..49) {
+                        coords.add(endNode)
+                    }
+                }
+            }
+        }
+        return coords.size
     }
 
     private companion object {
