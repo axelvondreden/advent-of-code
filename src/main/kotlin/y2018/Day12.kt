@@ -2,46 +2,58 @@ package y2018
 
 import Day
 
-class Day12 : Day<List<String>>(2018, 12) {
+class Day12 : Day<Pair<String, Set<String>>>(2018, 12) {
 
-    override suspend fun List<String>.parse() = this
+    override suspend fun List<String>.parse() = first().substring(15) to drop(2)
+        .filter { it.endsWith("#") }
+        .map { it.take(5) }
+        .toSet()
 
-    override suspend fun solve1(input: List<String>): Long {
-        val initialState = input[0].removePrefix("initial state: ").mapIndexed { index, c -> index.toLong() to (c == '#') }.toMap()
-        val rules = input.subList(2, input.lastIndex + 1).mapNotNull {
-            val split = it.split(" ")
-            if (split[2] == "#") split[0] else null
-        }
-        var plants = initialState
-        repeat(20) {
-            plants = plants.generate(rules)
-        }
-        return plants.filter { it.value }.keys.sum()
-    }
+    override suspend fun solve1(input: Pair<String, Set<String>>) = mutatePlants(input.first, input.second).drop(19).first().second
 
-    override suspend fun solve2(input: List<String>): Long {
-        val initialState = input[0].removePrefix("initial state: ").mapIndexed { index, c -> index.toLong() to (c == '#') }.toMap()
-        val rules = input.subList(2, input.lastIndex + 1).mapNotNull {
-            val split = it.split(" ")
-            if (split[2] == "#") split[0] else null
-        }
-        var plants = initialState
-        repeat(100) {
-            repeat(500000000) {
-                plants = plants.generate(rules)
+    override suspend fun solve2(input: Pair<String, Set<String>>): Long {
+        var previousDiff = 0L
+        var previousSize = 0L
+        var generationNumber = 0
+
+        mutatePlants(input.first, input.second).dropWhile { thisGen ->
+            val thisDiff = thisGen.second - previousSize
+            if (thisDiff != previousDiff) {
+                previousDiff = thisDiff
+                previousSize = thisGen.second
+                generationNumber += 1
+                true
+            } else {
+                false
             }
-        }
-        return plants.filter { it.value }.keys.sum()
+        }.first()
+
+        return previousSize + (previousDiff * (50_000_000_000 - generationNumber))
     }
 
-    private fun Map<Long, Boolean>.generate(rules: List<String>): Map<Long, Boolean> {
-        val map = mutableMapOf<Long, Boolean>()
-        val min = keys.minOrNull()!!
-        val max = keys.maxOrNull()!!
-        (min - 2..max + 2).forEach { index ->
-            val last5 = (index - 2..index + 2).map { if (getOrDefault(it, false)) '#' else '.' }.joinToString("")
-            map[index] = last5 in rules
+    private fun mutatePlants(state: String, rules: Set<String>): Sequence<Pair<String, Long>> = sequence {
+        var zeroIndex = 0
+        var currentState = state
+        while (true) {
+            while (!currentState.startsWith(".....")) {
+                currentState = ".$currentState"
+                zeroIndex++
+            }
+            while (!currentState.endsWith(".....")) {
+                currentState = "$currentState."
+            }
+
+            currentState = currentState
+                .toList()
+                .windowed(5, 1)
+                .map { it.joinToString(separator = "") }
+                .map { if (it in rules) '#' else '.' }
+                .joinToString(separator = "")
+
+            zeroIndex -= 2
+            yield(Pair(currentState, currentState.sumIndexesFrom(zeroIndex)))
         }
-        return map
     }
+
+    private fun String.sumIndexesFrom(zero: Int) = mapIndexed { idx, c -> if (c == '#') idx.toLong() - zero else 0 }.sum()
 }
