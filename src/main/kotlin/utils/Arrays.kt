@@ -128,3 +128,5 @@ operator fun Array<CharArray>.get(point: Point) = this[point.x.toInt()][point.y.
 operator fun Array<CharArray>.set(point: Point, value: Char) {
     this[point.x.toInt()][point.y.toInt()] = value
 }
+
+operator fun Array<CharArray>.contains(point: Point) = point.x in indices && point.y in this[0].indices

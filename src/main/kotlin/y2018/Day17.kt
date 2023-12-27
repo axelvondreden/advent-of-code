@@ -1,147 +1,132 @@
 package y2018
 
 import Day
-import utils.Point
-import utils.findPoints
-import utils.get
-import utils.set
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.collections.count
+import kotlin.collections.drop
+import kotlin.collections.forEach
+import kotlin.collections.hashMapOf
+import kotlin.collections.maxOf
+import kotlin.collections.minOf
+import kotlin.collections.set
 
-class Day17 : Day<List<Day17.Vein>>(2018, 17) {
+class Day17 : Day<HashMap<Pair<Int, Int>, Int>>(2018, 17) {
 
-    override suspend fun List<String>.parse(): List<Vein> = map {
-        val s = it.split(", ")
-        val s1 = s[0].split("=")
-        val s2 = s[1].split("=")
-        val s3 = s2[1].split("..")
-        if (s1[0] == "x") {
-            Vein(s1[1].toInt()..s1[1].toInt(), s3[0].toInt()..s3[1].toInt())
-        } else {
-            Vein(s3[0].toInt()..s3[1].toInt(), s1[1].toInt()..s1[1].toInt())
+    override suspend fun List<String>.parse(): HashMap<Pair<Int, Int>, Int> {
+        val map = hashMapOf<Pair<Int, Int>, Int>()
+
+        val regex = "(\\w)=(\\d+), \\w=(\\d+)..(\\d+)".toRegex()
+        mapNotNull { regex.matchEntire(it)?.groupValues?.drop(1) }.forEach { (xy, v, v1, v2) ->
+            var x1 = 0
+            var x2 = 0
+            var y1 = 0
+            var y2 = 0
+            when (xy) {
+                "x" -> {
+                    x1 = v.toInt()
+                    x2 = v.toInt()
+                    y1 = v1.toInt()
+                    y2 = v2.toInt()
+                }
+
+                "y" -> {
+                    y1 = v.toInt()
+                    y2 = v.toInt()
+                    x1 = v1.toInt()
+                    x2 = v2.toInt()
+                }
+            }
+
+            (x1..x2).forEach { x ->
+                (y1..y2).forEach { y ->
+                    map[x to y] = WALL
+                }
+            }
+        }
+        return map
+    }
+
+    override suspend fun solve1(input: HashMap<Pair<Int, Int>, Int>): Int {
+        val rangeY = input.keys.minOf { (_, y) -> y }..input.keys.maxOf { (_, y) -> y }
+
+        input.drop(rangeY, 500, 0)
+        return input.count { (key, value) -> key.second in rangeY && (value == STILL_WATER || value == FLOW_WATER) }
+    }
+
+    override suspend fun solve2(input: HashMap<Pair<Int, Int>, Int>): Int {
+        val rangeY = input.keys.minOf { (_, y) -> y }..input.keys.maxOf { (_, y) -> y }
+
+        input.drop(rangeY, 500, 0)
+        return input.count { (key, value) -> key.second in rangeY && value == STILL_WATER }
+    }
+
+    fun HashMap<Pair<Int, Int>, Int>.drop(rangeY: IntRange, x: Int, y: Int) {
+        var ty = y
+        while (true) {
+            if (ty > rangeY.last) return
+
+            this[x to ty] = FLOW_WATER
+            ty++
+            when (this[x to ty]) {
+                WALL, STILL_WATER -> break
+                FLOW_WATER -> return
+                else -> {}
+            }
+        }
+
+        while (true) {
+            ty--
+            if (ty < y) return
+            val leftBorder = scanBorder(-1, x, ty, rangeY)
+            val rightBorder = scanBorder(1, x, ty, rangeY)
+            if (leftBorder != null && rightBorder != null) {
+                (leftBorder + 1 until rightBorder).forEach {
+                    this[it to ty] = STILL_WATER
+                }
+            } else {
+                break
+            }
         }
     }
 
-    private val springLocation = Point(500, 0)
+    private fun HashMap<Pair<Int, Int>, Int>.scanBorder(direction: Int, baseX: Int, ty: Int, rangeY: IntRange): Int? {
+        var tx = baseX
+        var drop = false
 
-    override suspend fun solve1(input: List<Vein>): Int {
-        val resultScanRange = input.minOf { it.y.first }..input.maxOf { it.y.last }
-        val map = input.toMap()
-        map[springLocation.x.toInt()][springLocation.y.toInt()] = '|'
-        simulate(map)
-        return map.findPoints('~', '|').filter { it.y in resultScanRange }.size
-    }
+        while (!drop) {
+            tx += direction
 
-    override suspend fun solve2(input: List<Vein>): Any {
-        val resultScanRange = input.minOf { it.y.first }..input.maxOf { it.y.last }
-        val map = input.toMap()
-        map[springLocation.x.toInt()][springLocation.y.toInt()] = '|'
-
-        return map.findPoints('~').filter { it.y in resultScanRange }.size
-    }
-
-    private fun simulate(map: Array<CharArray>) {
-        var running = true
-        val flowingWaterLocations = map.findPoints('|').filter { it.y < map[0].lastIndex }.toMutableSet() // exclude bottom
-        while (running) {
-            var changes = false
-            for (loc in flowingWaterLocations) {
-                if (map[loc down 1] == '.') {
-                    // flowing down
-                    map[loc down 1] = '|'
-                    changes = true
-                    if (loc.y < map[0].lastIndex - 1) {
-                        flowingWaterLocations += loc down 1
-                    }
+            when (this[tx to ty]) {
+                WALL -> break
+                FLOW_WATER -> {
+                    drop = true
                     break
-                } else if (map[loc down 1] != '|') {
-                    if (loc.x > 0) {
-                        // left
-                        when (map[loc left 1]) {
-                            '.' -> {
-                                map[loc left 1] = '|'
-                                flowingWaterLocations += loc left 1
-                                changes = true
+                }
+
+                else -> {
+                    this[tx to ty] = FLOW_WATER
+                    when (this[tx to ty + 1]) {
+                        WALL -> {}
+                        STILL_WATER -> {}
+                        FLOW_WATER -> drop = true
+                        else -> {
+                            drop(rangeY, tx, ty + 1)
+                            if (this[tx to ty + 1] == FLOW_WATER) {
+                                drop = true
                                 break
-                            }
-
-                            '#' -> {
-                                // check for wall right
-                                var walledIn = true
-                                var i = 1
-                                while (loc.x + i <= map.lastIndex) {
-                                    when (map[loc right i]) {
-                                        '.', '~' -> {
-                                            walledIn = false
-                                            break
-                                        }
-
-                                        '#' -> break
-                                    }
-                                    i++
-                                }
-                                if (walledIn) {
-                                    (0 until i).forEach {
-                                        map[loc right it] = '~'
-                                    }
-                                    changes = true
-                                    break
-                                }
-                            }
-                        }
-                    }
-                    if (loc.x < map.lastIndex) {
-                        // right
-                        when (map[loc right 1]) {
-                            '.' -> {
-                                map[loc right 1] = '|'
-                                flowingWaterLocations += loc right 1
-                                changes = true
-                                break
-                            }
-
-                            '#' -> {
-                                // check for wall left
-                                var walledIn = true
-                                var i = 1
-                                while (loc.x - i >= 0) {
-                                    when (map[loc left i]) {
-                                        '.', '~' -> {
-                                            walledIn = false
-                                            break
-                                        }
-
-                                        '#' -> break
-                                    }
-                                    i++
-                                }
-                                if (walledIn) {
-                                    (0 until i).forEach {
-                                        map[loc left it] = '~'
-                                    }
-                                    changes = true
-                                    break
-                                }
                             }
                         }
                     }
                 }
             }
-            running = changes
         }
+        return tx.takeIf { !drop }
     }
 
-    data class Vein(val x: IntRange, val y: IntRange) {
-        fun contains(x: Int, y: Int) = x in this.x && y in this.y
-    }
-
-    private fun List<Vein>.toMap(): Array<CharArray> {
-        val maxY = maxOf { it.y.last }
-        val maxX = maxOf { it.x.last }
-        return Array(maxX + 1) { x ->
-            CharArray(maxY + 1) { y ->
-                if (any { it.contains(x, y) }) {
-                    '#'
-                } else '.'
-            }
-        }
+    companion object {
+        private const val WALL = 1
+        private const val FLOW_WATER = 2
+        private const val STILL_WATER = 3
     }
 }
