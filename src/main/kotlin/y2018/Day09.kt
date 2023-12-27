@@ -1,44 +1,46 @@
 package y2018
 
 import Day
+import kotlin.math.absoluteValue
 
 class Day09 : Day<List<String>>(2018, 9) {
 
     override suspend fun List<String>.parse() = first().split(" ")
 
-    override suspend fun solve1(input: List<String>) = getMaxScore(input[0].toInt(), input[6].toInt())
+    override suspend fun solve1(input: List<String>) = play(input[0].toInt(), input[6].toInt())
 
-    override suspend fun solve2(input: List<String>): Long {
-        return getMaxScore(input[0].toInt(), input[6].toInt() * 100)
-    }
+    override suspend fun solve2(input: List<String>) = play(input[0].toInt(), input[6].toInt() * 100)
 
-    private fun getMaxScore(playerCount: Int, marbleCount: Int): Long {
-        var playerIndex = 0
-        val players = List(playerCount) { Player() }
-        val unplayedMarbles = MutableList(marbleCount) { it + 1 }
-        val board = ArrayDeque<Int>(marbleCount).also { it.addFirst(0) }
-        var currentIndex = 0
-        while (unplayedMarbles.isNotEmpty()) {
-            currentIndex = players[playerIndex].turn(board, currentIndex, unplayedMarbles)
-            playerIndex++
-            if (playerIndex >= playerCount) playerIndex = 0
-        }
-        return players.maxOf { it.score }
-    }
+    private fun play(numPlayers: Int, highest: Int): Long {
+        val scores = LongArray(numPlayers)
+        val marbles = ArrayDeque<Int>().also { it.add(0) }
 
-    class Player(var score: Long = 0) {
-        fun turn(board: ArrayDeque<Int>, currentIndex: Int, unplayedMarbles: MutableList<Int>): Int {
-            val lowest = unplayedMarbles.removeAt(0)
-            return if (lowest % 23 == 0) {
-                score += lowest
-                val removeIndex = (board.size + (currentIndex - 7)) % board.size
-                score += board.removeAt(removeIndex)
-                removeIndex
-            } else {
-                val nextIndex = (currentIndex + 2) % board.size
-                board.add(nextIndex, lowest)
-                nextIndex
+        (1..highest).forEach { marble ->
+            when {
+                marble % 23 == 0 -> {
+                    scores[marble % numPlayers] += marble + with(marbles) {
+                        shift(-7)
+                        removeFirst().toLong()
+                    }
+                    marbles.shift(1)
+                }
+                else -> {
+                    with(marbles) {
+                        shift(1)
+                        addFirst(marble)
+                    }
+                }
             }
+        }
+        return scores.max()
+    }
+
+    private fun <T> ArrayDeque<T>.shift(n: Int) = when {
+        n < 0 -> repeat(n.absoluteValue) {
+            addLast(removeFirst())
+        }
+        else -> repeat(n) {
+            addFirst(removeLast())
         }
     }
 }
