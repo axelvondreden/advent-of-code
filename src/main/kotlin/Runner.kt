@@ -11,7 +11,7 @@ import runner.ResultState
 import runner.compose.App
 import utils.IO
 
-val years = 2015..2023
+val years = 2015..2024
 
 val expected = parseExpected()
 

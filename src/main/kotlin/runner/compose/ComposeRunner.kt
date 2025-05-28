@@ -339,9 +339,8 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: 
                 state,
                 scope,
                 onStart = { jobRunning = true },
-                onEnd = { jobRunning = false })
-            val caller1 = day::class.memberFunctions.firstOrNull { it.name == "solve1Visualized" }?.javaMethod?.declaringClass
-            val caller2 = day::class.memberFunctions.firstOrNull { it.name == "solve2Visualized" }?.javaMethod?.declaringClass
+                onEnd = { jobRunning = false }
+            )
             Button(
                 onClick = {
                     scope.launch(Dispatchers.IO) {
@@ -360,7 +359,7 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: 
                         }
                     }
                 },
-                enabled = caller1?.name != "DayViz" && !jobRunning
+                enabled = day is DayViz<Any, *> && !jobRunning
             ) {
                 Icon(Icons.Default.Star, "")
                 Text("Visualize Part 1")
@@ -383,7 +382,7 @@ private fun DayLayout(day: Day<Any>, samples: Samples?, state: DayState, scope: 
                         }
                     }
                 },
-                enabled = caller2?.name != "DayViz" && !jobRunning
+                enabled = day is DayViz<Any, *> && !jobRunning
             ) {
                 Icon(Icons.Default.Star, "")
                 Text("Visualize Part 2")
